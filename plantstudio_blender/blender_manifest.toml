@@ -1,0 +1,11 @@
+schema_version = "1.0.0"
+id = "plantstudio_blender"
+version = "0.3.0"
+name = "PlantStudio-Blender"
+tagline = "Deterministic plant growth and garden export"
+maintainer = "PlantStudio-Blender contributors"
+type = "add-on"
+blender_version_min = "4.2.0"
+license = [
+  "SPDX:GPL-3.0-or-later",
+]

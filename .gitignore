@@ -1,0 +1,17 @@
+# PlantStudio-Blender Addon — root gitignore
+__pycache__/
+*.pyc
+*.zip
+
+# OS temporary files
+.DS_Store
+Thumbs.db
+
+# Local config / secrets
+local_config.py
+
+# CI / test artifacts
+.hypothesis/
+.coverage
+htmlcov/
+.pytest_cache/

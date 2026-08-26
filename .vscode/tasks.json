@@ -1,0 +1,19 @@
+{
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "Sync addon with digital-garden",
+            "command": "python",
+            "args": [
+                "scripts/sync_addon.py"
+            ],
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "description": "Push addon repo, sync headless subset to digital-garden, and push"
+        }
+    ],
+    "version": "2.0.0"
+}
