@@ -1,16 +1,16 @@
 # PlantStudio-Blender Addon
 
-A Blender extension that brings the **PlantStudio** procedural plant growth simulator into Blender as a live, editable addon. Create, grow, and tweak herbaceous plants (wildflowers, grasses, vegetables, garden flowers, shrubs) with a step-by-step wizard, then export them for real-time use in AR/VR or rendering.
+A Blender extension that brings the **PlantStudio** procedural plant growth simulator into Blender as a live, editable addon. Create, grow, and tweak herbaceous plants (wildflowers, grasses, vegetables, garden flowers, shrubs) with a realtime wizard, then export them for use in your projects.
 
 ---
 
 ## What It Is
 
-**PlantStudio-Blender** is a faithful Python 3 port of **PlantStudio** (originally by Cynthia F. Kurtz & Paul Fernhout, Kurtz-Fernhout Software), wrapped as a Blender 4.2+ addon. The original PlantStudio was a Windows 95/98-era application for simulating herbaceous (non-woody) plant growth using a meristem/biomass model. This port:
+**PlantStudio-Blender** is a Python 3 port of **PlantStudio** (originally by Cynthia F. Kurtz & Paul Fernhout, Kurtz-Fernhout Software), wrapped as a Blender 4.2+ addon. The original PlantStudio was a Windows 95/98-era application for simulating herbaceous (non-woody) plant growth using a meristem/biomass model. This port:
 
 - **Preserves the simulation exactly** — deterministic growth, same parameter registry, same `.pla`/`.tdo` file formats.
 - **Runs headless** — the core (`plantstudio_blender/core/`) has zero Blender dependencies and can be imported in any Python 3.11+ environment for batch generation, testing, or server-side use.
-- **Adds a live Blender UI** — a sidebar panel (N-panel) with a **Wizard** that exposes 70+ parameters across 8 steps (Meristems → Internodes → Leaves → Compound Leaves → Inflorescence Placement → Inflorescence Drawing → Flowers → Fruits), with instant mesh rebuild on every slider change.
+- **Live Blender UI** — a sidebar panel with a **Wizard** that exposes 70+ parameters across 8 steps (Meristems → Internodes → Leaves → Compound Leaves → Inflorescence Placement → Inflorescence Drawing → Flowers → Fruits), with instant mesh rebuild on every slider change.
 - **Bundles the original species library** — 9 `.pla` files (~1.4 MB) covering garden flowers, wildflowers, grasses, shrubs, vegetables, and "Strange Breeder" experimental plants, plus the original `3D object library.tdo` with 100+ hand-modeled plant parts (leaves, petals, buds, fruits).
 - **Exports for digital gardens / AR** — one-click JSON config export (`plant_id`, `species`, `seed`, `planted_date`) for a companion cloud regeneration pipeline (e.g., `digital-garden-AR`).
 
