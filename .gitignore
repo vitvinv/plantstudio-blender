@@ -15,3 +15,17 @@ local_config.py
 .coverage
 htmlcov/
 .pytest_cache/
+
+# Agent / IDE workspaces — never commit
+.kilo/
+.freebuff/
+.agents/
+.agentmemory/
+.hermes/
+.claude/
+.cursor/
+.graphify/
+.expanse.json
+.env
+.env.*
+*.local.md
