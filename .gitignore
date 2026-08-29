@@ -19,6 +19,9 @@ htmlcov/
 # Maintainer-only repo-sync tool (kept on disk, local workflow; never committed)
 scripts/sync_addon.py
 
+# Draft plan documents (kept on disk, never committed)
+LOD_PLAN.md
+
 # Agent / IDE workspaces — never commit
 .kilo/
 .freebuff/
