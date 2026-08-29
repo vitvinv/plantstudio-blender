@@ -2,17 +2,21 @@
     "tasks": [
         {
             "type": "shell",
-            "label": "Sync addon with digital-garden",
+            "label": "Build distribution zip",
             "command": "python",
             "args": [
-                "scripts/sync_addon.py"
+                "-m",
+                "zipfile",
+                "-c",
+                "PlantStudio-Blender.zip",
+                "plantstudio_blender"
             ],
             "problemMatcher": [],
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
-            "description": "Push addon repo, sync headless subset to digital-garden, and push"
+            "description": "Package the addon folder into the installable PlantStudio-Blender.zip"
         }
     ],
     "version": "2.0.0"

@@ -16,6 +16,9 @@ local_config.py
 htmlcov/
 .pytest_cache/
 
+# Maintainer-only repo-sync tool (kept on disk, local workflow; never committed)
+scripts/sync_addon.py
+
 # Agent / IDE workspaces — never commit
 .kilo/
 .freebuff/

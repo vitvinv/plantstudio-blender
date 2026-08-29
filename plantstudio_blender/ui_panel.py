@@ -154,6 +154,13 @@ class PSProperties(bpy.types.PropertyGroup):
     base_species: StringProperty(name="Base species", default="")
     seed: IntProperty(name="Seed", default=280, min=1, max=99999, update=_seed_update)
     day: IntProperty(name="Age (days)", default=60, min=0, max=1000)
+    export_dir: StringProperty(
+        name="Export Dir",
+        subtype='DIR_PATH',
+        default="",
+        description="Directory for exported plant configs (JSON). Leave empty to "
+                    "use $PLANTSTUDIO_PLANTS_DIR or ~/.plantstudio/exports",
+    )
 
 
 class PSPlantListItem(PropertyGroup):
@@ -253,6 +260,7 @@ class PS_PT_panel(Panel):
         box.label(text=f"Plants ({len(plants)})", icon='OUTLINER_OB_MESH')
         box.template_list("PS_UL_plants", "", plist, "plants",
                           knobs, "selected_index")
+        box.prop(props, "export_dir", text="Config export dir")
         box.operator("plantstudio.export_plant_config",
                      text="export with metadata", icon='EXPORT')
         box.operator("plantstudio.delete_plant", text="Delete Plant",

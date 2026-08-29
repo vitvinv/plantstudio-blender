@@ -85,36 +85,21 @@ def _plant_id(species, seed):
     return f"{slug}_{int(seed):d}"
 
 
-def resolve_plants_dir():
-    """Locate digital-garden-AR/src/assets/plants for export.
+def export_dir_for(context):
+    """Resolve the target directory for exported plant configs.
 
-    Order: explicit env override -> walk up from the addon's module
-    location (covers running the addon straight from the repo) -> common
-    repo locations under the user profile (covers Blender appdata installs).
+    Order: scene property (panel "Config export dir") ->
+    $PLANTSTUDIO_PLANTS_DIR -> ~/.plantstudio/exports (created on demand).
     """
+    props = getattr(context.scene, "ps_props", None)
+    if props is not None and getattr(props, "export_dir", ""):
+        return os.path.abspath(props.export_dir)
     env = os.environ.get("PLANTSTUDIO_PLANTS_DIR")
-    if env and os.path.isdir(env):
-        return env
-    start = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    cur = os.path.abspath(start)
-    while True:
-        if os.path.isdir(os.path.join(cur, "digital-garden-AR", "src")):
-            return os.path.join(cur, "digital-garden-AR", "src", "assets",
-                                "plants")
-        parent = os.path.dirname(cur)
-        if parent == cur:
-            break
-        cur = parent
-    for base in (os.path.expanduser("~"), os.path.expanduser("~/dev"),
-                 os.path.expanduser("~/projects")):
-        for name in ("digital-garden", "digital_garden"):
-            cand = os.path.join(base, name, "digital-garden-AR", "src",
-                                "assets", "plants")
-            if os.path.isdir(cand):
-                return cand
-    raise RuntimeError(
-        "Cannot locate digital-garden-AR/src/assets/plants for export. "
-        "Set PLANTSTUDIO_PLANTS_DIR to the plants directory.")
+    if env:
+        return os.path.abspath(env)
+    default = os.path.join(os.path.expanduser("~"), ".plantstudio", "exports")
+    os.makedirs(default, exist_ok=True)
+    return default
 
 
 def _user_preset_categories():
@@ -400,10 +385,11 @@ class PS_OT_random_seed(Operator):
 class PS_OT_export_plant_config(Operator):
     bl_idname = "plantstudio.export_plant_config"
     bl_label = "Export Plant Config"
-    bl_description = ("Write one JSON config (plant_id/species/seed/planted_date) "
-                      "per checked plant to digital-garden-AR/src/assets/plants/ "
-                      "so the cloud regeneration script can grow these plants daily; "
-                      "plant_id is derived from species+seed, dates are strict ISO")
+    bl_description = ("Write one JSON config per checked plant "
+                      "(plant_id/species/seed/planted_date) for headless/CI "
+                      "pipelines; plant_id is derived from species+seed, dates "
+                      "are strict ISO; target directory = panel 'Config export "
+                      "dir' or $PLANTSTUDIO_PLANTS_DIR")
 
     def execute(self, context):
         from datetime import date, timedelta
@@ -420,11 +406,7 @@ class PS_OT_export_plant_config(Operator):
             self.report({'ERROR'}, "Check at least one plant in the list to export")
             return {'CANCELLED'}
 
-        try:
-            plants_dir = resolve_plants_dir()
-        except RuntimeError as e:
-            self.report({'ERROR'}, str(e))
-            return {'CANCELLED'}
+        plants_dir = export_dir_for(context)
         os.makedirs(plants_dir, exist_ok=True)
 
         planted = date.today()

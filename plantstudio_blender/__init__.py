@@ -15,7 +15,7 @@ bl_info = {
     "version": (0, 3, 0),
     "blender": (4, 2, 0),
     "location": "View3D > Sidebar > PlantStudio-Blender",
-    "description": "PlantStudio-Blender plant growth simulator with a live wizard and garden export",
+    "description": "PlantStudio-Blender plant growth simulator with a live wizard and config export",
     "category": "Add Mesh",
 }
 

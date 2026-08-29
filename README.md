@@ -16,7 +16,7 @@ That being said, a help from anyone with an actual coding experience will be muc
 
 **Run without Blender:**
 ```bash
-cd C:/Users/vitvin_v/dev/plantstudio-blender
+cd /path/to/plantstudio-blender
 python -m pytest plantstudio_blender/tests/ -q
 ```
 ---
@@ -29,7 +29,7 @@ python -m pytest plantstudio_blender/tests/ -q
 - **Runs headless** — the core (`plantstudio_blender/core/`) has zero Blender dependencies and can be imported in any Python 3.11+ environment for batch generation, testing, or server-side use.
 - **Runs in Blender** — N-panel with a **Wizard** exposes 70+ parameters across 8 steps (Meristems → Internodes → Leaves → Compound Leaves → Inflorescence Placement → Inflorescence Drawing → Flowers → Fruits), with mesh rebuild on every slider change.
 - **Bundles the original species library** — 9 `.pla` files (~1.4 MB) covering garden flowers, wildflowers, grasses, shrubs, vegetables, and "Strange Breeder" experimental plants, plus the original `3D object library.tdo` with 100+ hand-modeled plant parts (leaves, petals, buds, fruits).
-- **Exports with metadata** — one-click JSON config export (`plant_id`, `species`, `seed`, `planted_date`) for use in headless pipelines (see `digital-garden-AR`).
+- **Exports with metadata** — one-click JSON config export (`plant_id`, `species`, `seed`, `planted_date`) for headless pipelines, CI, or server-side regeneration.
 
 ---
 
@@ -99,7 +99,7 @@ The parameter registry (1,000+ entries) maps **field IDs** (e.g., `kGeneralAgeAt
 | `.pla` | Plant species definition | Text, Latin-1 encoded. Sections: `[Species Name] start PlantStudio plant <v2.0>` + `Param Name [kFieldID] =value`. Embedded TDO blocks (`start 3D object` … `end 3D object`) for custom parts. |
 | `.tdo` | 3D object library | Text. `Name=…`, `Point=x y z`, `Triangle=i j k` (1-based). Also a compact inline form `N[name],P[x y z],T[i j k]…` used in parameters.tab. |
 | `.json` (user preset) | Saved wizard state | `{name, category, base_species, knobs: {knob_name: value}}`. Stored under `data/user-presets/<category>/<name>.json`. |
-| `.json` (export config) | AR / cloud regeneration | `{plant_id, species, seed, planted_date}` (ISO date). Written to `digital-garden-AR/src/assets/plants/`. |
+| `.json` (export config) | Headless / CI regeneration | `{plant_id, species, seed, planted_date}` (ISO date). Written to the export dir (panel *Config export dir* or `$PLANTSTUDIO_PLANTS_DIR`). |
 
 ---
 
@@ -125,7 +125,7 @@ The parameter registry (1,000+ entries) maps **field IDs** (e.g., `kGeneralAgeAt
    - **Age (days)** slider — rebuilds at any age instantly.
    - **Save Preset** button → writes a `.json` preset (base species + knob deltas).
 5. **Live rebuild** — every knob change triggers a lightweight timer (`bpy.app.timers`) that re-draws the mesh in place (growth-affecting knobs re-simulate; draw-only knobs reuse the cached grown plant).
-6. **Export Plant Config** — writes one JSON per checked plant for the digital garden pipeline.
+6. **Export Plant Config** — writes one JSON config per checked plant to the export dir (see *Config export dir* above the button).
 7. **Animate Growth** operator — modal timer that steps the plant day-by-day over frames, updating the timeline.
 
 **Requirements:** Python 3.11+, Blender 4.2 LTS or 5.x LTS. No external Python packages (stdlib only).

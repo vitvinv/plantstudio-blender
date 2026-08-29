@@ -14,6 +14,7 @@ secrets) are not needed for the addon to function — keep them on disk only, ou
 - Build artifacts: `*.zip`, `dist/`, `build/`, `node_modules/`
 - Local caches and databases: `__pycache__/`, `.pytest_cache/`, `.hypothesis/`, `*.db`, `*.sqlite`
 - Draft plan documents with no references from code (e.g. `LOD_PLAN.md`) — only on explicit request
+- `scripts/sync_addon.py` — local maintainer repo-sync tool (gitignored; never commit)
 
 ## Commit workflow
 
@@ -29,5 +30,8 @@ PlantStudio Blender addon: plant growth simulation (meristem), 63 species,
 deterministic seeds, GLB export, animation; works in Blender 4.2 + 5.x.
 - Package: `plantstudio_blender/` (pure-Python core + data + Blender UI).
 - Tests: `pytest plantstudio_blender/tests`.
-- Distribution build: `scripts/` (the `*.zip` artifact is never committed).
+- Distribution build: `.vscode/tasks.json` task "Build distribution zip" (the `*.zip` artifact is never committed).
 - README.md is the single source of truth for install/usage.
+- **Standalone product**: keep code, docs, and UI free of references to other projects
+  (e.g. the digital garden). JSON config export targets a user-set directory
+  (panel *Config export dir* / `$PLANTSTUDIO_PLANTS_DIR` / `~/.plantstudio/exports`).
