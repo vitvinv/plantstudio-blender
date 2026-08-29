@@ -1,6 +1,6 @@
 # PlantStudio-Blender Addon
 
-A Blender extension that brings the **PlantStudio** procedural plant growth simulator into Blender as a live, editable addon. Create, grow, and tweak herbaceous plants (wildflowers, grasses, vegetables, garden flowers, shrubs) with a realtime wizard, then export them for use in your projects.
+An extension that brings the functions of **PlantStudio™ Botanical Illustration Software** into Blender. Create, grow, and tweak herbaceous plants (wildflowers, grasses, vegetables, garden flowers, shrubs) with a realtime wizard, then export them for use in your projects.
 
 ---
 
