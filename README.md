@@ -10,7 +10,7 @@ That said, help from anyone with actual coding experience would be very much app
 
 ## How to use
 **Download:**
-Click here or go to Releases
+[Click here](https://github.com/vitvinv/plantstudio-blender/releases/latest/download/plantstudio_blender.zip) or go to [Releases](https://github.com/vitvinv/plantstudio-blender/releases)
 
 **Install in Blender:**
 1. Edit → Preferences → Add-ons → Install from Disk → select plantstudio_blender.zip

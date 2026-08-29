@@ -5,18 +5,25 @@
             "label": "Build distribution zip",
             "command": "python",
             "args": [
-                "-m",
-                "zipfile",
-                "-c",
-                "PlantStudio-Blender.zip",
-                "plantstudio_blender"
+                "scripts/release.py",
+                "--zip-only"
             ],
             "problemMatcher": [],
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
-            "description": "Package the addon folder into the installable PlantStudio-Blender.zip"
+            "description": "Package the addon folder into the installable plantstudio_blender.zip (excludes caches)"
+        },
+        {
+            "type": "shell",
+            "label": "Release addon to GitHub",
+            "command": "python",
+            "args": [
+                "scripts/release.py"
+            ],
+            "problemMatcher": [],
+            "description": "Build zip and create/update the GitHub release at the current bl_info version"
         }
     ],
     "version": "2.0.0"
