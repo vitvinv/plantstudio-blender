@@ -1,8 +1,22 @@
-# PlantStudio-Blender Addon
+# PlantStudio-Blender Addon ⚘
 
 An extension that brings the functions of **PlantStudio™ Botanical Illustration Software** into Blender. Create, grow, and tweak herbaceous plants (wildflowers, grasses, vegetables, garden flowers, shrubs) with a realtime wizard, then export them for use in your projects.
 
 Fair warning: I am not a programmer. I have developed this addon with help of a coding agent to serve as a stylized engine for my art project. For now, my plan is to make a faithful recreation of PlantStudio in the modern environment, with a few quality of life improvements. That being said, a help from anyone with an actual coding experience will be much appreciated.
+
+---
+## How to use
+
+```bash
+
+# Install in Blender
+# 1. Edit → Preferences → Add-ons → Install from Disk → select plantstudio_blender.zip
+# 2. Enable "PlantStudio-Blender"
+# 3. N-panel → PlantStudio-Blender tab
+
+# Run headless, no Blender needed
+cd C:/Users/vitvin_v/dev/plantstudio-blender
+python -m pytest plantstudio_blender/tests/ -q
 
 ---
 
@@ -19,6 +33,8 @@ Fair warning: I am not a programmer. I have developed this addon with help of a 
 ---
 
 ## Architecture Overview
+<details>
+<summary>Click to expand</summary>
 
 ```
 plantstudio_blender/
@@ -52,6 +68,8 @@ plantstudio_blender/
 ├── tools/                   # Validation / comparison scripts
 └── tests/                   # Pytest suite (mesh output, LOD, parser round-trips)
 ```
+
+</details>
 
 **Key design principle:** the `core/` package is pure Python — no `import bpy`. The Blender bridge lives entirely in the top-level modules (`ui_panel.py`, `operators.py`, `wizard.py`, `scene_bridge.py`, `animator.py`). This makes the simulation testable in CI and reusable outside Blender.
 
@@ -91,7 +109,7 @@ The parameter registry (1,000+ entries) maps **field IDs** (e.g., `kGeneralAgeAt
    - **Load Preset** menu → pick a library species (grouped by category) or a saved user preset.
    - **Seed** spinner (default 280) — changes the stochastic shape.
    - **Create** button → grows a new plant at the current *Age (days)*.
-3. **Plant List** — Blender-style `UIList` of all plants in the `PlantStudio Plants` collection. Checkbox = include in export. Select one to edit.
+3. **Plant List** — list of all plants in the `PlantStudio Plants` collection. Checkbox = include in export. Select one to edit.
 4. **Wizard** (for selected plant) — 8 steps, each a collapsible box with labeled sliders/enum pickers/color pickers:
    - **Meristems** — branching index/distance/angle, determinate probability, sympodial, secondary branching.
    - **Internodes** — length, width, biomass, curving, days to create.
@@ -108,37 +126,6 @@ The parameter registry (1,000+ entries) maps **field IDs** (e.g., `kGeneralAgeAt
 5. **Live rebuild** — every knob change triggers a lightweight timer (`bpy.app.timers`) that re-draws the mesh in place (growth-affecting knobs re-simulate; draw-only knobs reuse the cached grown plant).
 6. **Export Plant Config** — writes one JSON per checked plant for the digital garden pipeline.
 7. **Animate Growth** operator — modal timer that steps the plant day-by-day over frames, updating the timeline.
-
----
-
-## Making Of / History
-
-| Phase | What Happened |
-|-------|---------------|
-| **Original (1997–2000s)** | PlantStudio written in Delphi/Object Pascal by Kurtz-Fernhout Software. Sold as shareware; later released free. Simulates herbaceous plants using a meristem/biomass model with 1,000+ parameters. |
-| **Open-source release (2020s)** | Paul Fernhout (`pdfernhout`) published the source on GitHub (`github.com/pdfernhout/PlantStudio`) — Delphi code, `.pla`/`.tdo` specs, parameter registry, and the full species library. |
-| **Python port (2024–2025)** | A clean-room Python 3 port of the simulation core (`PdPlant`, `PdMeristem`, `PdInternode`, `PdLeaf`, `PdInflorescence`, `PdFlowerFruit`, `PdRandom`, 3D math, parser, normalizer) — zero Blender deps. Validated against original `.pla` files: same seed → same vertex count / topology. |
-| **Blender addon wrapper (2025–2026)** | Built the Blender bridge: `MeshTurtle` → `MeshBuffer` → `bpy.mesh`, material per color, collection management, wizard PropertyGroups, live timer rebuild, preset I/O, export operator. Bundled the 9 `.pla` files + `3D object library.tdo` from the original repo. |
-| **LOD system (2026, in progress)** | Planned three-level LOD (triangle subsampling, pipe face reduction, repetition halving) exposed in UI and export — see `LOD_PLAN.md`. |
-| **Digital-garden sync (2026)** | `scripts/sync_addon.py` pushes the headless `core/` subset to a companion repo (`digital-garden`) for cloud regeneration; VS Code task for one-button sync. |
-
----
-
-## Development
-
-```bash
-# Run tests (headless, no Blender needed)
-cd C:/Users/vitvin_v/dev/plantstudio-blender
-python -m pytest plantstudio_blender/tests/ -q
-
-# Install in Blender (developer mode)
-# 1. Edit → Preferences → Add-ons → Install from Disk → select plantstudio_blender.zip
-# 2. Enable "PlantStudio-Blender"
-# 3. N-panel → PlantStudio-Blender tab
-
-# Sync headless core to digital-garden mirror
-python scripts/sync_addon.py
-```
 
 **Requirements:** Python 3.11+, Blender 4.2 LTS or 5.x LTS. No external Python packages (stdlib only).
 
