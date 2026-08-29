@@ -1,13 +1,16 @@
 # PlantStudio-Blender Addon ⚘
 
-An extension that brings the functions of **PlantStudio™ Botanical Illustration Software** into Blender. Create, grow, and tweak herbaceous plants (wildflowers, grasses, vegetables, garden flowers, shrubs) with a realtime wizard, then export them for use in your projects.
+An extension that brings the functionality of **PlantStudio™ Botanical Illustration Software** to Blender. Create, grow, and tweak herbaceous plants (wildflowers, grasses, vegetables, garden flowers, shrubs) with a real-time wizard, then export them for use in your projects.
 
-Fair warning: I am not a programmer. I have developed this addon with help of a coding agent to serve as a stylized engine for my art project. For now, my plan is to make a faithful recreation of PlantStudio in the modern environment, with a few quality of life improvements.
+A fair warning: I’m not a programmer. I made this add-on with the help of a coding agent as a stylized plant-generation engine for my [Digital Garden](https://github.com/vitvinv/digital-garden) art project. Beyond this section, the Readme is mostly written by the agent as well. For now, my plan is simply to recreate PlantStudio as faithfully as possible in a modern environment, with a few quality-of-life improvements.
 
-That being said, a help from anyone with an actual coding experience will be much appreciated.
+That said, help from anyone with actual coding experience would be very much appreciated.
 
 ---
+
 ## How to use
+**Download:**
+Click here or go to Releases
 
 **Install in Blender:**
 1. Edit → Preferences → Add-ons → Install from Disk → select plantstudio_blender.zip
@@ -32,7 +35,14 @@ python -m pytest plantstudio_blender/tests/ -q
 - **Exports with metadata** — one-click JSON config export (`plant_id`, `species`, `seed`, `planted_date`) for headless pipelines, CI, or server-side regeneration.
 
 ---
+## Plans
+- [ ] Make sure every plant matches its original PlantStudio counterpart
+- [ ] Polish the UI
+- [ ] Switch to vertex colors
+- [ ] Implement the decimation algorithm for headless mode
+- [ ] Add more human touch to this page
 
+---
 ## Architecture Overview
 <details>
 <summary>Click to expand</summary>
