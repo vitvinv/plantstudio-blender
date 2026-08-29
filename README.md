@@ -1,6 +1,6 @@
 # PlantStudio-Blender Addon ⚘
 
-An extension that brings the functionality of **PlantStudio™ Botanical Illustration Software** to Blender. Create, grow, and tweak herbaceous plants (wildflowers, grasses, vegetables, garden flowers, shrubs) with a real-time wizard, then export them for use in your projects.
+An extension that brings the functionality of [**PlantStudio™ Botanical Illustration Software**](https://www.kurtz-fernhout.com/summary_plantstudio.html) to Blender. Create, grow, and tweak herbaceous plants (wildflowers, grasses, vegetables, garden flowers, shrubs) with a real-time wizard, then export them for use in your projects.
 
 A fair warning: I’m not a programmer. I made this add-on with the help of a coding agent as a stylized plant-generation engine for my [Digital Garden](https://github.com/vitvinv/digital-garden) art project. Beyond this section, the Readme is mostly written by the agent as well. For now, my plan is simply to recreate PlantStudio as faithfully as possible in a modern environment, with a few quality-of-life improvements.
 
