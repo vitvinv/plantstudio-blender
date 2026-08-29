@@ -2,22 +2,23 @@
 
 An extension that brings the functions of **PlantStudio™ Botanical Illustration Software** into Blender. Create, grow, and tweak herbaceous plants (wildflowers, grasses, vegetables, garden flowers, shrubs) with a realtime wizard, then export them for use in your projects.
 
-Fair warning: I am not a programmer. I have developed this addon with help of a coding agent to serve as a stylized engine for my art project. For now, my plan is to make a faithful recreation of PlantStudio in the modern environment, with a few quality of life improvements. That being said, a help from anyone with an actual coding experience will be much appreciated.
+Fair warning: I am not a programmer. I have developed this addon with help of a coding agent to serve as a stylized engine for my art project. For now, my plan is to make a faithful recreation of PlantStudio in the modern environment, with a few quality of life improvements.
+
+That being said, a help from anyone with an actual coding experience will be much appreciated.
 
 ---
 ## How to use
 
+**Install in Blender:**
+1. Edit → Preferences → Add-ons → Install from Disk → select plantstudio_blender.zip
+2. Enable "PlantStudio-Blender"
+3. N-panel → PlantStudio-Blender tab
+
+**Run without Blender:**
 ```bash
-
-# Install in Blender
-# 1. Edit → Preferences → Add-ons → Install from Disk → select plantstudio_blender.zip
-# 2. Enable "PlantStudio-Blender"
-# 3. N-panel → PlantStudio-Blender tab
-
-# Run headless, no Blender needed
 cd C:/Users/vitvin_v/dev/plantstudio-blender
 python -m pytest plantstudio_blender/tests/ -q
-
+```
 ---
 
 ## What It Is
