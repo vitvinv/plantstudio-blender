@@ -1,0 +1,717 @@
+# Materials for file New version 2 plants_age100.obj
+# Created by PlantStudio http://www.kurtz-fernhout.com
+# These files must be in the same directory for the materials to be read correctly.
+newmtl Daylily_Intrnd
+Ka  0.196 0.5529 0.196
+Kd  0.196 0.5529 0.196
+Ks  0.196 0.5529 0.196
+d 1.0
+illum 1
+
+newmtl Daylily_Intrnd
+Ka  0.196 0.5529 0.196
+Kd  0.196 0.5529 0.196
+Ks  0.196 0.5529 0.196
+d 1.0
+illum 1
+
+newmtl Daylily_Petiole
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl Daylily_Leaf
+Ka  0.196 0.9803 0.196
+Kd  0.196 0.9803 0.196
+Ks  0.196 0.9803 0.196
+d 1.0
+illum 1
+
+newmtl Daylily_Leaf
+Ka  0.196 0.9803 0.196
+Kd  0.196 0.9803 0.196
+Ks  0.196 0.9803 0.196
+d 1.0
+illum 1
+
+newmtl Daylily_1Pdncle
+Ka  0.196 0.5843 0.196
+Kd  0.196 0.5843 0.196
+Ks  0.196 0.5843 0.196
+d 1.0
+illum 1
+
+newmtl Daylily_1InfInt
+Ka  0.196 0.5843 0.196
+Kd  0.196 0.5843 0.196
+Ks  0.196 0.5843 0.196
+d 1.0
+illum 1
+
+newmtl Daylily_1Pdcel
+Ka  0.196 0.5686 0.196
+Kd  0.196 0.5686 0.196
+Ks  0.196 0.5686 0.196
+d 1.0
+illum 1
+
+newmtl Daylily_Style
+Ka  0.7372 0.6549 0.0
+Kd  0.7372 0.6549 0.0
+Ks  0.7372 0.6549 0.0
+d 1.0
+illum 1
+
+newmtl Daylily_Stigma
+Ka  0.8862 0.8352 0.0
+Kd  0.8862 0.8352 0.0
+Ks  0.8862 0.8352 0.0
+d 1.0
+illum 1
+
+newmtl Daylily_Stigma
+Ka  0.8862 0.8352 0.0
+Kd  0.8862 0.8352 0.0
+Ks  0.8862 0.8352 0.0
+d 1.0
+illum 1
+
+newmtl Daylily_1Flmnt
+Ka  0.7137 0.6705 0.0
+Kd  0.7137 0.6705 0.0
+Ks  0.7137 0.6705 0.0
+d 1.0
+illum 1
+
+newmtl Daylily_1Anther
+Ka  0.7921 0.6784 0.0
+Kd  0.7921 0.6784 0.0
+Ks  0.7921 0.6784 0.0
+d 1.0
+illum 1
+
+newmtl Daylily_1Anther
+Ka  0.7921 0.6784 0.0
+Kd  0.7921 0.6784 0.0
+Ks  0.7921 0.6784 0.0
+d 1.0
+illum 1
+
+newmtl Daylily_1Petal1
+Ka  0.796 0.4 0.2509
+Kd  0.796 0.4 0.2509
+Ks  0.796 0.4 0.2509
+d 1.0
+illum 1
+
+newmtl Daylily_1Petal1
+Ka  0.796 0.4 0.2509
+Kd  0.796 0.4 0.2509
+Ks  0.796 0.4 0.2509
+d 1.0
+illum 1
+
+newmtl Daylily_1Petal2
+Ka  0.9333 0.6274 0.0
+Kd  0.9333 0.6274 0.0
+Ks  0.9333 0.6274 0.0
+d 1.0
+illum 1
+
+newmtl Daylily_1Petal2
+Ka  0.9333 0.6274 0.0
+Kd  0.9333 0.6274 0.0
+Ks  0.9333 0.6274 0.0
+d 1.0
+illum 1
+
+newmtl Daylily_1Sepal
+Ka  0.3921 0.6196 0.0
+Kd  0.3921 0.6196 0.0
+Ks  0.3921 0.6196 0.0
+d 1.0
+illum 1
+
+newmtl Daylily_1Sepal
+Ka  0.3921 0.6196 0.0
+Kd  0.3921 0.6196 0.0
+Ks  0.3921 0.6196 0.0
+d 1.0
+illum 1
+
+newmtl rose_Intrnd
+Ka  0.196 0.5372 0.196
+Kd  0.196 0.5372 0.196
+Ks  0.196 0.5372 0.196
+d 1.0
+illum 1
+
+newmtl rose_Intrnd
+Ka  0.196 0.5372 0.196
+Kd  0.196 0.5372 0.196
+Ks  0.196 0.5372 0.196
+d 1.0
+illum 1
+
+newmtl rose_Stipule
+Ka  0.196 0.9803 0.196
+Kd  0.196 0.9803 0.196
+Ks  0.196 0.9803 0.196
+d 1.0
+illum 1
+
+newmtl rose_Petiole
+Ka  0.196 0.6039 0.196
+Kd  0.196 0.6039 0.196
+Ks  0.196 0.6039 0.196
+d 1.0
+illum 1
+
+newmtl rose_Leaf
+Ka  0.196 0.9803 0.196
+Kd  0.196 0.9803 0.196
+Ks  0.196 0.9803 0.196
+d 1.0
+illum 1
+
+newmtl rose_Leaf
+Ka  0.196 0.9803 0.196
+Kd  0.196 0.9803 0.196
+Ks  0.196 0.9803 0.196
+d 1.0
+illum 1
+
+newmtl rose_1Pdncle
+Ka  0.196 0.545 0.196
+Kd  0.196 0.545 0.196
+Ks  0.196 0.545 0.196
+d 1.0
+illum 1
+
+newmtl rose_1InfInt
+Ka  0.196 0.545 0.196
+Kd  0.196 0.545 0.196
+Ks  0.196 0.545 0.196
+d 1.0
+illum 1
+
+newmtl rose_1Pdcel
+Ka  0.196 0.5372 0.196
+Kd  0.196 0.5372 0.196
+Ks  0.196 0.5372 0.196
+d 1.0
+illum 1
+
+newmtl rose_Style
+Ka  0.3921 0.5529 0.0
+Kd  0.3921 0.5529 0.0
+Ks  0.3921 0.5529 0.0
+d 1.0
+illum 1
+
+newmtl rose_Stigma
+Ka  0.4078 0.6235 0.0
+Kd  0.4078 0.6235 0.0
+Ks  0.4078 0.6235 0.0
+d 1.0
+illum 1
+
+newmtl rose_Stigma
+Ka  0.4078 0.6235 0.0
+Kd  0.4078 0.6235 0.0
+Ks  0.4078 0.6235 0.0
+d 1.0
+illum 1
+
+newmtl rose_1Flmnt
+Ka  0.3921 0.6196 0.0
+Kd  0.3921 0.6196 0.0
+Ks  0.3921 0.6196 0.0
+d 1.0
+illum 1
+
+newmtl rose_1Anther
+Ka  0.3921 0.6431 0.0
+Kd  0.3921 0.6431 0.0
+Ks  0.3921 0.6431 0.0
+d 1.0
+illum 1
+
+newmtl rose_1Anther
+Ka  0.3921 0.6431 0.0
+Kd  0.3921 0.6431 0.0
+Ks  0.3921 0.6431 0.0
+d 1.0
+illum 1
+
+newmtl rose_1Petal1
+Ka  0.9176 0.7529 0.8901
+Kd  0.9176 0.7529 0.8901
+Ks  0.9176 0.7529 0.8901
+d 1.0
+illum 1
+
+newmtl rose_1Petal1
+Ka  0.9176 0.7529 0.8901
+Kd  0.9176 0.7529 0.8901
+Ks  0.9176 0.7529 0.8901
+d 1.0
+illum 1
+
+newmtl rose_1Petal2
+Ka  0.7411 0.5803 0.7333
+Kd  0.7411 0.5803 0.7333
+Ks  0.7411 0.5803 0.7333
+d 1.0
+illum 1
+
+newmtl rose_1Petal2
+Ka  0.7411 0.5803 0.7333
+Kd  0.7411 0.5803 0.7333
+Ks  0.7411 0.5803 0.7333
+d 1.0
+illum 1
+
+newmtl rose_1Petal3
+Ka  0.745 0.6666 0.7607
+Kd  0.745 0.6666 0.7607
+Ks  0.745 0.6666 0.7607
+d 1.0
+illum 1
+
+newmtl rose_1Petal3
+Ka  0.745 0.6666 0.7607
+Kd  0.745 0.6666 0.7607
+Ks  0.745 0.6666 0.7607
+d 1.0
+illum 1
+
+newmtl rose_1Petal4
+Ka  0.7254 0.4039 0.749
+Kd  0.7254 0.4039 0.749
+Ks  0.7254 0.4039 0.749
+d 1.0
+illum 1
+
+newmtl rose_1Petal4
+Ka  0.7254 0.4039 0.749
+Kd  0.7254 0.4039 0.749
+Ks  0.7254 0.4039 0.749
+d 1.0
+illum 1
+
+newmtl rose_1Petal5
+Ka  0.5921 0.3921 0.6745
+Kd  0.5921 0.3921 0.6745
+Ks  0.5921 0.3921 0.6745
+d 1.0
+illum 1
+
+newmtl rose_1Petal5
+Ka  0.5921 0.3921 0.6745
+Kd  0.5921 0.3921 0.6745
+Ks  0.5921 0.3921 0.6745
+d 1.0
+illum 1
+
+newmtl rose_1Sepal
+Ka  0.3921 0.7568 0.0
+Kd  0.3921 0.7568 0.0
+Ks  0.3921 0.7568 0.0
+d 1.0
+illum 1
+
+newmtl rose_1Sepal
+Ka  0.3921 0.7568 0.0
+Kd  0.3921 0.7568 0.0
+Ks  0.3921 0.7568 0.0
+d 1.0
+illum 1
+
+newmtl flowert_Intrnd
+Ka  0.196 0.5333 0.196
+Kd  0.196 0.5333 0.196
+Ks  0.196 0.5333 0.196
+d 1.0
+illum 1
+
+newmtl flowert_Intrnd
+Ka  0.196 0.5333 0.196
+Kd  0.196 0.5333 0.196
+Ks  0.196 0.5333 0.196
+d 1.0
+illum 1
+
+newmtl flowert_Stipule
+Ka  0.196 0.9803 0.196
+Kd  0.196 0.9803 0.196
+Ks  0.196 0.9803 0.196
+d 1.0
+illum 1
+
+newmtl flowert_Petiole
+Ka  0.196 0.4941 0.196
+Kd  0.196 0.4941 0.196
+Ks  0.196 0.4941 0.196
+d 1.0
+illum 1
+
+newmtl flowert_Petiole
+Ka  0.196 0.4941 0.196
+Kd  0.196 0.4941 0.196
+Ks  0.196 0.4941 0.196
+d 1.0
+illum 1
+
+newmtl flowert_Leaf
+Ka  0.196 0.847 0.196
+Kd  0.196 0.847 0.196
+Ks  0.196 0.847 0.196
+d 1.0
+illum 1
+
+newmtl flowert_Leaf
+Ka  0.196 0.847 0.196
+Kd  0.196 0.847 0.196
+Ks  0.196 0.847 0.196
+d 1.0
+illum 1
+
+newmtl flowert_1Pdncle
+Ka  0.196 0.498 0.196
+Kd  0.196 0.498 0.196
+Ks  0.196 0.498 0.196
+d 1.0
+illum 1
+
+newmtl flowert_1InfInt
+Ka  0.196 0.498 0.196
+Kd  0.196 0.498 0.196
+Ks  0.196 0.498 0.196
+d 1.0
+illum 1
+
+newmtl flowert_1Pdcel
+Ka  0.196 0.5215 0.196
+Kd  0.196 0.5215 0.196
+Ks  0.196 0.5215 0.196
+d 1.0
+illum 1
+
+newmtl flowert_Style
+Ka  0.3921 0.6313 0.0
+Kd  0.3921 0.6313 0.0
+Ks  0.3921 0.6313 0.0
+d 1.0
+illum 1
+
+newmtl flowert_Stigma
+Ka  0.3921 0.7215 0.0
+Kd  0.3921 0.7215 0.0
+Ks  0.3921 0.7215 0.0
+d 1.0
+illum 1
+
+newmtl flowert_Stigma
+Ka  0.3921 0.7215 0.0
+Kd  0.3921 0.7215 0.0
+Ks  0.3921 0.7215 0.0
+d 1.0
+illum 1
+
+newmtl flowert_1Flmnt
+Ka  0.4274 0.5921 0.0
+Kd  0.4274 0.5921 0.0
+Ks  0.4274 0.5921 0.0
+d 1.0
+illum 1
+
+newmtl flowert_1Anther
+Ka  0.6078 0.898 0.0
+Kd  0.6078 0.898 0.0
+Ks  0.6078 0.898 0.0
+d 1.0
+illum 1
+
+newmtl flowert_1Anther
+Ka  0.6078 0.898 0.0
+Kd  0.6078 0.898 0.0
+Ks  0.6078 0.898 0.0
+d 1.0
+illum 1
+
+newmtl flowert_1Petal1
+Ka  1.0 0.5019 0.2509
+Kd  1.0 0.5019 0.2509
+Ks  1.0 0.5019 0.2509
+d 1.0
+illum 1
+
+newmtl flowert_1Petal1
+Ka  1.0 0.5019 0.2509
+Kd  1.0 0.5019 0.2509
+Ks  1.0 0.5019 0.2509
+d 1.0
+illum 1
+
+newmtl flowert_1Petal2
+Ka  0.5215 0.7843 0.9215
+Kd  0.5215 0.7843 0.9215
+Ks  0.5215 0.7843 0.9215
+d 1.0
+illum 1
+
+newmtl flowert_1Petal2
+Ka  0.5215 0.7843 0.9215
+Kd  0.5215 0.7843 0.9215
+Ks  0.5215 0.7843 0.9215
+d 1.0
+illum 1
+
+newmtl flowert_1Petal3
+Ka  0.647 0.4431 0.0
+Kd  0.647 0.4431 0.0
+Ks  0.647 0.4431 0.0
+d 1.0
+illum 1
+
+newmtl flowert_1Petal3
+Ka  0.647 0.4431 0.0
+Kd  0.647 0.4431 0.0
+Ks  0.647 0.4431 0.0
+d 1.0
+illum 1
+
+newmtl flowert_1Petal4
+Ka  0.3921 0.3921 0.5843
+Kd  0.3921 0.3921 0.5843
+Ks  0.3921 0.3921 0.5843
+d 1.0
+illum 1
+
+newmtl flowert_1Petal4
+Ka  0.3921 0.3921 0.5843
+Kd  0.3921 0.3921 0.5843
+Ks  0.3921 0.3921 0.5843
+d 1.0
+illum 1
+
+newmtl flowert_1Petal5
+Ka  0.7411 0.6039 0.0
+Kd  0.7411 0.6039 0.0
+Ks  0.7411 0.6039 0.0
+d 1.0
+illum 1
+
+newmtl flowert_1Petal5
+Ka  0.7411 0.6039 0.0
+Kd  0.7411 0.6039 0.0
+Ks  0.7411 0.6039 0.0
+d 1.0
+illum 1
+
+newmtl flowert_1Sepal
+Ka  0.3921 0.3921 0.0
+Kd  0.3921 0.3921 0.0
+Ks  0.3921 0.3921 0.0
+d 1.0
+illum 1
+
+newmtl flowert_1Sepal
+Ka  0.3921 0.3921 0.0
+Kd  0.3921 0.3921 0.0
+Ks  0.3921 0.3921 0.0
+d 1.0
+illum 1
+
+newmtl purplef_Intrnd
+Ka  0.196 0.5333 0.196
+Kd  0.196 0.5333 0.196
+Ks  0.196 0.5333 0.196
+d 1.0
+illum 1
+
+newmtl purplef_Intrnd
+Ka  0.196 0.5333 0.196
+Kd  0.196 0.5333 0.196
+Ks  0.196 0.5333 0.196
+d 1.0
+illum 1
+
+newmtl purplef_Petiole
+Ka  0.196 0.4941 0.196
+Kd  0.196 0.4941 0.196
+Ks  0.196 0.4941 0.196
+d 1.0
+illum 1
+
+newmtl purplef_Petiole
+Ka  0.196 0.4941 0.196
+Kd  0.196 0.4941 0.196
+Ks  0.196 0.4941 0.196
+d 1.0
+illum 1
+
+newmtl purplef_Leaf
+Ka  0.196 0.847 0.196
+Kd  0.196 0.847 0.196
+Ks  0.196 0.847 0.196
+d 1.0
+illum 1
+
+newmtl purplef_Leaf
+Ka  0.196 0.847 0.196
+Kd  0.196 0.847 0.196
+Ks  0.196 0.847 0.196
+d 1.0
+illum 1
+
+newmtl purplef_1Pdncle
+Ka  0.196 0.498 0.196
+Kd  0.196 0.498 0.196
+Ks  0.196 0.498 0.196
+d 1.0
+illum 1
+
+newmtl purplef_1InfInt
+Ka  0.196 0.498 0.196
+Kd  0.196 0.498 0.196
+Ks  0.196 0.498 0.196
+d 1.0
+illum 1
+
+newmtl purplef_1InfInt
+Ka  0.196 0.498 0.196
+Kd  0.196 0.498 0.196
+Ks  0.196 0.498 0.196
+d 1.0
+illum 1
+
+newmtl purplef_1Pdcel
+Ka  0.196 0.5215 0.196
+Kd  0.196 0.5215 0.196
+Ks  0.196 0.5215 0.196
+d 1.0
+illum 1
+
+newmtl purplef_Style
+Ka  0.3921 0.6313 0.0
+Kd  0.3921 0.6313 0.0
+Ks  0.3921 0.6313 0.0
+d 1.0
+illum 1
+
+newmtl purplef_Stigma
+Ka  0.3921 0.7215 0.0
+Kd  0.3921 0.7215 0.0
+Ks  0.3921 0.7215 0.0
+d 1.0
+illum 1
+
+newmtl purplef_Stigma
+Ka  0.3921 0.7215 0.0
+Kd  0.3921 0.7215 0.0
+Ks  0.3921 0.7215 0.0
+d 1.0
+illum 1
+
+newmtl purplef_1Flmnt
+Ka  0.4274 0.5921 0.0
+Kd  0.4274 0.5921 0.0
+Ks  0.4274 0.5921 0.0
+d 1.0
+illum 1
+
+newmtl purplef_1Anther
+Ka  0.6078 0.898 0.0
+Kd  0.6078 0.898 0.0
+Ks  0.6078 0.898 0.0
+d 1.0
+illum 1
+
+newmtl purplef_1Anther
+Ka  0.6078 0.898 0.0
+Kd  0.6078 0.898 0.0
+Ks  0.6078 0.898 0.0
+d 1.0
+illum 1
+
+newmtl purplef_1Petal1
+Ka  0.6078 0.5019 0.6078
+Kd  0.6078 0.5019 0.6078
+Ks  0.6078 0.5019 0.6078
+d 1.0
+illum 1
+
+newmtl purplef_1Petal1
+Ka  0.6078 0.5019 0.6078
+Kd  0.6078 0.5019 0.6078
+Ks  0.6078 0.5019 0.6078
+d 1.0
+illum 1
+
+newmtl purplef_1Petal2
+Ka  0.5215 0.7843 0.9215
+Kd  0.5215 0.7843 0.9215
+Ks  0.5215 0.7843 0.9215
+d 1.0
+illum 1
+
+newmtl purplef_1Petal2
+Ka  0.5215 0.7843 0.9215
+Kd  0.5215 0.7843 0.9215
+Ks  0.5215 0.7843 0.9215
+d 1.0
+illum 1
+
+newmtl purplef_1Petal3
+Ka  0.647 0.4431 0.7529
+Kd  0.647 0.4431 0.7529
+Ks  0.647 0.4431 0.7529
+d 1.0
+illum 1
+
+newmtl purplef_1Petal3
+Ka  0.647 0.4431 0.7529
+Kd  0.647 0.4431 0.7529
+Ks  0.647 0.4431 0.7529
+d 1.0
+illum 1
+
+newmtl purplef_1Petal4
+Ka  0.5803 0.5137 0.7725
+Kd  0.5803 0.5137 0.7725
+Ks  0.5803 0.5137 0.7725
+d 1.0
+illum 1
+
+newmtl purplef_1Petal4
+Ka  0.5803 0.5137 0.7725
+Kd  0.5803 0.5137 0.7725
+Ks  0.5803 0.5137 0.7725
+d 1.0
+illum 1
+
+newmtl purplef_1Petal5
+Ka  0.7411 0.6039 0.796
+Kd  0.7411 0.6039 0.796
+Ks  0.7411 0.6039 0.796
+d 1.0
+illum 1
+
+newmtl purplef_1Petal5
+Ka  0.7411 0.6039 0.796
+Kd  0.7411 0.6039 0.796
+Ks  0.7411 0.6039 0.796
+d 1.0
+illum 1
+
+newmtl purplef_1Sepal
+Ka  0.3921 0.3921 0.6588
+Kd  0.3921 0.3921 0.6588
+Ks  0.3921 0.3921 0.6588
+d 1.0
+illum 1
+

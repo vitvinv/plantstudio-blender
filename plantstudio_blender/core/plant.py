@@ -106,6 +106,13 @@ class PdPlant:
     # ── growth ──
 
     def nextDay(self):
+        # The original never simulates past maturity — every day-advancing
+        # path is guarded with `if age < pGeneral.ageAtMaturity`
+        # (uplant.pas setAge intMin, updcom.pas animateOneDay, Umain.pas
+        # slider). Past it, the repro-allocation fraction would exceed 1.0
+        # and plants would grow and fruit forever.
+        if self.age >= int(getattr(self.pGeneral, "ageAtMaturity", 0)):
+            return
         fractionToMaturity = umath.safedivExcept(self.age, self.pGeneral.ageAtMaturity, 0)
         newTotal = umath.max(0.0, umath.min(100.0,
                             100.0 * umath.scurve(fractionToMaturity,
@@ -184,14 +191,16 @@ class PdPlant:
 
     def setAge(self, newAge):
         """Set age by rebuilding the plant, matching PlantStudio semantics."""
-        maturity = int(getattr(self.pGeneral, "ageAtMaturity", newAge))
-        target = max(0, min(maturity, int(newAge)))
+        target = max(0, min(int(getattr(self.pGeneral, "ageAtMaturity", int(newAge))), int(newAge)))
         self.reset()
         while self.age < target:
             self.nextDay()
         return self
 
     def growTo(self, day):
+        # nextDay self-guards at ageAtMaturity, so no clamp needed here;
+        # rewind still goes through setAge (which clamps, per the original).
+        day = min(int(day), int(getattr(self.pGeneral, "ageAtMaturity", day)))
         if day < self.age:
             return self.setAge(day)
         while self.age < day:
@@ -227,10 +236,22 @@ class PdPlant:
             self.unallocatedNewVegetativeBiomass_pctMPB = self._allocateOrRemoveParticularBiomass(
                 shootAddition, self.unallocatedNewVegetativeBiomass_pctMPB,
                 kActivityDemandVegetative, kActivityGrowVegetative, traverser)
+        if shootReduction > 0.0:
+            # remove dead shoot biomass (streaming from old parts once the
+            # S-curve flattens and reproductive allocation shrinks shoots)
+            self.unremovedDeadVegetativeBiomass_pctMPB = self._allocateOrRemoveParticularBiomass(
+                shootReduction, self.unremovedDeadVegetativeBiomass_pctMPB,
+                kActivityVegetativeBiomassThatCanBeRemoved,
+                kActivityRemoveVegetativeBiomass, traverser)
         if reproAddition > 0.0:
             self.unallocatedNewReproductiveBiomass_pctMPB = self._allocateOrRemoveParticularBiomass(
                 reproAddition, self.unallocatedNewReproductiveBiomass_pctMPB,
                 kActivityDemandReproductive, kActivityGrowReproductive, traverser)
+        if reproReduction > 0.0:
+            self.unremovedDeadReproductiveBiomass_pctMPB = self._allocateOrRemoveParticularBiomass(
+                reproReduction, self.unremovedDeadReproductiveBiomass_pctMPB,
+                kActivityReproductiveBiomassThatCanBeRemoved,
+                kActivityRemoveReproductiveBiomass, traverser)
 
     def _allocateOrRemoveParticularBiomass(self, biomass, undistributed, askingMode, tellingMode, traverser):
         traverser.traverseWholePlant(askingMode)

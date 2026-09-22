@@ -3,7 +3,9 @@
 from . import math3d as umath
 from .meristem import (PdPlantPart, kPartTypeInflorescence, kPartTypeFlowerFruit,
                        kActivityNextDay, kActivityDemandReproductive,
-                       kActivityGrowReproductive, kActivityDraw, kActivityFree)
+                       kActivityGrowReproductive, kActivityDraw, kActivityFree,
+                       kActivityReproductiveBiomassThatCanBeRemoved,
+                       kActivityRemoveReproductiveBiomass, kGenderMale)
 
 
 def _gp(obj, name, default=0.0):
@@ -53,7 +55,13 @@ class PdFlowerFruit(PdPlantPart):
             fruit_deadline = self.age > _gp(flower, "maxDaysToGrowIfOverMinFraction", 30)
             fruit_threshold = self.liveBiomass_pctMPB >= min_fraction * _gp(
                 flower, "optimalBiomass_pctMPB", 1.0)
-            if self.gender != 1 and self.age > min_days and (min_days_optimal or fruit_deadline or fruit_threshold):
+            if self.daysOpen > _gp(flower, "daysBeforeDrop", 200.0):
+                # ufruit.py nextDay: an open flower that stays open past
+                # daysBeforeDrop falls off BEFORE the fruit gate can fire —
+                # this is why species with a short drop window (campanula:
+                # drop 50 < fruit gate 100) never show fruits in the original
+                self.hasFallenOff = True
+            elif self.gender != kGenderMale and self.age > min_days and (min_days_optimal or fruit_deadline or fruit_threshold):
                 self.stage = "unripe_fruit"
                 self.hasSetFruit = True
                 self.isRipe = False
@@ -63,6 +71,12 @@ class PdFlowerFruit(PdPlantPart):
                 anthesis_loss = self.liveBiomass_pctMPB * 0.5
                 self.liveBiomass_pctMPB -= anthesis_loss
                 self.deadBiomass_pctMPB += anthesis_loss
+                # original resets propFullSize against the FRUIT's optimal at
+                # fruit set (ufruit.py line 85)
+                self.propFullSize = umath.min(1.0, umath.safedivExcept(
+                    self.totalBiomass_pctMPB(),
+                    _gp(self.plant.params.pFruit, "optimalBiomass_pctMPB", 5.0),
+                    0.0))
         elif self.stage == "unripe_fruit":
             if self.daysAccumulatingFruitBiomass >= self._days_to_ripen():
                 self.stage = "ripe_fruit"
@@ -111,6 +125,24 @@ class PdFlowerFruit(PdPlantPart):
         elif mode == kActivityGrowReproductive:
             newBiomass = self.biomassDemand_pctMPB * traverser.fractionOfPotentialBiomass
             self.liveBiomass_pctMPB += newBiomass
+            # original updates propFullSize on every reproductive grow,
+            # against the flower's optimal while a bud/open flower and the
+            # fruit's optimal once fruit has set (ufruit.py lines 151-158)
+            if self.stage in ("bud", "open"):
+                optimal = _gp(self.plant.pFlower[self.gender],
+                              "optimalBiomass_pctMPB", 1.0)
+            else:
+                optimal = _gp(self.plant.params.pFruit,
+                              "optimalBiomass_pctMPB", 5.0)
+            self.propFullSize = umath.min(1.0, umath.safedivExcept(
+                self.totalBiomass_pctMPB(), optimal, 0.0))
+        elif mode == kActivityReproductiveBiomassThatCanBeRemoved:
+            traverser.total += self.liveBiomass_pctMPB
+        elif mode == kActivityRemoveReproductiveBiomass:
+            biomassToRemove = self.liveBiomass_pctMPB * \
+                traverser.fractionOfPotentialBiomass
+            self.liveBiomass_pctMPB -= biomassToRemove
+            self.deadBiomass_pctMPB += biomassToRemove
         elif mode == kActivityFree:
             pass
 
@@ -134,7 +166,7 @@ class PdInflorescence(PdPlantPart):
         return "inflorescence"
 
     def initializeGenderApicalOrAxillary(self, plant, gender, initAsApical, fractionOfOptimalSize):
-        self.plant = plant
+        self.initialize(plant)
         self.gender = gender
         self.isApical = initAsApical
         self.daysSinceLastFlowerAppeared = 0
@@ -163,10 +195,14 @@ class PdInflorescence(PdPlantPart):
             _gp(p, "minFractionOfOptimalBiomassToCreateInflorescence_frn", 0.2)
 
     def nextDay(self):
-        # Flowers are advanced by traverseActivity before this method is
-        # called. Advancing them here as well skips the open stage for fast
-        # flowering species.
         super().nextDay()
+        # The original advances every flower's nextDay() twice per plant
+        # day: once via traverseActivity(kActivityNextDay) and again here
+        # (uinflor.nextDay lines 91-92). Flowers therefore age, open, set
+        # fruit, ripen, and exhaust maxDaysToGrow twice as fast as the
+        # calendar — reproduce that exactly.
+        for flower in self.flowers:
+            flower.nextDay()
         p = self.plant.pInflor[self.gender]
         biomassToMakeFlowers = _gp(p, "minFractionOfOptimalBiomassToMakeFlowers_frn", 0.5) \
             * _gp(p, "optimalBiomass_pctMPB")
@@ -192,6 +228,7 @@ class PdInflorescence(PdPlantPart):
         if self.plant.partsCreated > max_parts:
             return
         flower = PdFlowerFruit(self.plant)
+        flower.initialize(self.plant)
         flower.gender = self.gender
         flower.phytomerAttachedTo = self
         # The original initializes flowers at zero biomass
@@ -199,8 +236,8 @@ class PdInflorescence(PdPlantPart):
         # them via reproductive demand toward the FLOWER's own optimal
         # biomass (pFlower.optimalBiomass_pctMPB) — not the inflorescence's.
         flower.liveBiomass_pctMPB = 0.0
+        flower.propFullSize = 0.0
         self.flowers.append(flower)
-        self.plant.partsCreated += 1
 
     def traverseActivity(self, mode, traverser):
         if mode != kActivityDraw:
@@ -219,6 +256,13 @@ class PdInflorescence(PdPlantPart):
             traverser.total += self.biomassDemand_pctMPB
         elif mode == kActivityGrowReproductive:
             self.liveBiomass_pctMPB += self.biomassDemand_pctMPB * traverser.fractionOfPotentialBiomass
+        elif mode == kActivityReproductiveBiomassThatCanBeRemoved:
+            traverser.total += self.liveBiomass_pctMPB
+        elif mode == kActivityRemoveReproductiveBiomass:
+            biomassToRemove = self.liveBiomass_pctMPB * \
+                traverser.fractionOfPotentialBiomass
+            self.liveBiomass_pctMPB -= biomassToRemove
+            self.deadBiomass_pctMPB += biomassToRemove
         elif mode == kActivityDraw:
             from .draw import draw_inflorescence
             draw_inflorescence(self)

@@ -1,0 +1,220 @@
+# Materials for file Bushes and shrubs_age100.obj
+# Created by PlantStudio http://www.kurtz-fernhout.com
+# These files must be in the same directory for the materials to be read correctly.
+newmtl Pineybu_Intrnd
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl Pineybu_Intrnd
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl Pineybu_Petiole
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl Pineybu_Petiole
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl Pineybu_Leaf
+Ka  0.196 0.7843 0.196
+Kd  0.196 0.7843 0.196
+Ks  0.196 0.7843 0.196
+d 1.0
+illum 1
+
+newmtl Pineybu_Leaf
+Ka  0.196 0.7843 0.196
+Kd  0.196 0.7843 0.196
+Ks  0.196 0.7843 0.196
+d 1.0
+illum 1
+
+newmtl Pineybu_Mrstm
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl Pineybu_Mrstm
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl tree-lik_Intrnd
+Ka  0.447 0.3803 0.3137
+Kd  0.447 0.3803 0.3137
+Ks  0.447 0.3803 0.3137
+d 1.0
+illum 1
+
+newmtl tree-lik_Intrnd
+Ka  0.447 0.3803 0.3137
+Kd  0.447 0.3803 0.3137
+Ks  0.447 0.3803 0.3137
+d 1.0
+illum 1
+
+newmtl tree-lik_Petiole
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl tree-lik_Leaf
+Ka  0.196 0.7843 0.196
+Kd  0.196 0.7843 0.196
+Ks  0.196 0.7843 0.196
+d 1.0
+illum 1
+
+newmtl tree-lik_Leaf
+Ka  0.196 0.7843 0.196
+Kd  0.196 0.7843 0.196
+Ks  0.196 0.7843 0.196
+d 1.0
+illum 1
+
+newmtl tree-lik_Mrstm
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl tree-lik_Mrstm
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl thinshr_Intrnd
+Ka  0.5137 0.4392 0.4196
+Kd  0.5137 0.4392 0.4196
+Ks  0.5137 0.4392 0.4196
+d 1.0
+illum 1
+
+newmtl thinshr_1stPetiole
+Ka  0.4196 0.5019 0.196
+Kd  0.4196 0.5019 0.196
+Ks  0.4196 0.5019 0.196
+d 1.0
+illum 1
+
+newmtl thinshr_1stLeaf
+Ka  0.447 0.4627 0.196
+Kd  0.447 0.4627 0.196
+Ks  0.447 0.4627 0.196
+d 1.0
+illum 1
+
+newmtl thinshr_1stLeaf
+Ka  0.447 0.4627 0.196
+Kd  0.447 0.4627 0.196
+Ks  0.447 0.4627 0.196
+d 1.0
+illum 1
+
+newmtl thinshr_Petiole
+Ka  0.4196 0.5019 0.196
+Kd  0.4196 0.5019 0.196
+Ks  0.4196 0.5019 0.196
+d 1.0
+illum 1
+
+newmtl thinshr_Petiole
+Ka  0.4196 0.5019 0.196
+Kd  0.4196 0.5019 0.196
+Ks  0.4196 0.5019 0.196
+d 1.0
+illum 1
+
+newmtl thinshr_Leaf
+Ka  0.5647 0.7529 0.4392
+Kd  0.5647 0.7529 0.4392
+Ks  0.5647 0.7529 0.4392
+d 1.0
+illum 1
+
+newmtl thinshr_Leaf
+Ka  0.5647 0.7529 0.4392
+Kd  0.5647 0.7529 0.4392
+Ks  0.5647 0.7529 0.4392
+d 1.0
+illum 1
+
+newmtl thinshr_Mrstm
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl thinshr_Mrstm
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl coral-li_Intrnd
+Ka  0.3921 0.9176 0.145
+Kd  0.3921 0.9176 0.145
+Ks  0.3921 0.9176 0.145
+d 1.0
+illum 1
+
+newmtl coral-li_Intrnd
+Ka  0.3921 0.9176 0.145
+Kd  0.3921 0.9176 0.145
+Ks  0.3921 0.9176 0.145
+d 1.0
+illum 1
+
+newmtl coral-li_Petiole
+Ka  0.9764 0.4901 0.1882
+Kd  0.9764 0.4901 0.1882
+Ks  0.9764 0.4901 0.1882
+d 1.0
+illum 1
+
+newmtl coral-li_Leaf
+Ka  0.698 0.4352 0.1882
+Kd  0.698 0.4352 0.1882
+Ks  0.698 0.4352 0.1882
+d 1.0
+illum 1
+
+newmtl coral-li_Leaf
+Ka  0.698 0.4352 0.1882
+Kd  0.698 0.4352 0.1882
+Ks  0.698 0.4352 0.1882
+d 1.0
+illum 1
+
+newmtl coral-li_Mrstm
+Ka  0.4392 0.4117 0.2
+Kd  0.4392 0.4117 0.2
+Ks  0.4392 0.4117 0.2
+d 1.0
+illum 1
+

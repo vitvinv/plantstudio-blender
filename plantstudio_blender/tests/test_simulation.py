@@ -121,33 +121,58 @@ class TestSimulation:
             assert plant.age == 50, f"{name} failed"
 
     def test_flower_stage_waits_for_biomass_or_deadline(self, lib):
+        """Stage progression follows the original's gates: campanula's open
+        flowers would drop at daysOpen > 50 (daysBeforeDrop) before the
+        fruit gate (minDaysBeforeSettingFruit = 100) could fire — but the
+        original never simulates past ageAtMaturity (uplant.pas setAge
+        clamps), and campanula matures at 60, so its flowers stay open
+        forever. Same for gilia (maturity 120 < the 100-day fruit gate)."""
         species = lib.get("campanula")
         plant = grow_species(species, 80, seed=280)
         flowers = list(iter_flowers(plant))
         assert flowers
         assert all(f.stage == "open" for f in flowers)
         plant = grow_species(species, 150, seed=280)
+        assert plant.age == 60, "growth must hard-stop at ageAtMaturity"
         flowers = list(iter_flowers(plant))
-        assert any(f.stage in ("unripe_fruit", "ripe_fruit") for f in flowers)
+        assert all(f.stage == "open" for f in flowers)
+        assert not any(f.hasSetFruit or f.hasFallenOff for f in flowers)
+        species = lib.get("gilia")
+        plant = grow_species(species, 250, seed=482)
+        assert plant.age == 120, "growth must hard-stop at ageAtMaturity"
+        flowers = list(iter_flowers(plant))
+        assert flowers
+        assert all(f.stage == "open" for f in flowers)
+        assert not any(f.hasSetFruit for f in flowers)
 
     @pytest.mark.parametrize("name", ["tomato", "This way - that way plant"])
     def test_fast_flowers_pass_through_open_stage(self, lib, name):
-        """A fast reproductive cycle must not skip the visible open stage."""
+        """A fast reproductive cycle must still progress bud → fruit.
+
+        With the faithful double nextDay on flowers (uinflor.nextDay
+        advances each flower twice per plant day), the open window of a
+        fast species can be shorter than one plant day — e.g. tomato
+        seed-280 jumps bud(70) → unripe(71). The open stage itself is
+        exercised by campanula in
+        test_flower_stage_waits_for_biomass_or_deadline; here we assert the
+        full bud → unripe → ripe progression is reachable."""
         species = lib.get(name)
         assert species is not None, f"species {name!r} not found"
         stages_by_day = []
-        for day in (49, 54, 59) if name == "This way - that way plant" else (74, 77, 95):
+        for day in (44, 49, 54) if name == "This way - that way plant" else (70, 71, 90):
             plant = grow_species(species, day, seed=280)
             stages_by_day.append({flower.stage for flower in iter_flowers(plant)})
-        assert any("open" in stages for stages in stages_by_day)
+        assert any("bud" in stages for stages in stages_by_day)
         assert any("unripe_fruit" in stages for stages in stages_by_day)
         assert any("ripe_fruit" in stages for stages in stages_by_day)
 
-    @pytest.mark.parametrize("name", ["corn", "tomato", "gilia"])
+    @pytest.mark.parametrize("name", ["corn", "tomato"])
     def test_fruit_sets_by_deadline(self, lib, name):
         """P1 regression: fruit must set even when biomass stays below the
         min-fraction threshold — the original's maxDaysToGrowIfOverMinFraction
-        deadline fallback (IMPROVEMENT_PLAN §1)."""
+        deadline fallback (IMPROVEMENT_PLAN §1). (Gilia excluded: its fruit
+        gate needs flower age > 100 but it matures at 120, so the original
+        can never show gilia fruit — see the maturity hard-stop test.)"""
         species = lib.get(name)
         assert species is not None, f"species {name!r} not found"
         plant = grow_species(species, 200)
@@ -157,7 +182,7 @@ class TestSimulation:
             f"{name}: no flower set fruit by day 200 "
             f"(threshold never reached nor deadline passed)")
 
-    @pytest.mark.parametrize("name", ["corn", "tomato", "gilia"])
+    @pytest.mark.parametrize("name", ["corn", "tomato"])
     def test_fruit_ripens(self, lib, name):
         """P3a regression: a flower that has set fruit eventually ripens
         (isRipe True) after pFruit.daysToRipen days (IMPROVEMENT_PLAN §3a)."""
@@ -169,6 +194,27 @@ class TestSimulation:
         assert any(f.isRipe for f in flowers), (
             f"{name}: fruit set but nothing ripened by day 200 "
             f"(daysToRipen never elapsed)")
+
+    def test_growth_hard_stops_at_maturity(self, lib):
+        """The original never simulates past ageAtMaturity (uplant.pas
+        setAge clamps; the UI slider clamps too), so growTo must stop
+        there: age freezes at maturity and reproductive biomass stops
+        rising (no eternal carrots, no fruits the original never shows)."""
+        maturity = int(lib.get("gilia").params.pGeneral.ageAtMaturity)
+        plant = grow_species(lib.get("gilia"), 9999, seed=482)
+        assert plant.age == maturity
+        assert plant.totalBiomass_pctMPB <= 100.0 + 1e-6
+        # past maturity nothing new can ever be produced
+        repro_at_maturity = plant.reproBiomass_pctMPB
+        parts_at_maturity = count_parts(plant)
+        flowers_at_maturity = sum(1 for _ in iter_flowers(plant))
+        for _ in range(10):
+            plant.nextDay()
+        # age stays pinned at maturity forever; nothing changes
+        assert plant.age == maturity
+        assert plant.reproBiomass_pctMPB == pytest.approx(repro_at_maturity)
+        assert count_parts(plant) == parts_at_maturity
+        assert sum(1 for _ in iter_flowers(plant)) == flowers_at_maturity
 
 
 class TestRegistryDefaults:

@@ -211,9 +211,10 @@ def normalize_internode(params):
                        default=registry_default("pInternode", "lengthMultiplierDueToBolting", 0.0))))
     _ensure(i, "minDaysToBolt",
             int(_get(i, "MinDaysToBolt", default=registry_default("pInternode", "minDaysToBolt", 10))))
-    # biomass accretion multipliers (not in .pla; source defaults to 1)
-    _ensure(i, "lengthMultiplierDueToBiomassAccretion", 1.0)
-    _ensure(i, "widthMultiplierDueToBiomassAccretion", 1.0)
+    # biomass accretion multipliers (not in .pla; PdPlant.create hard-codes
+    # 2.0 so internode optimalInitialBiomass is optimalFinal / 4)
+    _ensure(i, "lengthMultiplierDueToBiomassAccretion", 2.0)
+    _ensure(i, "widthMultiplierDueToBiomassAccretion", 2.0)
 
 
 def normalize_leaf(params):
@@ -396,6 +397,14 @@ def normalize_fruit(params):
     _ensure(f, "daysToRipen", float(_get(f, "DaysToRipen", default=5)))
 
 
+def normalize_root(params):
+    """Map the root-top drawing gate: the registry stores it as
+    'ShowsAboveGround' (capitalized); draw.py reads snake_case."""
+    r = params.pRoot
+    _ensure(r, "showsAboveGround",
+            bool(_get(r, "ShowsAboveGround", default=False)))
+
+
 def normalize_params(params):
     """Apply all normalizations so a species is simulation-ready."""
     normalize_general(params)
@@ -406,6 +415,7 @@ def normalize_params(params):
     normalize_flowers(params)
     normalize_inflors(params)
     normalize_fruit(params)
+    normalize_root(params)
     # leaf tdo params accessors used by drawing
     name = getattr(params, "name", "unknown species")
     for container in ("leafTdoParams", "stipuleTdoParams", "seedlingTdoParams", "pAxillaryBud"):

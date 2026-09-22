@@ -1,0 +1,441 @@
+{
+ "meta": {
+  "ages": "per .pla kStateAge",
+  "generated": "2026-09-21T00:08:16",
+  "seed": "per .pla",
+  "species_count": 4,
+  "tool": "plant_census.py"
+ },
+ "species": {
+  "Piney bushy plant": {
+   "ages": {
+    "60": {
+     "parts": {
+      "internode": {
+       "area_mm2": 3383.109,
+       "bbox_mm": [
+        -0.07033508159156189,
+        143.55015440649336,
+        -48.81948706703116,
+        48.735593696476485,
+        -33.51079140850853,
+        63.3530363284668
+       ],
+       "faces": 612,
+       "pipe_length_mm": 433.818,
+       "pipe_radius_mm": 1.361,
+       "pipe_segments": 102,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      },
+      "leaf": {
+       "area_mm2": 4403.305,
+       "bbox_mm": [
+        26.23181663739467,
+        166.2001711637063,
+        -67.195765925087,
+        68.9193602146532,
+        -50.154950783038,
+        86.57748112676576
+       ],
+       "faces": 660,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 15.7041,
+       "tdo_instances": 165,
+       "tdo_mean_scale": 0.150936,
+       "tdo_triangles": 660
+      },
+      "meristem": {
+       "area_mm2": 0.475,
+       "bbox_mm": [
+        41.49931619307509,
+        143.36339190916647,
+        -48.54010668715335,
+        48.60470412310613,
+        -33.105357749500236,
+        63.30823338029735
+       ],
+       "faces": 1080,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 0.0554,
+       "tdo_instances": 135,
+       "tdo_mean_scale": 0.001,
+       "tdo_triangles": 1080
+      },
+      "petiole": {
+       "area_mm2": 2822.247,
+       "bbox_mm": [
+        29.00082408059532,
+        149.37091276807928,
+        -50.389752461147424,
+        51.14609936973752,
+        -34.503833585655634,
+        66.74212384291731
+       ],
+       "faces": 3564,
+       "pipe_length_mm": 622.611,
+       "pipe_radius_mm": 0.7547,
+       "pipe_segments": 594,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      }
+     },
+     "whole_plant": {
+      "depth_mm": 136.732,
+      "faces": 5916,
+      "height_mm": 166.271,
+      "live_biomass_by_class": {
+       "PdInternode": 57.84243,
+       "PdLeaf": 26.850276,
+       "PdMeristem": 0.215533
+      },
+      "vertices": 4515,
+      "width_mm": 136.115
+     }
+    }
+   },
+   "category": "Bushes and shrubs",
+   "seed": 1375
+  },
+  "coral-like plant": {
+   "ages": {
+    "500": {
+     "parts": {
+      "internode": {
+       "area_mm2": 77904.791,
+       "bbox_mm": [
+        -0.32631257456607327,
+        1196.2308318064308,
+        -315.7620797534865,
+        198.53210513705673,
+        -201.91423148576746,
+        436.5579614234391
+       ],
+       "faces": 1656,
+       "pipe_length_mm": 5744.267,
+       "pipe_radius_mm": 2.2949,
+       "pipe_segments": 276,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      },
+      "leaf": {
+       "area_mm2": 10134.456,
+       "bbox_mm": [
+        181.90880034322032,
+        1197.3064744058645,
+        -323.29271804984415,
+        205.84956370505313,
+        -200.5587167091745,
+        439.2716128250063
+       ],
+       "faces": 685,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 7.551,
+       "tdo_instances": 137,
+       "tdo_mean_scale": 0.157072,
+       "tdo_triangles": 685
+      },
+      "meristem": {
+       "area_mm2": 3.707,
+       "bbox_mm": [
+        228.40337707228144,
+        1195.2218745787538,
+        -315.6448582320844,
+        196.99582945670983,
+        -200.84254756014926,
+        435.92815157755666
+       ],
+       "faces": 3570,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 0.0224,
+       "tdo_instances": 595,
+       "tdo_mean_scale": 0.001,
+       "tdo_triangles": 3570
+      },
+      "petiole": {
+       "area_mm2": 121.598,
+       "bbox_mm": [
+        177.97317495029867,
+        1195.5814770130685,
+        -317.3509707432801,
+        197.42069734418865,
+        -200.86357899271098,
+        436.70276225787137
+       ],
+       "faces": 1644,
+       "pipe_length_mm": 333.406,
+       "pipe_radius_mm": 0.0676,
+       "pipe_segments": 274,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      }
+     },
+     "whole_plant": {
+      "depth_mm": 641.186,
+      "faces": 7555,
+      "height_mm": 1197.633,
+      "live_biomass_by_class": {
+       "PdInternode": 54.652511,
+       "PdLeaf": 23.053483,
+       "PdMeristem": 2.114831
+      },
+      "vertices": 7718,
+      "width_mm": 529.142
+     }
+    }
+   },
+   "category": "Bushes and shrubs",
+   "seed": 115
+  },
+  "thin shrub": {
+   "ages": {
+    "58": {
+     "parts": {
+      "internode": {
+       "area_mm2": 5587.353,
+       "bbox_mm": [
+        -0.06246905132361405,
+        241.33643461925283,
+        -36.510202698562225,
+        50.52020086925372,
+        -51.06825225636053,
+        2.026012526591844
+       ],
+       "faces": 594,
+       "pipe_length_mm": 640.36,
+       "pipe_radius_mm": 1.1643,
+       "pipe_segments": 99,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      },
+      "leaf": {
+       "area_mm2": 4678.369,
+       "bbox_mm": [
+        65.30112857899485,
+        258.19443885997725,
+        -55.128090477372645,
+        68.94840308438765,
+        -77.21782109464775,
+        20.459499709699646
+       ],
+       "faces": 1920,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 7.6415,
+       "tdo_instances": 192,
+       "tdo_mean_scale": 0.088351,
+       "tdo_triangles": 1920
+      },
+      "meristem": {
+       "area_mm2": 0.702,
+       "bbox_mm": [
+        102.40850319348759,
+        241.35959917866168,
+        -36.33976589965944,
+        50.58936527552303,
+        -51.105019665002885,
+        -8.863974036867228
+       ],
+       "faces": 840,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 0.0761,
+       "tdo_instances": 105,
+       "tdo_mean_scale": 0.001373,
+       "tdo_triangles": 840
+      },
+      "petiole": {
+       "area_mm2": 1309.64,
+       "bbox_mm": [
+        68.49925080536995,
+        246.84171936332683,
+        -40.12553700166318,
+        53.477458706666475,
+        -58.2531620550917,
+        -3.323977797501502
+       ],
+       "faces": 4032,
+       "pipe_length_mm": 1180.51,
+       "pipe_radius_mm": 0.1679,
+       "pipe_segments": 672,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      },
+      "seedling leaf": {
+       "area_mm2": 147.397,
+       "bbox_mm": [
+        38.19966474704162,
+        63.21283306124389,
+        -4.199773060459572,
+        13.6214270482013,
+        -31.287793785808088,
+        16.719497414780346
+       ],
+       "faces": 20,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 14.8037,
+       "tdo_instances": 2,
+       "tdo_mean_scale": 0.17116,
+       "tdo_triangles": 20
+      },
+      "seedling petiole": {
+       "area_mm2": 16.15,
+       "bbox_mm": [
+        34.88936112287676,
+        40.49546009778676,
+        0.7651043796747464,
+        3.1242501724964993,
+        -3.1447773128791234,
+        -0.7732967594201557
+       ],
+       "faces": 36,
+       "pipe_length_mm": 9.724,
+       "pipe_radius_mm": 0.3097,
+       "pipe_segments": 6,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      }
+     },
+     "whole_plant": {
+      "depth_mm": 97.677,
+      "faces": 7442,
+      "height_mm": 258.257,
+      "live_biomass_by_class": {
+       "PdInternode": 73.18405,
+       "PdLeaf": 23.17638,
+       "PdMeristem": 2.029275
+      },
+      "vertices": 5548,
+      "width_mm": 124.076
+     }
+    }
+   },
+   "category": "Bushes and shrubs",
+   "seed": 1665
+  },
+  "tree-like shrub": {
+   "ages": {
+    "254": {
+     "parts": {
+      "internode": {
+       "area_mm2": 61947.818,
+       "bbox_mm": [
+        -0.045634015216827695,
+        923.1931404934039,
+        -221.9809862980312,
+        195.2976401692449,
+        -220.35653693645625,
+        382.6765106551774
+       ],
+       "faces": 1998,
+       "pipe_length_mm": 4015.58,
+       "pipe_radius_mm": 2.4752,
+       "pipe_segments": 333,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      },
+      "leaf": {
+       "area_mm2": 32624.229,
+       "bbox_mm": [
+        186.18030528409435,
+        944.2474945241822,
+        -231.02828380331172,
+        203.50871745950204,
+        -237.20967327067524,
+        390.48651685471873
+       ],
+       "faces": 1320,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 15.1754,
+       "tdo_instances": 110,
+       "tdo_mean_scale": 0.168372,
+       "tdo_triangles": 1320
+      },
+      "meristem": {
+       "area_mm2": 1.708,
+       "bbox_mm": [
+        234.6849180307775,
+        921.9193033009999,
+        -220.99253724023075,
+        194.13454731110946,
+        -220.0114998253475,
+        382.1310538629657
+       ],
+       "faces": 3880,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 0.0554,
+       "tdo_instances": 485,
+       "tdo_mean_scale": 0.001,
+       "tdo_triangles": 3880
+      },
+      "petiole": {
+       "area_mm2": 415.775,
+       "bbox_mm": [
+        180.06799310927275,
+        923.3340951724462,
+        -221.34558253901096,
+        194.6910189862746,
+        -221.36973116928732,
+        383.3808297667003
+       ],
+       "faces": 1980,
+       "pipe_length_mm": 257.235,
+       "pipe_radius_mm": 0.2339,
+       "pipe_segments": 330,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      }
+     },
+     "whole_plant": {
+      "depth_mm": 627.696,
+      "faces": 9178,
+      "height_mm": 944.293,
+      "live_biomass_by_class": {
+       "PdInternode": 42.269268,
+       "PdLeaf": 26.779882,
+       "PdMeristem": 1.935493
+      },
+      "vertices": 7348,
+      "width_mm": 434.537
+     }
+    }
+   },
+   "category": "Bushes and shrubs",
+   "seed": 95
+  }
+ }
+}

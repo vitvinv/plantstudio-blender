@@ -18,11 +18,13 @@ GARDEN_COLLECTION_PREFIX = "PS Garden"
 
 
 def ensure_collection(name, parent=None):
-    if name in bpy.data.collections:
-        coll = bpy.data.collections[name]
-    else:
+    coll = bpy.data.collections.get(name)
+    if coll is None:
         coll = bpy.data.collections.new(name)
-        bpy.context.scene.collection.children.link(coll)
+        # re-fetch by name: linking into the scene may reallocate and the
+        # fresh data-block reference can go stale (crash on undo)
+        if bpy.context.scene.collection.children.get(name) is None:
+            bpy.context.scene.collection.children.link(coll)
     return coll
 
 
@@ -64,8 +66,15 @@ def build_mesh_object(plant, name):
     data["vertices"] = orient_vertices(data["vertices"])
 
     mesh = bpy.data.meshes.new(name)
-    mesh.from_pydata(data["vertices"], [], data["faces"])
-    mesh.update()
+    # guard: from_pydata with zero polygons leaves the mesh in a state that
+    # Blender's undo cannot serialize — crash on the next Ctrl+Z (age-0
+    # plants legitimately draw nothing)
+    if data["faces"]:
+        mesh.from_pydata(data["vertices"], [], data["faces"])
+        mesh.update()
+    else:
+        mesh.update()
+        mesh.use_fake_user = True
 
     # materials: one per unique color (slots must exist before foreach_set)
     color_to_mat = {}
@@ -91,6 +100,7 @@ def build_plant_object(species, seed, day, collection, tdo_library):
     """Grow + build + link a plant object. Returns the bpy object."""
     plant = create_plant(species, seed=seed, tdo_library=tdo_library)
     plant.growTo(day)
+    day = plant.age  # growTo clamps to ageAtMaturity (matches original)
     sp_name = getattr(species, "name", "plant")
     name = plant_object_name(sp_name, seed, day)
     obj = build_mesh_object(plant, name)
@@ -138,5 +148,8 @@ def rebuild_plant_mesh(obj, plant, fast=False):
             mesh.materials.append(mat)
             color_to_slot[mat_name] = len(mesh.materials) - 1
         indices.append(color_to_slot[mat_name])
-    mesh.polygons.foreach_set("material_index", indices)
+    # empty write into foreach_set corrupts mesh memory (crash on undo) —
+    # polygons count is the truth (face indices may have welded to zero)
+    if indices and len(mesh.polygons) == len(indices):
+        mesh.polygons.foreach_set("material_index", indices)
     return obj

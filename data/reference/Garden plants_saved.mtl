@@ -1,0 +1,437 @@
+# Materials for file Garden plants_age100.obj
+# Created by PlantStudio http://www.kurtz-fernhout.com
+# These files must be in the same directory for the materials to be read correctly.
+newmtl corn_Intrnd
+Ka  0.2549 0.7098 0.2313
+Kd  0.2549 0.7098 0.2313
+Ks  0.2549 0.7098 0.2313
+d 1.0
+illum 1
+
+newmtl corn_1stPetiole
+Ka  0.4117 0.7137 0.196
+Kd  0.4117 0.7137 0.196
+Ks  0.4117 0.7137 0.196
+d 1.0
+illum 1
+
+newmtl corn_1stLeaf
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl corn_Petiole
+Ka  0.4117 0.7137 0.196
+Kd  0.4117 0.7137 0.196
+Ks  0.4117 0.7137 0.196
+d 1.0
+illum 1
+
+newmtl corn_Leaf
+Ka  0.3568 0.5764 0.0
+Kd  0.3568 0.5764 0.0
+Ks  0.3568 0.5764 0.0
+d 1.0
+illum 1
+
+newmtl corn_1Pdncle
+Ka  0.0 0.5019 0.0
+Kd  0.0 0.5019 0.0
+Ks  0.0 0.5019 0.0
+d 1.0
+illum 1
+
+newmtl corn_1InfInt
+Ka  0.0 0.5019 0.0
+Kd  0.0 0.5019 0.0
+Ks  0.0 0.5019 0.0
+d 1.0
+illum 1
+
+newmtl corn_1Pdcel
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl corn_FruitR
+Ka  0.0 0.5019 0.0
+Kd  0.0 0.5019 0.0
+Ks  0.0 0.5019 0.0
+d 1.0
+illum 1
+
+newmtl corn_FruitR
+Ka  0.0 0.5019 0.0
+Kd  0.0 0.5019 0.0
+Ks  0.0 0.5019 0.0
+d 1.0
+illum 1
+
+newmtl corn_Mrstm
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl corn_Mrstm
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl corn_2Pdncle
+Ka  0.3764 0.5372 0.196
+Kd  0.3764 0.5372 0.196
+Ks  0.3764 0.5372 0.196
+d 1.0
+illum 1
+
+newmtl corn_2InfInt
+Ka  0.3764 0.5372 0.196
+Kd  0.3764 0.5372 0.196
+Ks  0.3764 0.5372 0.196
+d 1.0
+illum 1
+
+newmtl corn_2InfInt
+Ka  0.3764 0.5372 0.196
+Kd  0.3764 0.5372 0.196
+Ks  0.3764 0.5372 0.196
+d 1.0
+illum 1
+
+newmtl corn_2Pdcel
+Ka  0.3686 0.5803 0.196
+Kd  0.3686 0.5803 0.196
+Ks  0.3686 0.5803 0.196
+d 1.0
+illum 1
+
+newmtl corn_2Petal1
+Ka  0.4666 0.4352 0.0
+Kd  0.4666 0.4352 0.0
+Ks  0.4666 0.4352 0.0
+d 1.0
+illum 1
+
+newmtl corn_2Petal1
+Ka  0.4666 0.4352 0.0
+Kd  0.4666 0.4352 0.0
+Ks  0.4666 0.4352 0.0
+d 1.0
+illum 1
+
+newmtl corn_2Bud
+Ka  0.4823 0.4941 0.0
+Kd  0.4823 0.4941 0.0
+Ks  0.4823 0.4941 0.0
+d 1.0
+illum 1
+
+newmtl corn_2Bud
+Ka  0.4823 0.4941 0.0
+Kd  0.4823 0.4941 0.0
+Ks  0.4823 0.4941 0.0
+d 1.0
+illum 1
+
+newmtl sunflowe_Intrnd
+Ka  0.196 0.4 0.196
+Kd  0.196 0.4 0.196
+Ks  0.196 0.4 0.196
+d 1.0
+illum 1
+
+newmtl sunflowe_Intrnd
+Ka  0.196 0.4 0.196
+Kd  0.196 0.4 0.196
+Ks  0.196 0.4 0.196
+d 1.0
+illum 1
+
+newmtl sunflowe_Petiole
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl sunflowe_Leaf
+Ka  0.7686 0.8862 0.6666
+Kd  0.7686 0.8862 0.6666
+Ks  0.7686 0.8862 0.6666
+d 1.0
+illum 1
+
+newmtl sunflowe_Mrstm
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl sunflowe_Mrstm
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl sunflowe_1Pdncle
+Ka  0.0 0.5019 0.0
+Kd  0.0 0.5019 0.0
+Ks  0.0 0.5019 0.0
+d 1.0
+illum 1
+
+newmtl sunflowe_1Pdcel
+Ka  0.7215 0.5843 0.0
+Kd  0.7215 0.5843 0.0
+Ks  0.7215 0.5843 0.0
+d 1.0
+illum 1
+
+newmtl sunflowe_1Petal1
+Ka  0.8862 0.6901 0.0
+Kd  0.8862 0.6901 0.0
+Ks  0.8862 0.6901 0.0
+d 1.0
+illum 1
+
+newmtl sunflowe_1Petal1
+Ka  0.8862 0.6901 0.0
+Kd  0.8862 0.6901 0.0
+Ks  0.8862 0.6901 0.0
+d 1.0
+illum 1
+
+newmtl onion_Intrnd
+Ka  0.196 0.396 0.196
+Kd  0.196 0.396 0.196
+Ks  0.196 0.396 0.196
+d 1.0
+illum 1
+
+newmtl onion_Intrnd
+Ka  0.196 0.396 0.196
+Kd  0.196 0.396 0.196
+Ks  0.196 0.396 0.196
+d 1.0
+illum 1
+
+newmtl onion_Petiole
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl onion_Leaf
+Ka  0.196 0.7921 0.196
+Kd  0.196 0.7921 0.196
+Ks  0.196 0.7921 0.196
+d 1.0
+illum 1
+
+newmtl onion_Leaf
+Ka  0.196 0.7921 0.196
+Kd  0.196 0.7921 0.196
+Ks  0.196 0.7921 0.196
+d 1.0
+illum 1
+
+newmtl onion_Mrstm
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl onion_Mrstm
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl carrot_Root
+Ka  1.0 0.5019 0.0
+Kd  1.0 0.5019 0.0
+Ks  1.0 0.5019 0.0
+d 1.0
+illum 1
+
+newmtl carrot_Root
+Ka  1.0 0.5019 0.0
+Kd  1.0 0.5019 0.0
+Ks  1.0 0.5019 0.0
+d 1.0
+illum 1
+
+newmtl carrot_Intrnd
+Ka  0.196 0.396 0.196
+Kd  0.196 0.396 0.196
+Ks  0.196 0.396 0.196
+d 1.0
+illum 1
+
+newmtl carrot_Intrnd
+Ka  0.196 0.396 0.196
+Kd  0.196 0.396 0.196
+Ks  0.196 0.396 0.196
+d 1.0
+illum 1
+
+newmtl carrot_Petiole
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl carrot_Petiole
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl carrot_Leaf
+Ka  0.196 0.7921 0.196
+Kd  0.196 0.7921 0.196
+Ks  0.196 0.7921 0.196
+d 1.0
+illum 1
+
+newmtl carrot_Leaf
+Ka  0.196 0.7921 0.196
+Kd  0.196 0.7921 0.196
+Ks  0.196 0.7921 0.196
+d 1.0
+illum 1
+
+newmtl carrot_Mrstm
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl carrot_Mrstm
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl tomato_Intrnd
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl tomato_Intrnd
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl tomato_Petiole
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl tomato_Petiole
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl tomato_Leaf
+Ka  0.196 0.7843 0.196
+Kd  0.196 0.7843 0.196
+Ks  0.196 0.7843 0.196
+d 1.0
+illum 1
+
+newmtl tomato_Leaf
+Ka  0.196 0.7843 0.196
+Kd  0.196 0.7843 0.196
+Ks  0.196 0.7843 0.196
+d 1.0
+illum 1
+
+newmtl tomato_1Pdncle
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl tomato_1InfInt
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl tomato_1Pdcel
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl tomato_FruitR
+Ka  0.6156 0.0 0.0
+Kd  0.6156 0.0 0.0
+Ks  0.6156 0.0 0.0
+d 1.0
+illum 1
+
+newmtl tomato_FruitR
+Ka  0.6156 0.0 0.0
+Kd  0.6156 0.0 0.0
+Ks  0.6156 0.0 0.0
+d 1.0
+illum 1
+
+newmtl cabbage_Intrnd
+Ka  0.545 0.7607 0.5882
+Kd  0.545 0.7607 0.5882
+Ks  0.545 0.7607 0.5882
+d 1.0
+illum 1
+
+newmtl cabbage_Intrnd
+Ka  0.545 0.7607 0.5882
+Kd  0.545 0.7607 0.5882
+Ks  0.545 0.7607 0.5882
+d 1.0
+illum 1
+
+newmtl cabbage_Petiole
+Ka  0.196 0.596 0.5176
+Kd  0.196 0.596 0.5176
+Ks  0.196 0.596 0.5176
+d 1.0
+illum 1
+
+newmtl cabbage_Leaf
+Ka  0.698 0.9254 0.6352
+Kd  0.698 0.9254 0.6352
+Ks  0.698 0.9254 0.6352
+d 1.0
+illum 1
+

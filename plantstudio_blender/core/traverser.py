@@ -43,10 +43,12 @@ class PdTraverser:
                 if phytomer.leftBranchPlantPart is not None:
                     if self.mode == kActivityDraw:
                         self.plant.turtle.push()
-                    part = phytomer.leftBranchPlantPart
-                    part.traverseActivity(self.mode, self)
-                    if part.isPhytomer():
-                        phytomer = part
+                    phytomer.leftBranchPlantPart.traverseActivity(self.mode, self)
+                    # re-read the pointer AFTER the call: creating a phytomer
+                    # mid-walk replaces the branch pointer, and the original
+                    # then follows into the new phytomer (utravers.traversePlant)
+                    if phytomer.leftBranchPlantPart.isPhytomer():
+                        phytomer = phytomer.leftBranchPlantPart
                         phytomer.traversingDirection = kTraverseLeft
                     elif self.mode == kActivityDraw:
                         self.plant.turtle.pop()
@@ -55,10 +57,9 @@ class PdTraverser:
                 if phytomer.rightBranchPlantPart is not None:
                     if self.mode == kActivityDraw:
                         self.plant.turtle.push()
-                    part = phytomer.rightBranchPlantPart
-                    part.traverseActivity(self.mode, self)
-                    if part.isPhytomer():
-                        phytomer = part
+                    phytomer.rightBranchPlantPart.traverseActivity(self.mode, self)
+                    if phytomer.rightBranchPlantPart.isPhytomer():
+                        phytomer = phytomer.rightBranchPlantPart
                         phytomer.traversingDirection = kTraverseLeft
                     elif self.mode == kActivityDraw:
                         self.plant.turtle.pop()
@@ -69,10 +70,9 @@ class PdTraverser:
                         self.plant.turtle.push()
                         self.plant.turtle.rotateX(
                             self.plant.pGeneral.phyllotacticRotationAngle * 256 / 360)
-                    part = phytomer.nextPlantPart
-                    part.traverseActivity(self.mode, self)
-                    if part.isPhytomer():
-                        phytomer = part
+                    phytomer.nextPlantPart.traverseActivity(self.mode, self)
+                    if phytomer.nextPlantPart.isPhytomer():
+                        phytomer = phytomer.nextPlantPart
                         phytomer.traversingDirection = kTraverseLeft
                     elif self.mode == kActivityDraw:
                         self.plant.turtle.pop()

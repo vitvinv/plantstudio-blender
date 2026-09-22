@@ -1,0 +1,360 @@
+# Materials for file Grassy plants_age100.obj
+# Created by PlantStudio http://www.kurtz-fernhout.com
+# These files must be in the same directory for the materials to be read correctly.
+newmtl Grassyp_Intrnd
+Ka  0.2862 0.7137 0.3019
+Kd  0.2862 0.7137 0.3019
+Ks  0.2862 0.7137 0.3019
+d 1.0
+illum 1
+
+newmtl Grassyp_Intrnd
+Ka  0.2862 0.7137 0.3019
+Kd  0.2862 0.7137 0.3019
+Ks  0.2862 0.7137 0.3019
+d 1.0
+illum 1
+
+newmtl Grassyp_Petiole
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl Grassyp_Leaf
+Ka  0.3647 0.898 0.4352
+Kd  0.3647 0.898 0.4352
+Ks  0.3647 0.898 0.4352
+d 1.0
+illum 1
+
+newmtl Grassyp_Leaf
+Ka  0.3647 0.898 0.4352
+Kd  0.3647 0.898 0.4352
+Ks  0.3647 0.898 0.4352
+d 1.0
+illum 1
+
+newmtl Grassyp_Mrstm
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl Grassyp_Mrstm
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl Differen_Intrnd
+Ka  0.2862 0.7137 0.3019
+Kd  0.2862 0.7137 0.3019
+Ks  0.2862 0.7137 0.3019
+d 1.0
+illum 1
+
+newmtl Differen_Intrnd
+Ka  0.2862 0.7137 0.3019
+Kd  0.2862 0.7137 0.3019
+Ks  0.2862 0.7137 0.3019
+d 1.0
+illum 1
+
+newmtl Differen_Petiole
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl Differen_Leaf
+Ka  0.3647 0.898 0.4352
+Kd  0.3647 0.898 0.4352
+Ks  0.3647 0.898 0.4352
+d 1.0
+illum 1
+
+newmtl Differen_Leaf
+Ka  0.3647 0.898 0.4352
+Kd  0.3647 0.898 0.4352
+Ks  0.3647 0.898 0.4352
+d 1.0
+illum 1
+
+newmtl Differen_Mrstm
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl Differen_Mrstm
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl bluefes_Intrnd
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl bluefes_Intrnd
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl bluefes_Petiole
+Ka  0.196 0.7647 0.6156
+Kd  0.196 0.7647 0.6156
+Ks  0.196 0.7647 0.6156
+d 1.0
+illum 1
+
+newmtl bluefes_Petiole
+Ka  0.196 0.7647 0.6156
+Kd  0.196 0.7647 0.6156
+Ks  0.196 0.7647 0.6156
+d 1.0
+illum 1
+
+newmtl bluefes_Leaf
+Ka  0.196 0.7764 0.6862
+Kd  0.196 0.7764 0.6862
+Ks  0.196 0.7764 0.6862
+d 1.0
+illum 1
+
+newmtl bluefes_Leaf
+Ka  0.196 0.7764 0.6862
+Kd  0.196 0.7764 0.6862
+Ks  0.196 0.7764 0.6862
+d 1.0
+illum 1
+
+newmtl bending_Intrnd
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl bending_Intrnd
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl bending_Petiole
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl bending_Leaf
+Ka  0.196 0.7843 0.196
+Kd  0.196 0.7843 0.196
+Ks  0.196 0.7843 0.196
+d 1.0
+illum 1
+
+newmtl bending_Mrstm
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl bending_Mrstm
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl maideng_Intrnd
+Ka  0.196 0.7098 0.196
+Kd  0.196 0.7098 0.196
+Ks  0.196 0.7098 0.196
+d 1.0
+illum 1
+
+newmtl maideng_Intrnd
+Ka  0.196 0.7098 0.196
+Kd  0.196 0.7098 0.196
+Ks  0.196 0.7098 0.196
+d 1.0
+illum 1
+
+newmtl maideng_Petiole
+Ka  0.196 0.7529 0.196
+Kd  0.196 0.7529 0.196
+Ks  0.196 0.7529 0.196
+d 1.0
+illum 1
+
+newmtl maideng_Petiole
+Ka  0.196 0.7529 0.196
+Kd  0.196 0.7529 0.196
+Ks  0.196 0.7529 0.196
+d 1.0
+illum 1
+
+newmtl maideng_Leaf
+Ka  0.196 0.7843 0.196
+Kd  0.196 0.7843 0.196
+Ks  0.196 0.7843 0.196
+d 1.0
+illum 1
+
+newmtl maideng_Leaf
+Ka  0.196 0.7843 0.196
+Kd  0.196 0.7843 0.196
+Ks  0.196 0.7843 0.196
+d 1.0
+illum 1
+
+newmtl maideng_1Pdncle
+Ka  0.7921 0.8823 0.749
+Kd  0.7921 0.8823 0.749
+Ks  0.7921 0.8823 0.749
+d 1.0
+illum 1
+
+newmtl maideng_1InfInt
+Ka  0.7921 0.8823 0.749
+Kd  0.7921 0.8823 0.749
+Ks  0.7921 0.8823 0.749
+d 1.0
+illum 1
+
+newmtl maideng_1InfInt
+Ka  0.7921 0.8823 0.749
+Kd  0.7921 0.8823 0.749
+Ks  0.7921 0.8823 0.749
+d 1.0
+illum 1
+
+newmtl maideng_1Pdcel
+Ka  0.9058 0.9529 0.6862
+Kd  0.9058 0.9529 0.6862
+Ks  0.9058 0.9529 0.6862
+d 1.0
+illum 1
+
+newmtl maideng_1Petal1
+Ka  0.9921 0.9254 0.7843
+Kd  0.9921 0.9254 0.7843
+Ks  0.9921 0.9254 0.7843
+d 1.0
+illum 1
+
+newmtl maideng_1Petal1
+Ka  0.9921 0.9254 0.7843
+Kd  0.9921 0.9254 0.7843
+Ks  0.9921 0.9254 0.7843
+d 1.0
+illum 1
+
+newmtl curvyma_Intrnd
+Ka  0.196 0.7098 0.196
+Kd  0.196 0.7098 0.196
+Ks  0.196 0.7098 0.196
+d 1.0
+illum 1
+
+newmtl curvyma_Intrnd
+Ka  0.196 0.7098 0.196
+Kd  0.196 0.7098 0.196
+Ks  0.196 0.7098 0.196
+d 1.0
+illum 1
+
+newmtl curvyma_Petiole
+Ka  0.196 0.7529 0.196
+Kd  0.196 0.7529 0.196
+Ks  0.196 0.7529 0.196
+d 1.0
+illum 1
+
+newmtl curvyma_Petiole
+Ka  0.196 0.7529 0.196
+Kd  0.196 0.7529 0.196
+Ks  0.196 0.7529 0.196
+d 1.0
+illum 1
+
+newmtl curvyma_Leaf
+Ka  0.196 0.7843 0.196
+Kd  0.196 0.7843 0.196
+Ks  0.196 0.7843 0.196
+d 1.0
+illum 1
+
+newmtl curvyma_Leaf
+Ka  0.196 0.7843 0.196
+Kd  0.196 0.7843 0.196
+Ks  0.196 0.7843 0.196
+d 1.0
+illum 1
+
+newmtl curvyma_Mrstm
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl curvyma_Mrstm
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl curvyma_1Pdncle
+Ka  0.7921 0.8823 0.749
+Kd  0.7921 0.8823 0.749
+Ks  0.7921 0.8823 0.749
+d 1.0
+illum 1
+
+newmtl curvyma_1InfInt
+Ka  0.7921 0.8823 0.749
+Kd  0.7921 0.8823 0.749
+Ks  0.7921 0.8823 0.749
+d 1.0
+illum 1
+
+newmtl curvyma_1InfInt
+Ka  0.7921 0.8823 0.749
+Kd  0.7921 0.8823 0.749
+Ks  0.7921 0.8823 0.749
+d 1.0
+illum 1
+
+newmtl curvyma_1Pdcel
+Ka  0.9058 0.9529 0.6862
+Kd  0.9058 0.9529 0.6862
+Ks  0.9058 0.9529 0.6862
+d 1.0
+illum 1
+
+newmtl curvyma_1Petal1
+Ka  0.9921 0.9254 0.7843
+Kd  0.9921 0.9254 0.7843
+Ks  0.9921 0.9254 0.7843
+d 1.0
+illum 1
+

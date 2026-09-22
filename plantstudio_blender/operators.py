@@ -33,6 +33,16 @@ def get_library():
     if _tdo_cache is None:
         path = os.path.join(DATA_DIR, "3D object library.tdo")
         _tdo_cache = TdoLibrary.from_file(path) if os.path.exists(path) else None
+        # Make species-embedded 3D objects (inline in .pla files) resolvable
+        # by name: shape knobs store names, and a knob may name an object
+        # that only exists embedded in a species (e.g. 'Petal, daylily').
+        # Library entries win; per-species geometry is preserved by keeping
+        # the embedded Tdo on the params (see apply_object3d_name).
+        if _tdo_cache is not None and _lib_cache is not None:
+            missing = [t for name, t in _lib_cache.embedded_tdos.items()
+                       if _tdo_cache.get(name) is None]
+            if missing:
+                _tdo_cache.merge(missing)
     return _lib_cache, _tdo_cache
 
 
@@ -183,6 +193,9 @@ class PS_OT_add_plant(Operator):
     bl_idname = "plantstudio.add_plant"
     bl_label = "Create"
     bl_description = "Create a new plant with all original PlantStudio default settings"
+    # without a registered undo step, Ctrl+Z after creating plants can
+    # crash Blender (operator created data the undo stack doesn't know)
+    bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
         props = context.scene.ps_props
@@ -199,6 +212,7 @@ class PS_OT_load_preset(Operator):
     bl_idname = "plantstudio.load_preset"
     bl_label = "Load Preset"
     bl_description = "Create a new plant from a library species or a saved preset"
+    bl_options = {'REGISTER', 'UNDO'}
     species_name: EnumProperty(name="Species", items=_species_items)
     preset_name: StringProperty(name="Preset", default="")
     preset_category: StringProperty(name="Preset category", default="")
@@ -218,6 +232,14 @@ class PS_OT_load_preset(Operator):
             params = copy.deepcopy(species.params)
             base_name = species.name
             display = species.name
+            # Place at the species' own saved drawing age (kStateAge) so a
+            # fresh placement matches what the original PlantStudio shows
+            # for this plant; the age slider can still dial it afterwards.
+            day = props.day
+            saved_age = int(getattr(getattr(params, "pGeneral", None),
+                                    "age", 0) or 0)
+            if saved_age > 0:
+                day = saved_age
         else:
             # saved user preset (json with base species + knob deltas)
             if not (self.preset_name and self.preset_category):
@@ -230,9 +252,10 @@ class PS_OT_load_preset(Operator):
                 self.report({'ERROR'}, str(e))
                 return {'CANCELLED'}
             display = self.preset_name
-        obj = _create_plant_object(params, base_name, props.seed, props.day,
+        obj = _create_plant_object(params, base_name, props.seed, day,
                                    context, name=display)
-        self.report({'INFO'}, f"Created new plant from preset: {display}")
+        self.report({'INFO'}, f"Created new plant from preset: {display} "
+                              f"(age {day})")
         return {'FINISHED'}
 
 
@@ -314,6 +337,7 @@ class PS_OT_regrow(Operator):
     bl_idname = "plantstudio.regrow"
     bl_label = "Grow To Age"
     bl_description = "Rebuild the selected plant at its target day"
+    bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
         obj = context.active_object
@@ -342,6 +366,7 @@ class PS_OT_step_day(Operator):
     bl_idname = "plantstudio.step_day"
     bl_label = "Step Day"
     bl_description = "Advance the selected plant by one day"
+    bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
         obj = context.active_object
@@ -357,6 +382,7 @@ class PS_OT_delete_plant(Operator):
     bl_idname = "plantstudio.delete_plant"
     bl_label = "Delete Plant"
     bl_description = "Remove the selected plant from the scene"
+    bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
         knobs = context.scene.ps_wizard_knobs
@@ -364,9 +390,12 @@ class PS_OT_delete_plant(Operator):
         if coll is None or not (0 <= knobs.selected_index < len(coll.objects)):
             self.report({'ERROR'}, "Select a plant in the list first")
             return {'CANCELLED'}
-        obj = coll.objects[knobs.selected_index]
+        index = knobs.selected_index
+        obj = coll.objects[index]
         bpy.data.objects.remove(obj, do_unlink=True)
-        knobs.selected_index = min(knobs.selected_index, len(coll.objects) - 1)
+        # removing reallocates the collection — re-fetch objects by index
+        # instead of touching the removed reference
+        knobs.selected_index = min(index, len(coll.objects) - 1)
         from .ui_panel import sync_plant_list
         sync_plant_list(context.scene)
         return {'FINISHED'}
@@ -375,6 +404,7 @@ class PS_OT_delete_plant(Operator):
 class PS_OT_random_seed(Operator):
     bl_idname = "plantstudio.random_seed"
     bl_label = "Randomize Seed"
+    bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
         import random
@@ -383,6 +413,7 @@ class PS_OT_random_seed(Operator):
 
 
 class PS_OT_export_plant_config(Operator):
+    bl_options = {'REGISTER', 'UNDO'}
     bl_idname = "plantstudio.export_plant_config"
     bl_label = "Export Plant Config"
     bl_description = ("Write one JSON config per checked plant "

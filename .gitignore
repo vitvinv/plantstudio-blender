@@ -35,3 +35,4 @@ LOD_PLAN.md
 .env
 .env.*
 *.local.mdLOD_PLAN.md
+scripts/oracle_compare.py

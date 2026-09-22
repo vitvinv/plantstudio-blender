@@ -2,7 +2,14 @@
 
 from . import math3d as umath
 from .meristem import (PdPlantPart, kPartTypePhytomer, kArrangementOpposite,
-                       kActivityFree, kActivityDraw, kActivityNextDay)
+                       kActivityFree, kActivityDraw, kActivityNextDay,
+                       kActivityDemandVegetative, kActivityDemandReproductive,
+                       kActivityGrowVegetative, kActivityGrowReproductive,
+                       kActivityStartReproduction,
+                       kActivityVegetativeBiomassThatCanBeRemoved,
+                       kActivityRemoveVegetativeBiomass,
+                       kActivityReproductiveBiomassThatCanBeRemoved,
+                       kActivityRemoveReproductiveBiomass)
 from .leaf import PdLeaf
 
 
@@ -30,7 +37,7 @@ class PdInternode(PdPlantPart):
         return True
 
     def newWithPlantFractionOfInitialOptimalSize(self, plant, aFraction):
-        self.plant = plant
+        self.initialize(plant)
         self.isFirstPhytomer = False
         self.calculateInternodeAngle()
         self.lengthExpansion = 1.0
@@ -62,8 +69,10 @@ class PdInternode(PdPlantPart):
     @staticmethod
     def optimalInitialBiomass_pctMPB(plant):
         p = plant.pInternode
-        lenMult = getattr(p, "lengthMultiplierDueToBiomassAccretion", 1.0)
-        widMult = getattr(p, "widthMultiplierDueToBiomassAccretion", 1.0)
+        # PdPlant.create hard-codes these to 2.0 (uplant.pas: internodes
+        # gain width and height twice), so optimal initial = final / 4
+        lenMult = getattr(p, "lengthMultiplierDueToBiomassAccretion", 2.0)
+        widMult = getattr(p, "widthMultiplierDueToBiomassAccretion", 2.0)
         return umath.safedivExcept(p.optimalFinalBiomass_pctMPB, lenMult * widMult, 0)
 
     # ── growth ──
@@ -98,13 +107,25 @@ class PdInternode(PdPlantPart):
         self.calculateDistanceFromFirstPhytomer()
 
     def checkIfSeedlingLeavesHaveAbscissed(self):
-        # Natural PlantStudio behavior: seedling leaves fall off after
-        # NodesOnStemWhenFallsOff nodes (e.g. grass seedling leaves die).
+        """Port of PdInternode.checkIfSeedlingLeavesHaveAbscissed
+        (uintern.pas): seedling leaves on the first phytomer fall off once
+        the stem has grown nodesOnStemWhenFallsOff nodes past them, but not
+        before the plant is a quarter of the way to maturity."""
+        if not self.isFirstPhytomer:
+            return
+        if self.plant.pMeristem.branchingIsSympodial:
+            if self.age < 10:
+                return
+        else:
+            if self.distanceFromApicalMeristem() <= \
+                    int(self.plant.pSeedlingLeaf.nodesOnStemWhenFallsOff):
+                return
+        if umath.safedivExcept(self.plant.age,
+                               self.plant.pGeneral.ageAtMaturity, 0) < 0.25:
+            return
         for leaf in (self.leftLeaf, self.rightLeaf):
-            if leaf is not None and leaf.isSeedlingLeaf:
-                nodes = int(self.plant.pSeedlingLeaf.nodesOnStemWhenFallsOff)
-                if self.plant.mainStemNodeCount() > nodes:
-                    leaf.hasFallenOff = True
+            if leaf is not None:
+                leaf.hasFallenOff = True
 
     # ── geometry helpers ──
 
@@ -126,13 +147,24 @@ class PdInternode(PdPlantPart):
                                    optimal, 0)
 
     def calculateInternodeAngle(self):
-        # angle from vertical based on curving index (simplified)
+        """Port of PdInternode.calculateInternodeAngle (uintern.py:293):
+        angle = 64/100 * randomNormalPercent(curvingIndex) in 256-degree
+        turtle units, then sway is baked in (angleWithSway). Consumes RNG
+        whenever the curving index is nonzero."""
         p = self.plant.pInternode
         if self.isFirstPhytomer:
             ci = getattr(p, "firstInternodeCurvingIndex", 0.0)
         else:
             ci = getattr(p, "curvingIndex", 0.0)
-        self.internodeAngle = (ci / 100.0) * 90.0
+        if ci == 0:
+            self.internodeAngle = 0
+        else:
+            self.internodeAngle = 64.0 / 100.0 * \
+                self.plant.randomNumberGenerator.randomNormalPercent(ci)
+        sway = getattr(self.plant.pGeneral, "randomSway", 0.0)
+        if sway != 0:
+            self.internodeAngle = self.internodeAngle + \
+                ((self.randomSwayIndex - 0.5) * sway)
 
     def distanceFromApicalMeristem(self):
         """Count phytomers along the apex until reaching an apical meristem
@@ -160,9 +192,18 @@ class PdInternode(PdPlantPart):
         return self.distanceFromFirstPhytomer_val
 
     def firstPhytomerOnBranch(self):
+        """Port of PdInternode.firstPhytomerOnBranch (uintern.pas): walk down
+        only while the phytomer below links back via nextPlantPart (same
+        branch); returns None when this phytomer starts its own branch."""
         result = self
-        while result is not None and result.phytomerAttachedTo is not None:
-            result = result.phytomerAttachedTo
+        while result is not None:
+            attached = result.phytomerAttachedTo
+            if attached is not None and attached.nextPlantPart is result:
+                result = attached
+            else:
+                break
+        if result is self:
+            return None
         return result
 
     def mainStemNodeCount(self):
@@ -178,18 +219,68 @@ class PdInternode(PdPlantPart):
         return count
 
     def traverseActivity(self, mode, traverser):
+        """Port of PdInternode.traverseActivity (uintern.pas).
+
+        The internode is a first-class biomass participant: it demands
+        vegetative biomass over its first maxDaysToAccumulateBiomass days
+        (with stunting recovery), grows into it, and offers/removes biomass
+        for streaming. Leaves are recursed into for every non-draw mode.
+        """
+        if mode != kActivityDraw:
+            if self.leftLeaf is not None:
+                self.leftLeaf.traverseActivity(mode, traverser)
+            if self.rightLeaf is not None:
+                self.rightLeaf.traverseActivity(mode, traverser)
+        if self.hasFallenOff and mode != kActivityFree:
+            return
         if mode == kActivityNextDay:
             self.nextDay()
+            if self.age < traverser.ageOfYoungestPhytomer:
+                traverser.ageOfYoungestPhytomer = self.age
+        elif mode == kActivityDemandVegetative:
+            p = self.plant.pInternode
+            if self.age > p.maxDaysToAccumulateBiomass:
+                self.biomassDemand_pctMPB = 0.0
+                return
+            if getattr(p, "canRecoverFromStuntingDuringCreation", True):
+                targetBiomass = p.optimalFinalBiomass_pctMPB
+            else:
+                targetBiomass = p.optimalFinalBiomass_pctMPB * \
+                    self.fractionOfOptimalInitialBiomassAtCreation_frn
+            self.biomassDemand_pctMPB = umath.linearGrowthResult(
+                self.liveBiomass_pctMPB, targetBiomass,
+                p.minDaysToAccumulateBiomass)
+            traverser.total += self.biomassDemand_pctMPB
+        elif mode == kActivityDemandReproductive:
+            pass
+        elif mode == kActivityGrowVegetative:
+            p = self.plant.pInternode
+            if self.age > p.maxDaysToAccumulateBiomass:
+                return
+            self.newBiomassForDay_pctMPB = max(
+                0.0, self.biomassDemand_pctMPB *
+                traverser.fractionOfPotentialBiomass)
+            self.liveBiomass_pctMPB += self.newBiomassForDay_pctMPB
+        elif mode == kActivityGrowReproductive:
+            pass
+        elif mode == kActivityStartReproduction:
+            pass
         elif mode == kActivityDraw:
             self.draw()
         elif mode == kActivityFree:
             pass
-        else:
-            # leaves handled separately
-            if self.leftLeaf is not None and not self.leftLeaf.hasFallenOff:
-                self.leftLeaf.traverseActivity(mode, traverser)
-            if self.rightLeaf is not None and not self.rightLeaf.hasFallenOff:
-                self.rightLeaf.traverseActivity(mode, traverser)
+        elif mode == kActivityVegetativeBiomassThatCanBeRemoved:
+            traverser.total += self.liveBiomass_pctMPB
+        elif mode == kActivityRemoveVegetativeBiomass:
+            biomassToRemove = self.liveBiomass_pctMPB * \
+                traverser.fractionOfPotentialBiomass
+            self.liveBiomass_pctMPB -= biomassToRemove
+            self.deadBiomass_pctMPB += biomassToRemove
+        elif mode in (kActivityReproductiveBiomassThatCanBeRemoved,
+                      kActivityRemoveReproductiveBiomass):
+            pass
+        # other modes (statistics, picking, export counting) are not used
+        # by the headless census and are ignored
 
     def draw(self):
         from .draw import draw_internode, draw_leaf

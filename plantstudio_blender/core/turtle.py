@@ -156,6 +156,7 @@ class MeshTurtle:
         (moveInMillimeters applies scale_pixelsPerMm). Convert to meters
         BEFORE the transform so rotation doesn't amplify ~1000x.
         """
+        pos = self.currentMatrix.position
         self.mesh_buffer.triangle_set_records.append({
             "scale": float(scale),
             "part_id": part_id,
@@ -164,14 +165,25 @@ class MeshTurtle:
             "semantic_id": semantic_id,
             "points": len(tdo_points),
             "triangles": len(triangles),
+            "origin": (float(pos.x), float(pos.y), float(pos.z)),
         })
         transformed = []
+        cx = cy = cz = 0.0
         for p in tdo_points:
             tp = KfPoint3D(p[0] * scale * self.scale_pixelsPerMm,
                            p[1] * scale * self.scale_pixelsPerMm,
                            p[2] * scale * self.scale_pixelsPerMm)
             self.currentMatrix.transform(tp)
             transformed.append((tp.x, tp.y, tp.z))
+            cx += tp.x
+            cy += tp.y
+            cz += tp.z
+        n = max(1, len(transformed))
+        prev_part_id = self.mesh_buffer.current_part_id
+        self.mesh_buffer.current_part_id = part_id
         for (i, j, k) in triangles:
             self.mesh_buffer.add_triangle(transformed[i - 1], transformed[j - 1],
                                           transformed[k - 1], color)
+        self.mesh_buffer.current_part_id = prev_part_id
+        self.mesh_buffer.triangle_set_records[-1]["centroid"] = \
+            (cx / n, cy / n, cz / n)

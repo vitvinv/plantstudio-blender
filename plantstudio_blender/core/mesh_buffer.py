@@ -12,6 +12,10 @@ class MeshBuffer:
         self.vertices = []   # list of (x, y, z)
         self.faces = []      # list of [i, j, k]
         self.face_colors = []  # list of (r, g, b) 0-255 per face
+        # per-face part tag (kExportPart* id or None), parallel to faces
+        self.face_part_ids = []
+        # part id applied to geometry emitted next (set by draw primitives)
+        self.current_part_id = None
         # Diagnostic records are deliberately lightweight and remain available
         # to the headless audit without affecting exported mesh data.
         self.pipe_records = []
@@ -25,6 +29,8 @@ class MeshBuffer:
         self.vertices = []
         self.faces = []
         self.face_colors = []
+        self.face_part_ids = []
+        self.current_part_id = None
         self.pipe_records = []
         self.triangle_set_records = []
         # Semantic records identify plant parts independently of mesh topology.
@@ -50,6 +56,7 @@ class MeshBuffer:
             return
         self.faces.append([i0, i1, i2])
         self.face_colors.append(tuple(color))
+        self.face_part_ids.append(self.current_part_id)
 
     def add_quad(self, p0, p1, p2, p3, color):
         self.add_triangle(p0, p1, p2, color)
@@ -101,6 +108,8 @@ class MeshBuffer:
         if radius_start <= 0 and radius_end <= 0:
             return
         n = max(3, faces)
+        prev_part_id = self.current_part_id
+        self.current_part_id = part_id
         self.pipe_records.append({
             "start": tuple(float(v) for v in center_start),
             "end": tuple(float(v) for v in center_end),
@@ -118,8 +127,13 @@ class MeshBuffer:
         dy = center_end[1] - center_start[1]
         dz = center_end[2] - center_start[2]
         length = math.sqrt(dx * dx + dy * dy + dz * dz)
-        if length < 1e-9:
-            return
+        # No zero-length early return: the original write3DExportLine always
+        # draws the start->end ring quads (upart.py:323-364), and a zero-length
+        # segment whose bases differ by the per-division rotation is a real
+        # twisted band with real area (Wildflowers round 5: thistle pedicels,
+        # violet peduncles). Genuinely degenerate rings (same center AND same
+        # basis) collapse to shared vertices and are dropped by add_triangle's
+        # weld, exactly like the original's zero-area export faces.
         if basis_start is None:
             basis = self._perpendicular_basis(dx, dy, dz)
             if basis_end is None:
@@ -141,6 +155,7 @@ class MeshBuffer:
             cx, cy, cz = center_end
             for i in range(1, n - 1):
                 self.add_triangle((cx, cy, cz), ring_end[i + 1], ring_end[i], color)
+        self.current_part_id = prev_part_id
 
     def to_mesh_data(self):
         """Return {vertices, faces, face_colors} for Blender."""

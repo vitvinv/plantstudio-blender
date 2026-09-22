@@ -1,0 +1,277 @@
+
+=== Strange breeder plants_saved.obj (20 plants) ===
+
+  plant 'knobbly' = census species 'knobbly plant' @ age 30  [scale 1.62 units/mm = 0.3449 mm/unit, file zoom 1.79]
+
+  part                           faces ours faces ref      area ours       area ref  up/ours   up/ref   verdicts
+  internode                             324       324          23.97          23.97    89.19%    89.41%  PASS / PASS
+  leaf                                 1088    1088.0          85.88          85.88    74.25%    74.11%  PASS / PASS
+  meristem                              560     560.0           0.01           0.01    67.74%    67.69%  PASS / PASS
+  petiole                              1530      1530          28.49          28.49    76.37%    75.93%  PASS / PASS
+  whole plant (absolute mm):
+    height   ours=   33.0950 ref=   32.5672  PASS
+    width    ours=   18.4430 ref=   18.8764  PASS
+    depth    ours=   18.7490 ref=   19.1249  PASS
+
+  plant 'prettyp' = census species 'pretty purple plant' @ age 44  [scale 0.29 units/mm = 1.9264 mm/unit, file zoom 1.79]
+
+  part                           faces ours faces ref      area ours       area ref  up/ours   up/ref   verdicts
+  inflorescence internode female         48        48          55.68          55.66    28.64%    29.13%  PASS / PASS
+  inflorescence stalk female             48        48         240.63         240.67    23.49%    23.56%  PASS / PASS
+  internode                             144       144        1060.90        1060.75    99.08%    99.15%  PASS / PASS
+  leaf                                  308     308.0        2432.78        2432.77    94.06%    93.95%  PASS / PASS
+  meristem                              720     720.0           0.38           0.38    82.05%    81.75%  PASS / PASS
+  pedicel female                         48        48          87.47          87.47    35.60%    37.12%  PASS / PASS
+  petiole                               264       264         104.47         104.44    85.83%    85.68%  PASS / PASS
+  ripe fruit                            112     112.0         363.32         363.32    47.89%    50.40%  PASS / PASS
+  whole plant (absolute mm):
+    height   ours=  194.9450 ref=  191.4949  PASS
+    width    ours=  116.3480 ref=  118.2410  PASS
+    depth    ours=  166.7320 ref=  171.4604  PASS
+
+  plant 'oriental' = census species 'oriental architecture plant' @ age 20  [scale 0.26 units/mm = 2.1487 mm/unit, file zoom 1.79]
+
+  part                           faces ours faces ref      area ours       area ref  up/ours   up/ref   verdicts
+  internode                             336       336         641.61         641.61    94.46%    95.43%  PASS / PASS
+  leaf                                  156     156.0       11432.25       11432.28    91.88%    90.84%  PASS / PASS
+  meristem                              520     520.0           0.95           0.95    83.63%    84.66%  PASS / PASS
+  petiole                               312       312         183.53         183.54    84.31%    85.59%  PASS / PASS
+  whole plant (absolute mm):
+    height   ours=  200.5590 ref=  201.9392  PASS
+    width    ours=   34.7930 ref=   33.9065  PASS
+    depth    ours=  160.0000 ref=  155.5367  PASS
+
+  plant 'Flagpla' = census species 'Flag plant' @ age 28  [scale 1.23 units/mm = 0.4542 mm/unit, file zoom 1.79]
+
+  part                           faces ours faces ref      area ours       area ref  up/ours   up/ref   verdicts
+  internode                             504       504          52.65          52.64    98.97%    97.56%  PASS / PASS
+  leaf                                  320     320.0         129.71         129.71    62.83%    62.09%  PASS / PASS
+  meristem                              480     480.0           0.03           0.03    66.69%    65.33%  PASS / PASS
+  petiole                              2400      2400         182.95         182.95    76.90%    75.72%  PASS / PASS
+  whole plant (absolute mm):
+    height   ours=   42.5140 ref=   42.7731  PASS
+    width    ours=   30.0690 ref=   30.1190  PASS
+    depth    ours=   29.0080 ref=   28.3327  PASS
+
+  plant 'Lacypla' = census species 'Lacy plant' @ age 28  [scale 1.19 units/mm = 0.4695 mm/unit, file zoom 1.79]
+
+  part                           faces ours faces ref      area ours       area ref  up/ours   up/ref   verdicts
+  internode                             720       720          49.73          49.73    96.34%    96.95%  PASS / PASS
+  leaf                                  920     920.0          86.80          86.80    76.18%    76.11%  PASS / PASS
+  meristem                              720     720.0           0.02           0.02    68.64%    69.19%  PASS / PASS
+  petiole                              3450      3450          64.21          64.19    74.61%    75.05%  PASS / PASS
+  whole plant (absolute mm):
+    height   ours=   46.4500 ref=   46.6192  PASS
+    width    ours=   25.5600 ref=   24.4285  PASS
+    depth    ours=   13.6410 ref=   13.7663  PASS
+
+  plant 'Thisway' = census species 'This way - that way plant' @ age 87  [scale 0.61 units/mm = 0.9158 mm/unit, file zoom 1.79]
+
+  part                           faces ours faces ref      area ours       area ref  up/ours   up/ref   verdicts
+  inflorescence internode female        144       144          14.16          14.16    38.06%    38.42%  PASS / PASS
+  inflorescence stalk female             48        48          17.07          17.08    37.57%    37.86%  PASS / PASS
+  internode                             108       108         279.30         279.29    96.89%    97.02%  PASS / PASS
+  leaf                                   32      32.0         112.59         112.59    72.43%    72.79%  PASS / PASS
+  meristem                              120     120.0           0.00           0.00    21.51%    21.85%  PASS / PASS
+  pedicel female                        144       144          46.35          46.34    40.57%    41.03%  PASS / PASS
+  petiole                                96        96          12.93          12.92    70.67%    71.25%  PASS / PASS
+  ripe fruit                            840     840.0          91.86          91.86    39.47%    40.10%  PASS / PASS
+  whole plant (absolute mm):
+    height   ours=   87.0280 ref=   88.1378  PASS
+    width    ours=   42.9790 ref=   40.5641  FAIL(6%)
+    depth    ours=   26.4040 ref=   26.4041  PASS
+
+  plant 'Bluebal' = census species 'Blue ball plant' @ age 120  [scale 0.48 units/mm = 1.1639 mm/unit, file zoom 1.79]
+
+  part                           faces ours faces ref      area ours       area ref  up/ours   up/ref   verdicts
+  inflorescence internode female        126       126          28.83          28.83    14.62%    14.47%  PASS / PASS
+  inflorescence stalk female             36        42           0.07           0.08     0.17%     0.16%  FAIL(14%) / PASS
+  internode                             336       336           7.59           7.62     2.96%     2.86%  PASS / PASS
+  leaf                                   28      28.0         374.03         382.64    97.92%    99.75%  PASS / PASS
+  meristem                              900     900.0           0.37           0.37     2.15%     1.80%  PASS / FAIL(16%)
+  pedicel female                        126       126         115.52         115.48    22.44%    21.78%  PASS / PASS
+  petiole                               294       294        2319.70        2373.57    69.43%    69.70%  PASS / PASS
+  ripe fruit                             84      84.0       10826.09       10826.09    30.32%    30.28%  PASS / PASS
+  whole plant (absolute mm):
+    height   ours=  119.5630 ref=  120.1356  PASS
+    width    ours=  143.1220 ref=  137.7971  PASS
+    depth    ours=  110.8480 ref=  110.3918  PASS
+
+  plant 'Pinkwhi' = census species 'Pink whirligigs' @ age 35  [scale 0.96 units/mm = 0.5819 mm/unit, file zoom 1.79]
+
+  part                           faces ours faces ref      area ours       area ref  up/ours   up/ref   verdicts
+  inflorescence stalk female             72        72          36.02          36.03    64.76%    64.64%  PASS / PASS
+  internode                              90        90          81.33          85.66    67.74%    68.81%  FAIL(5%) / PASS
+  leaf                                   32      32.0          10.71          10.71    41.07%    41.67%  PASS / PASS
+  pedicel female                       2160      2160          78.24          78.24    43.99%    44.47%  PASS / PASS
+  petals row 1 female                  1200    1200.0         116.86         116.85    54.88%    54.75%  PASS / PASS
+  petiole                                72        72           1.15           1.15    40.77%    41.38%  PASS / PASS
+  whole plant (absolute mm):
+    height   ours=   52.4880 ref=   54.3785  PASS
+    width    ours=   12.0280 ref=   12.2124  PASS
+    depth    ours=   12.1660 ref=   11.9446  PASS
+
+  plant 'Festival' = census species 'Festival plant' @ age 71  [scale 0.26 units/mm = 2.1487 mm/unit, file zoom 1.79]
+
+  part                           faces ours faces ref      area ours       area ref  up/ours   up/ref   verdicts
+  inflorescence internode female       1620      1620          15.28          15.28    82.08%    82.03%  PASS / PASS
+  inflorescence stalk female            162       162           7.59           7.60    80.81%    80.74%  PASS / PASS
+  internode                             180       180         873.52         873.46    99.59%    99.44%  PASS / PASS
+  leaf                                   54      54.0        1165.91        1165.90    83.80%    83.68%  PASS / PASS
+  pedicel female                       1620      1620          53.60          53.61    82.58%    82.52%  PASS / PASS
+  petiole                               162       162          51.43          51.43    80.65%    80.64%  PASS / PASS
+  unripe fruit                         4320    4320.0          25.31          25.31    82.45%    82.37%  PASS / PASS
+  whole plant (absolute mm):
+    height   ours=  223.5940 ref=  223.1289  PASS
+    width    ours=   47.2700 ref=   50.9048  FAIL(7%)
+    depth    ours=    4.5770 ref=    4.5769  PASS
+
+  plant 'Droopyp' = census species 'Droopy plant' @ age 26  [scale 1.3 units/mm = 0.4297 mm/unit, file zoom 1.79]
+
+  part                           faces ours faces ref      area ours       area ref  up/ours   up/ref   verdicts
+  internode                             672       672           8.86           8.86    25.28%    24.61%  PASS / PASS
+  leaf                                  104     104.0         585.33         585.33    96.90%    98.18%  PASS / PASS
+  meristem                             1560    1560.0           3.57           3.57    23.76%    23.09%  PASS / PASS
+  petiole                               624       624         289.96         289.94    57.62%    58.57%  PASS / PASS
+  whole plant (absolute mm):
+    height   ours=   41.2630 ref=   41.4274  PASS
+    width    ours=   43.4490 ref=   41.7493  PASS
+    depth    ours=   27.6700 ref=   28.2504  PASS
+
+  plant 'hourglas' = census species 'hourglass plant' @ age 66  [scale 0.047 units/mm = 11.8864 mm/unit, file zoom 1.79]
+
+  part                           faces ours faces ref      area ours       area ref  up/ours   up/ref   verdicts
+  internode                             750       750        1679.22        1679.11    99.86%    99.84%  PASS / PASS
+  leaf                                 1008    1008.0      254051.43      254050.73    94.64%    95.32%  PASS / PASS
+  meristem                             3450    3450.0           0.51           0.51    95.66%    95.57%  PASS / PASS
+  petiole                               720       720        7290.70        7291.70    95.75%    95.69%  PASS / PASS
+  whole plant (absolute mm):
+    height   ours= 1239.1250 ref= 1211.2600  PASS
+    width    ours=  437.7110 ref=  523.8738  FAIL(16%)
+    depth    ours=  371.5140 ref=  376.0164  PASS
+
+  plant 'flatvin' = census species 'flat vine' @ age 38  [scale 1.21 units/mm = 0.4617 mm/unit, file zoom 1.79]
+
+  part                           faces ours faces ref      area ours       area ref  up/ours   up/ref   verdicts
+  internode                             114       114         246.97         246.97    97.89%    98.14%  PASS / PASS
+  leaf                                  432     432.0         241.14         241.14   100.00%   100.00%  PASS / PASS
+  meristem                              340     340.0           2.85           2.85    97.69%    97.56%  PASS / PASS
+  petiole                                10       108           0.00           0.00    63.24%    98.03%  FAIL(100%) / FAIL(35%)
+  whole plant (absolute mm):
+    height   ours=   44.6870 ref=   44.1600  PASS
+    width    ours=   23.8910 ref=   23.8427  PASS
+    depth    ours=   57.0040 ref=   57.6513  PASS
+
+  plant 'feathery' = census species 'feathery plant' @ age 171  [scale 0.16 units/mm = 3.4916 mm/unit, file zoom 1.79]
+
+  part                           faces ours faces ref      area ours       area ref  up/ours   up/ref   verdicts
+  inflorescence internode female        720       720         428.10         428.09    32.76%    33.48%  PASS / PASS
+  inflorescence stalk female             24        24          24.76          24.76    17.40%    19.70%  PASS / FAIL(12%)
+  internode                            2016      2016        2326.94        2326.86    98.53%    98.62%  PASS / PASS
+  leaf                                  668     668.0        6769.31        6769.27    95.86%    96.06%  PASS / PASS
+  meristem                               15    8050.0           0.00           0.00    63.74%    94.70%  FAIL(100%) / FAIL(33%)
+  pedicel female                        720       720        4027.04        4027.30    37.59%    37.79%  PASS / PASS
+  petiole                              2004      2004          47.93          51.12    94.46%    94.76%  FAIL(6%) / PASS
+  ripe fruit                           2880    2880.0          28.40          28.40    36.18%    37.20%  PASS / PASS
+  whole plant (absolute mm):
+    height   ours=  338.0910 ref=  355.0723  PASS
+    width    ours=  275.4680 ref=  300.6774  FAIL(8%)
+    depth    ours=  377.0630 ref=  387.1334  PASS
+
+  plant 'bush-lik' = census species 'bush-like plant' @ age 128  [scale 0.63 units/mm = 0.8868 mm/unit, file zoom 1.79]
+
+  part                           faces ours faces ref      area ours       area ref  up/ours   up/ref   verdicts
+  inflorescence internode female       1980      1980         845.93         845.71    55.70%    57.85%  PASS / PASS
+  inflorescence stalk female              2       180           0.00           0.00     0.75%    39.08%  FAIL(100%) / FAIL(98%)
+  internode                             918       918         781.46         781.38    99.86%    99.87%  PASS / PASS
+  leaf                                  600     600.0         447.73         447.73    89.69%    89.77%  PASS / PASS
+  meristem                                3     740.0           0.00           0.00     0.00%    72.00%  FAIL(100%) / FAIL(100%)
+  pedicel female                       1620      1620         274.71         274.66    57.38%    59.79%  PASS / PASS
+  petals row 1 female                 17100   17100.0        3774.83        3774.83    62.11%    64.63%  PASS / PASS
+  petiole                              2938      3600         266.34         266.29    90.13%    90.28%  PASS / PASS
+  whole plant (absolute mm):
+    height   ours=   86.7610 ref=   88.2216  PASS
+    width    ours=   94.3220 ref=   94.2166  PASS
+    depth    ours=   88.3000 ref=   89.0669  PASS
+
+  plant 'spiderp' = census species 'spider plant' @ age 83  [scale 0.91 units/mm = 0.6139 mm/unit, file zoom 1.79]
+
+  part                           faces ours faces ref      area ours       area ref  up/ours   up/ref   verdicts
+  internode                              54        54           0.71           0.71     5.38%     4.79%  PASS / FAIL(11%)
+  leaf                                   80      80.0         979.71         979.71   100.00%   100.00%  PASS / PASS
+  meristem                              120     120.0           0.00           0.00     2.99%     2.65%  FAIL(14%) / FAIL(12%)
+  petiole                               180       180          41.97          41.97    18.94%    19.53%  PASS / PASS
+  seedling leaf                          24      24.0           1.08           1.08     3.20%     2.85%  PASS / FAIL(11%)
+  seedling petiole                       36        36           4.42           4.42     6.02%     5.27%  PASS / FAIL(12%)
+  whole plant (absolute mm):
+    height   ours=   53.8500 ref=   59.3897  FAIL(9%)
+    width    ours=   76.9270 ref=   74.2734  PASS
+    depth    ours=   83.4340 ref=   82.5754  PASS
+
+  plant 'pharoah' = census species 'pharoah plant' @ age 75  [scale 0.98 units/mm = 0.5701 mm/unit, file zoom 1.79]
+
+  part                           faces ours faces ref      area ours       area ref  up/ours   up/ref   verdicts
+  inflorescence internode female        144       144           1.55           1.55     1.51%     1.60%  PASS / FAIL(6%)
+  inflorescence stalk female             36        36           0.51           0.51     0.70%     0.69%  PASS / PASS
+  internode                              72        72           0.15           0.15     0.79%     0.82%  PASS / PASS
+  leaf                                  380     380.0        1148.27        1148.27    49.74%    50.60%  PASS / PASS
+  meristem                               80      80.0           0.00           0.00     0.07%     0.07%  FAIL(14%) / PASS
+  pedicel female                        144       144           4.43           4.43     2.41%     2.36%  PASS / PASS
+  petiole                               396       396         132.66         132.65    80.84%    81.00%  PASS / PASS
+  ripe fruit                           1728    1728.0           2.11           2.11     3.19%     3.08%  PASS / PASS
+  seedling leaf                          28      28.0           6.45           6.45     3.91%     3.53%  PASS / FAIL(10%)
+  seedling petiole                       72        72          30.12          30.12     6.55%     6.80%  PASS / PASS
+  whole plant (absolute mm):
+    height   ours=   55.8170 ref=   56.0154  PASS
+    width    ours=   51.3540 ref=   51.1783  PASS
+    depth    ours=   21.8260 ref=   21.7387  PASS
+
+  plant 'loopypl' = census species 'loopy plant' @ age 30  [scale 0.46 units/mm = 1.2145 mm/unit, file zoom 1.79]
+
+  part                           faces ours faces ref      area ours       area ref  up/ours   up/ref   verdicts
+  internode                             666       666        2281.30        2281.65    97.80%    98.07%  PASS / PASS
+  leaf                                  432     432.0          31.89          31.89    98.63%    98.47%  PASS / PASS
+  meristem                              898    2100.0           0.00           0.00    91.21%    91.28%  FAIL(42%) / PASS
+  petiole                               648       648        1860.06        1859.90    99.32%    98.51%  PASS / PASS
+  whole plant (absolute mm):
+    height   ours=  119.5700 ref=  122.3394  PASS
+    width    ours=   72.1520 ref=   74.0904  PASS
+    depth    ours=   71.3830 ref=   68.1224  PASS
+
+  plant 'coralpl' = census species 'coral plant' @ age 57  [scale 0.36 units/mm = 1.5518 mm/unit, file zoom 1.79]
+
+  part                           faces ours faces ref      area ours       area ref  up/ours   up/ref   verdicts
+  internode                            4698      4698        5551.40        5549.29   100.00%   100.00%  PASS / PASS
+  leaf                                    0    9288.0           0.00           0.00     0.00%    99.91%  FAIL(100%) / FAIL(100%)
+  meristem                                0    1160.0           0.00           0.00     0.00%    99.78%  FAIL(100%) / FAIL(100%)
+  petiole                             13932     27864          51.96          51.96    99.27%    99.92%  PASS / PASS
+  whole plant (absolute mm):
+    height   ours=  149.2940 ref=  153.2120  PASS
+    width    ours=  129.4890 ref=  124.2990  PASS
+    depth    ours=  104.6390 ref=  102.4063  PASS
+
+  plant 'redloop' = census species 'red loopy plant' @ age 59  [scale 0.36 units/mm = 1.5518 mm/unit, file zoom 1.79]
+
+  part                           faces ours faces ref      area ours       area ref  up/ours   up/ref   verdicts
+  internode                             960       960        6724.64        6723.98    87.40%    86.82%  PASS / PASS
+  leaf                                 2844    2844.0        8337.00        8336.97   100.00%   100.00%  PASS / PASS
+  meristem                                0    1220.0           0.00           0.00     0.00%    76.79%  FAIL(100%) / FAIL(100%)
+  petiole                              4678      5688          31.79          31.87    86.44%    84.81%  PASS / PASS
+  whole plant (absolute mm):
+    height   ours=  157.7360 ref=  159.2024  PASS
+    width    ours=  196.4920 ref=  199.5416  PASS
+    depth    ours=   56.8920 ref=   53.8670  FAIL(5%)
+
+  plant 'seriousl' = census species 'seriously loopy plant' @ age 100  [scale 1.21 units/mm = 0.4617 mm/unit, file zoom 1.79]
+
+  part                           faces ours faces ref      area ours       area ref  up/ours   up/ref   verdicts
+  internode                              90        90          27.41          27.40    97.92%    98.08%  PASS / PASS
+  leaf                                   80      80.0         273.73         273.73    98.66%    96.07%  PASS / PASS
+  meristem                                2     240.0           0.00           0.00     0.00%    91.16%  FAIL(100%) / FAIL(100%)
+  petiole                               162       288           0.94           1.04    95.36%    92.06%  FAIL(9%) / PASS
+  seedling leaf                           8       8.0           0.00           0.00     0.32%     0.30%  FAIL(28%) / FAIL(5%)
+  seedling petiole                       10        36           0.00           0.00     0.01%     0.01%  FAIL(100%) / FAIL(17%)
+  whole plant (absolute mm):
+    height   ours=   39.2070 ref=   41.3891  FAIL(5%)
+    width    ours=   81.0170 ref=   79.7331  PASS
+    depth    ours=   40.1270 ref=   39.2339  PASS

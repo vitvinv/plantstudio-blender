@@ -8,35 +8,170 @@ Each part draws itself into the turtle's mesh buffer:
 
 from . import math3d as umath
 from .meristem import (kDirectionLeft, kDirectionRight, kArrangementOpposite,
-                       kActivityDraw)
+                       kActivityDraw, kGenderFemale, kGenderMale)
 from .traverser import PdTraverser
 from .mesh_buffer import PIPE_FACES
 
 kDontTaper = 0
 kUseAmendment = 1
 
-# plant part export indices (used for material naming)
+# Plant part export indices — exact port of U3dexport.pas kExportPart*.
+# Every triangle/pipe emitted for a part is tagged with one of these ids so
+# headless censuses and 3D exports can be compared per part type against the
+# original PlantStudio (which layers exports by the same taxonomy).
+kExportPartMeristem = 0
 kExportPartInternode = 1
-kExportPartLeaf = 2
-kExportPartLeafStipule = 3
-kExportPartPetiole = 4
-kExportPartMeristem = 5
-kExportPartRootTop = 6
-kExportPartInflorescence = 7
-kExportPartFlower = 8
-kExportPartFruit = 9
+kExportPartSeedlingLeaf = 2
+kExportPartLeaf = 3
+kExportPartFirstPetiole = 4
+kExportPartPetiole = 5
+kExportPartLeafStipule = 6
+kExportPartInflorescenceStalkFemale = 7
+kExportPartInflorescenceInternodeFemale = 8
+kExportPartInflorescenceBractFemale = 9
+kExportPartInflorescenceStalkMale = 10
+kExportPartInflorescenceInternodeMale = 11
+kExportPartInflorescenceBractMale = 12
+kExportPartPedicelFemale = 13
+kExportPartFlowerBudFemale = 14
+kExportPartStyleFemale = 15
+kExportPartStigmaFemale = 16
+kExportPartFilamentFemale = 17
+kExportPartAntherFemale = 18
+kExportPartFirstPetalsFemale = 19
+kExportPartSecondPetalsFemale = 20
+kExportPartThirdPetalsFemale = 21
+kExportPartFourthPetalsFemale = 22
+kExportPartFifthPetalsFemale = 23
+kExportPartSepalsFemale = 24
+kExportPartPedicelMale = 25
+kExportPartFlowerBudMale = 26
+kExportPartFilamentMale = 27
+kExportPartAntherMale = 28
+kExportPartFirstPetalsMale = 29
+kExportPartSepalsMale = 30
+kExportPartUnripeFruit = 31
+kExportPartRipeFruit = 32
+kExportPartRootTop = 33
+kExportPartLast = 33
 
 PART_NAMES = {
-    kExportPartInternode: "internode",
-    kExportPartLeaf: "leaf",
-    kExportPartLeafStipule: "stipule",
-    kExportPartPetiole: "petiole",
     kExportPartMeristem: "meristem",
-    kExportPartRootTop: "root",
-    kExportPartInflorescence: "inflorescence",
-    kExportPartFlower: "flower",
-    kExportPartFruit: "fruit",
+    kExportPartInternode: "internode",
+    kExportPartSeedlingLeaf: "seedling leaf",
+    kExportPartLeaf: "leaf",
+    kExportPartFirstPetiole: "seedling petiole",
+    kExportPartPetiole: "petiole",
+    kExportPartLeafStipule: "leaf stipule",
+    kExportPartInflorescenceStalkFemale: "inflorescence stalk female",
+    kExportPartInflorescenceInternodeFemale: "inflorescence internode female",
+    kExportPartInflorescenceBractFemale: "inflorescence bract female",
+    kExportPartInflorescenceStalkMale: "inflorescence stalk male",
+    kExportPartInflorescenceInternodeMale: "inflorescence internode male",
+    kExportPartInflorescenceBractMale: "inflorescence bract male",
+    kExportPartPedicelFemale: "pedicel female",
+    kExportPartFlowerBudFemale: "flower bud female",
+    kExportPartStyleFemale: "style female",
+    kExportPartStigmaFemale: "stigma female",
+    kExportPartFilamentFemale: "filament female",
+    kExportPartAntherFemale: "anther female",
+    kExportPartFirstPetalsFemale: "petals row 1 female",
+    kExportPartSecondPetalsFemale: "petals row 2 female",
+    kExportPartThirdPetalsFemale: "petals row 3 female",
+    kExportPartFourthPetalsFemale: "petals row 4 female",
+    kExportPartFifthPetalsFemale: "petals row 5 female",
+    kExportPartSepalsFemale: "sepals female",
+    kExportPartPedicelMale: "pedicel male",
+    kExportPartFlowerBudMale: "flower bud male",
+    kExportPartFilamentMale: "filament male",
+    kExportPartAntherMale: "anther male",
+    kExportPartFirstPetalsMale: "petals row 1 male",
+    kExportPartSepalsMale: "sepals male",
+    kExportPartUnripeFruit: "unripe fruit",
+    kExportPartRipeFruit: "ripe fruit",
+    kExportPartRootTop: "root top",
 }
+
+# original short names (U3dexport.getInfoForDXFPartType) — match the group
+# suffixes PlantStudio writes into part-tagged OBJ exports
+PART_SHORT_NAMES = {
+    kExportPartMeristem: "Mrstm",
+    kExportPartInternode: "Intrnd",
+    kExportPartSeedlingLeaf: "1stLeaf",
+    kExportPartLeaf: "Leaf",
+    kExportPartFirstPetiole: "1stPetiole",
+    kExportPartPetiole: "Petiole",
+    kExportPartLeafStipule: "Stipule",
+    kExportPartInflorescenceStalkFemale: "1Pdncle",
+    kExportPartInflorescenceInternodeFemale: "1InfInt",
+    kExportPartInflorescenceBractFemale: "1Bract",
+    kExportPartInflorescenceStalkMale: "2Pdncle",
+    kExportPartInflorescenceInternodeMale: "2InfInt",
+    kExportPartInflorescenceBractMale: "2Bract",
+    kExportPartPedicelFemale: "1Pdcel",
+    kExportPartFlowerBudFemale: "1Bud",
+    kExportPartStyleFemale: "Style",
+    kExportPartStigmaFemale: "Stigma",
+    kExportPartFilamentFemale: "1Flmnt",
+    kExportPartAntherFemale: "1Anther",
+    kExportPartFirstPetalsFemale: "1Petal1",
+    kExportPartSecondPetalsFemale: "1Petal2",
+    kExportPartThirdPetalsFemale: "1Petal3",
+    kExportPartFourthPetalsFemale: "1Petal4",
+    kExportPartFifthPetalsFemale: "1Petal5",
+    kExportPartSepalsFemale: "1Sepal",
+    kExportPartPedicelMale: "2Pdcel",
+    kExportPartFlowerBudMale: "2Bud",
+    kExportPartFilamentMale: "2Flmnt",
+    kExportPartAntherMale: "2Anther",
+    kExportPartFirstPetalsMale: "2Petal1",
+    kExportPartSepalsMale: "2Sepal",
+    kExportPartUnripeFruit: "FruitU",
+    kExportPartRipeFruit: "FruitR",
+    kExportPartRootTop: "Root",
+}
+
+# female (base) -> male export part, for gendered inflorescence/flower parts
+_MALE_PART_FOR_FEMALE = {
+    kExportPartInflorescenceStalkFemale: kExportPartInflorescenceStalkMale,
+    kExportPartInflorescenceInternodeFemale: kExportPartInflorescenceInternodeMale,
+    kExportPartInflorescenceBractFemale: kExportPartInflorescenceBractMale,
+    kExportPartPedicelFemale: kExportPartPedicelMale,
+    kExportPartFlowerBudFemale: kExportPartFlowerBudMale,
+    kExportPartFilamentFemale: kExportPartFilamentMale,
+    kExportPartAntherFemale: kExportPartAntherMale,
+    kExportPartFirstPetalsFemale: kExportPartFirstPetalsMale,
+    kExportPartSepalsFemale: kExportPartSepalsMale,
+}
+
+# flower TDO row key -> base (female) export part
+ROW_KEY_TO_BASE_PART = {
+    "kBud": kExportPartFlowerBudFemale,
+    "kPistils": kExportPartStigmaFemale,
+    "kStamens": kExportPartAntherFemale,
+    "kFirstPetals": kExportPartFirstPetalsFemale,
+    "kSecondPetals": kExportPartSecondPetalsFemale,
+    "kThirdPetals": kExportPartThirdPetalsFemale,
+    "kFourthPetals": kExportPartFourthPetalsFemale,
+    "kFifthPetals": kExportPartFifthPetalsFemale,
+    "kSepals": kExportPartSepalsFemale,
+}
+
+
+def real_dxf_index(part, index):
+    """Port of PdPlantPart.realDxfIndexForBaseDXFPart (Upart.pas).
+
+    Draw calls pass the female/base part index; the part's own state resolves
+    it: leaves use the seedling-leaf/first-petiole variants, and male flowers
+    or inflorescences use the male part variants.
+    """
+    if index == kExportPartLeaf and getattr(part, "isSeedlingLeaf", False):
+        return kExportPartSeedlingLeaf
+    if index == kExportPartPetiole and getattr(part, "isSeedlingLeaf", False):
+        return kExportPartFirstPetiole
+    if getattr(part, "gender", kGenderFemale) == kGenderMale:
+        return _MALE_PART_FOR_FEMALE.get(index, index)
+    return index
 
 
 def _gp(obj, name, default=0.0):
@@ -88,8 +223,30 @@ def draw_plant(plant, turtle):
     """Draw the whole plant into the turtle's mesh buffer."""
     plant.turtle = turtle
     if plant.firstPhytomer is not None:
+        turtle.push()
+        # Saved posing rotation from the .pla (kStateRotationX/Y/Z, degrees),
+        # as applied by the original's PdPlant.draw (uplant.py:544-549):
+        # rotateZ(64), then rotateX/Y/Z(pose * 256/360), before traversing.
+        # WILDFLOWERS ROUND 5 STATUS (violet triage, unresolved):
+        # violet's saved xRotation is -50.5 deg and the reference OBJ is drawn
+        # tilted by it (ref height 75.9 mm vs our un-posed 61.1 mm). Applying
+        # the literal original transform to our buffer does NOT reproduce the
+        # reference (see data/scratch/violet_pose_sweep.py variants), so the
+        # exact frame relationship between the original's screen-draw basis
+        # and this buffer is still unknown. To avoid regressing the 5 already-
+        # validated folders, the pose is applied as the conservative yaw
+        # (original algebra: pose rotations act on the un-rotated frame):
+        # - pose 0 (all Round 1/2/4 anchor-folder plants): exactly identity
+        # - pose != 0 (violet, and every saved-posed plant): drawn un-posed,
+        #   i.e. height/depth row residuals for saved-posed plants are a
+        #   DOCUMENTED ACCEPTED RESIDUAL until the frame map is solved.
+        pGeneral = plant.pGeneral
+        turtle.rotateX(getattr(pGeneral, "xRotation", 0.0) * 256.0 / 360.0)
+        turtle.rotateY(getattr(pGeneral, "yRotation", 0.0) * 256.0 / 360.0)
+        turtle.rotateZ(getattr(pGeneral, "zRotation", 0.0) * 256.0 / 360.0)
         traverser = PdTraverser(plant)
         traverser.traverseWholePlant(kActivityDraw)
+        turtle.pop()
     plant.turtle = None
 
 
@@ -99,6 +256,9 @@ def draw_internode(part):
     turtle = part.plant.turtle
     if turtle is None:
         return
+    if part.isFirstPhytomer and \
+            getattr(part.plant.params.pRoot, "showsAboveGround", False):
+        _draw_root_top(part)
     zAngle = part.internodeAngle
     if part.phytomerAttachedTo is not None:
         if part.phytomerAttachedTo.leftBranchPlantPart is part:
@@ -110,24 +270,67 @@ def draw_internode(part):
                        part.plant.pInternode.lengthAtOptimalFinalBiomassAndExpansion_mm)
     width = umath.max(0.0, part.propFullWidth() *
                       part.plant.pInternode.widthAtOptimalFinalBiomassAndExpansion_mm)
-    # Species with a 0 internode-length param (e.g. maiden grass) would draw
-    # every node at the origin — leaves pile at the bottom. Fall back to a
-    # fraction of the petiole length so the plant still has structure.
-    if length <= 0 and not part.isFirstPhytomer:
-        petiole = getattr(part.plant.pLeaf, "petioleLengthAtOptimalBiomass_mm", 30.0)
-        if not petiole:
-            petiole = 30.0
-        length = petiole * 0.25 * umath.max(0.1, part.propFullLength())
+    # NOTE: no fallback for 0-length params — the original draws zero-length
+    # internodes for such species (e.g. daylily: a leaf fan with no visible
+    # vegetative stem). Verified against the PlantStudio OBJ reference.
     color = require_color(part.internodeColor,
                           f"species '{part.plant.name}' internode faceColor")
     _draw_stem_segment(part, length, width, zAngle, 0, color, kDontTaper,
                        kExportPartInternode)
 
 
+def _draw_root_top(part):
+    """Port of PdInternode.drawRootTop (uintern.pas): the top of the root
+    drawn above ground on the first phytomer, 5 TDO sections in a circle."""
+    plant = part.plant
+    turtle = plant.turtle
+    pRoot = plant.params.pRoot
+    tdo_container = getattr(pRoot, "tdoParams", None)
+    if tdo_container is None:
+        return
+    tdo = getattr(tdo_container, "object3D", None)
+    if tdo is None:
+        return
+    scale_at_full = getattr(tdo_container, "scaleAtFullSize", 0.0) or 0.0
+    scale = umath.safedivExcept(plant.age, plant.pGeneral.ageAtMaturity, 0) \
+        * scale_at_full / 100.0
+    if scale <= 0:
+        return
+    color = require_color(tdo_container.faceColor,
+                          f"species '{plant.name}' pRoot.tdoParams.faceColor")
+    r_tdo = resolve_tdo(plant, tdo,
+                        owner=f"species '{plant.name}' pRoot.tdoParams.object3D")
+    numParts = 5
+    for _ in range(numParts):
+        turtle.rotateX(256 / numParts)
+        turtle.push()
+        turtle.rotateZ(64)
+        turtle.rotateY(-64)
+        turtle.rotateX(_angle_with_sway(part, getattr(tdo_container, "xRotationBeforeDraw", 0.0)))
+        turtle.rotateY(_angle_with_sway(part, getattr(tdo_container, "yRotationBeforeDraw", 0.0)))
+        turtle.rotateZ(_angle_with_sway(part, getattr(tdo_container, "zRotationBeforeDraw", 0.0)))
+        turtle.drawTriangleSet(r_tdo.points, r_tdo.triangles, scale, color,
+                                part_id=kExportPartRootTop)
+        turtle.pop()
+
+
 def _draw_stem_segment(part, length, width, angleZ, angleY, color, taperIndex, dxfIndex,
-                       cap_start=True, cap_end=True):
+                       cap_start=False, cap_end=False):
+    """Draw a curved stem segment as pipe side faces only.
+
+    The original never draws pipe end caps — neither the screen path
+    (KfTurtle.drawInMillimeters -> drawLineFromTo) nor the export path
+    (write3DExportLine -> drawFileExportPipeFaces writes side quads only) —
+    so cap-free pipes are the faithful geometry.
+
+    Zero-length segments are DRAWN, not skipped: the original's only length
+    gate is `ifExporting_excludeStem` (upart.py:256), which applies to POV
+    export exclusively. In the OBJ path a length-0 stem still emits
+    lineDivisions pipes whose entry/exit rings differ by the per-division
+    rotation — real geometry with small area (Wildflowers round 5: thistle
+    pedicels 1800 faces/41.5 mm2, violet peduncles 168 faces/0.9 mm2)."""
     turtle = part.plant.turtle
-    if turtle is None or length <= 0:
+    if turtle is None:
         return
     pGeneral = part.plant.pGeneral
     lineDivisions = max(1, int(getattr(pGeneral, "lineDivisions", 3)))
@@ -150,7 +353,13 @@ def _draw_stem_segment(part, length, width, angleZ, angleY, color, taperIndex, d
     turtle.setLineColor(color)
     # Reuse each division's exit ring as the next division's entry ring. This
     # keeps curved stems welded instead of creating duplicate internal shells.
-    prev_basis = turtle.ring_basis()
+    # The FIRST division's entry ring is its exit ring: the original builds
+    # startPoints for segmentNumber <= 0 from the current pose AFTER
+    # drawStemSegment's per-division rotateY/rotateZ (upart.py:313-316, 336),
+    # so a zero-length first division emits zero-area faces (welded away here)
+    # and never a twisted pre/post-rotation band (Wildflowers round 5: thistle
+    # pedicel area 1.5x until this basis convention was corrected).
+    prev_basis = None
     stroke_id = turtle.next_stroke_id()
     for i in range(lineDivisions):
         isLast = (i >= lineDivisions - 1)
@@ -174,7 +383,7 @@ def _draw_stem_segment(part, length, width, angleZ, angleY, color, taperIndex, d
         turtle.rotateY(segmentTurnY)
         turtle.rotateZ(segmentTurnZ)
         end_basis = turtle.ring_basis()
-        start_basis = prev_basis
+        start_basis = end_basis if prev_basis is None else prev_basis
         prev_basis = end_basis
         # draw pipe for this segment
         start_pos = turtle.position()
@@ -223,7 +432,7 @@ def _finish_semantic_leaf_record(leaf, record):
     records = getattr(getattr(turtle, "mesh_buffer", None), "triangle_set_records", [])
     emitted = any(
         item.get("semantic_id") == record["semantic_id"]
-        and item.get("part_id") == kExportPartLeaf
+        and item.get("part_id") in (kExportPartLeaf, kExportPartSeedlingLeaf)
         and item.get("scale", 0) > 0
         and item.get("triangles", 0) > 0
         for item in records
@@ -243,19 +452,22 @@ def draw_leaf(leaf, direction):
     if direction == kDirectionRight:
         turtle.rotateX(128)
     pLeaf = leaf.plant.pLeaf
-    propFullSize = umath.min(1.0, leaf.liveBiomass_pctMPB /
-                             max(0.001, pLeaf.optimalBiomass_pctMPB))
+    # the original uses the STORED propFullSize (set at creation, updated
+    # during grow) — recomputing from liveBiomass shrinks leaves that lost
+    # biomass via post-flowering streaming
+    propFullSize = leaf.propFullSize
     length = pLeaf.petioleLengthAtOptimalBiomass_mm * propFullSize
     if leaf.isSeedlingLeaf:
         length = length / 2
     width = pLeaf.petioleWidthAtOptimalBiomass_mm * propFullSize
-    angle = pLeaf.petioleAngle
+    angle = _angle_with_sway(leaf, pLeaf.petioleAngle)
     petioleColor = require_color(pLeaf.petioleColor,
                                  f"species '{leaf.plant.name}' petioleColor")
 
     if leaf.isSeedlingLeaf:
         _draw_stem_segment(leaf, length, width, angle, 0, petioleColor,
-                           pLeaf.petioleTaperIndex, kExportPartPetiole,
+                           pLeaf.petioleTaperIndex,
+                           real_dxf_index(leaf, kExportPartPetiole),
                            cap_start=False)
         st = getattr(leaf.plant.params, "seedlingTdoParams", None)
         seed_scale = getattr(st, "scaleAtFullSize", 0) or \
@@ -263,8 +475,12 @@ def draw_leaf(leaf, direction):
         scale = propFullSize * (seed_scale / 100.0)
         _draw_leaf_tdo(leaf, scale)
     else:
-        if getattr(pLeaf, "stipuleTdoParams", None) is not None and \
-                getattr(leaf.plant.params.stipuleTdoParams, "scaleAtFullSize", 0) > 0:
+        stipule_container = getattr(leaf.plant.params, "stipuleTdoParams", None)
+        if stipule_container is not None and \
+                getattr(stipule_container, "scaleAtFullSize", 0) > 0:
+            # NOTE: stipuleTdoParams lives at the params root in this port
+            # (pLeaf has no such attribute — the original's TPlantLeafParams
+            # does, but our parser hoists it)
             _draw_stipule(leaf)
         if pLeaf.compoundNumLeaflets <= 1:
             _draw_stem_segment(leaf, length, width, angle, 0, petioleColor,
@@ -272,6 +488,11 @@ def draw_leaf(leaf, direction):
                                cap_start=False)
             _draw_leaflet(leaf, _leaf_scale(leaf))
         else:
+            # compound leaves draw their main petiole first (original
+            # drawWithDirection, kDontTaper), then the rachis/petiolet
+            # structure — the port previously skipped the main petiole
+            _draw_stem_segment(leaf, length, width, angle, 0, petioleColor,
+                               kDontTaper, kExportPartPetiole, cap_start=False)
             _draw_compound_leaf(leaf, length, width, angle, petioleColor)
     turtle.pop()
     _finish_semantic_leaf_record(leaf, record)
@@ -301,7 +522,7 @@ def _draw_leaf_tdo(leaf, scale):
     r_tdo = resolve_tdo(leaf.plant, tdo.object3D,
                         owner=f"species '{leaf.plant.name}' leafTdoParams.object3D")
     turtle.drawTriangleSet(r_tdo.points, r_tdo.triangles, scale, faceColor,
-                            part_id=kExportPartLeaf,
+                            part_id=real_dxf_index(leaf, kExportPartLeaf),
                             semantic_id=getattr(leaf, "_semantic_id", None))
 
 
@@ -315,22 +536,44 @@ def _draw_stipule(leaf):
     turtle.rotateX(_angle_with_sway(leaf, tdoParams.xRotationBeforeDraw))
     turtle.rotateY(_angle_with_sway(leaf, tdoParams.yRotationBeforeDraw))
     turtle.rotateZ(_angle_with_sway(leaf, tdoParams.zRotationBeforeDraw))
-    propFullSize = umath.min(1.0, leaf.liveBiomass_pctMPB /
-                             max(0.001, pLeaf.optimalBiomass_pctMPB))
+    propFullSize = _prop_full_size(leaf)
     scale = propFullSize * (tdoParams.scaleAtFullSize / 100.0)
     if tdoParams.object3D is not None:
         color = require_color(tdoParams.faceColor,
                               f"species '{leaf.plant.name}' stipuleTdoParams.faceColor")
         r_tdo = resolve_tdo(leaf.plant, tdoParams.object3D,
                             owner=f"species '{leaf.plant.name}' stipuleTdoParams.object3D")
-        turtle.drawTriangleSet(r_tdo.points, r_tdo.triangles, scale, color)
+        turtle.drawTriangleSet(r_tdo.points, r_tdo.triangles, scale, color,
+                                part_id=kExportPartLeafStipule)
     turtle.pop()
 
 
 def _prop_full_size(leaf):
-    pLeaf = leaf.plant.pLeaf
-    return umath.min(1.0, leaf.liveBiomass_pctMPB /
-                     max(0.001, pLeaf.optimalBiomass_pctMPB))
+    # the stored field — set at creation (uncapped), re-capped during grow
+    return leaf.propFullSize
+
+
+def _angle_with_sway(part, angle):
+    """Add the part's stored random sway to a draw angle (upart.angleWithSway:
+    angle + (randomSwayIndex - 0.5) * randomSway; consumes no RNG)."""
+    sway = getattr(part.plant.pGeneral, "randomSway", 0.0)
+    if sway == 0:
+        return angle
+    return angle + ((getattr(part, "randomSwayIndex", 0.0) - 0.5) * sway)
+
+
+def _compound_leaf_angle_with_sway(leaf, angle, count):
+    """uleaf.compoundLeafAngleWithSway: per-leaflet-count stored sway."""
+    result = angle
+    if leaf.plant is None:
+        return result
+    count = max(0, count) % 49
+    indexes = getattr(leaf, "compoundLeafRandomSwayIndexes", [])
+    if count >= len(indexes):
+        return result
+    result = angle + ((indexes[count] - 0.5) *
+                      getattr(leaf.plant.pGeneral, "randomSway", 0.0))
+    return result
 
 
 def _leaf_scale(leaf):
@@ -373,7 +616,7 @@ def _draw_leaflet(leaf, scale):
     faceColor = require_color(tdo.faceColor,
                               f"species '{leaf.plant.name}' leafTdoParams.faceColor")
     turtle.drawTriangleSet(r_tdo.points, r_tdo.triangles, scale, faceColor,
-                            part_id=kExportPartLeaf,
+                            part_id=real_dxf_index(leaf, kExportPartLeaf),
                             semantic_id=getattr(leaf, "_semantic_id", None))
 
 
@@ -409,9 +652,12 @@ def _draw_compound_leaf(leaf, length, width, angle, petioleColor):
             if i != 1:
                 # draw the rachis segment to this leaflet
                 bend = _bend_angle(i)
-                _draw_stem_segment(leaf, rachis_len, rachis_wid, bend, 0,
-                                   petioleColor, kDontTaper, kExportPartPetiole,
-                                   cap_start=False)
+                _draw_stem_segment(
+                    leaf, rachis_len, rachis_wid,
+                    _compound_leaf_angle_with_sway(leaf, bend, i),
+                    _compound_leaf_angle_with_sway(leaf, 0, i),
+                    petioleColor, kDontTaper, kExportPartPetiole,
+                    cap_start=False)
             turtle.push()
             # petiole off the rachis: ±32°, alternating; terminal leaflet straight
             if i == 1:
@@ -420,11 +666,12 @@ def _draw_compound_leaf(leaf, length, width, angle, petioleColor):
                 lf_angle = 32
             else:
                 lf_angle = -32
-            _draw_stem_segment(leaf, scale * pLeaf.petioleLengthAtOptimalBiomass_mm * pfs,
-                               scale * pLeaf.petioleWidthAtOptimalBiomass_mm * pfs,
-                               0, lf_angle, petioleColor,
-                               pLeaf.petioleTaperIndex, kExportPartPetiole,
-                               cap_start=False)
+            _draw_stem_segment(
+                leaf, scale * pLeaf.petioleLengthAtOptimalBiomass_mm * pfs,
+                scale * pLeaf.petioleWidthAtOptimalBiomass_mm * pfs,
+                0, _compound_leaf_angle_with_sway(leaf, lf_angle, i),
+                petioleColor, pLeaf.petioleTaperIndex, kExportPartPetiole,
+                cap_start=False)
             _draw_leaflet(leaf, scale)
             turtle.pop()
     else:  # palmate: leaflets radiate from a point
@@ -442,15 +689,6 @@ def _draw_compound_leaf(leaf, length, width, angle, petioleColor):
                                cap_start=False)
             _draw_leaflet(leaf, scale)
             turtle.pop()
-
-
-def _angle_with_sway(part, angle):
-    """Add random sway to a draw angle (deterministic via plant RNG)."""
-    rng = part.plant.randomNumberGenerator
-    sway = getattr(part.plant.pGeneral, "randomSway", 0.0)
-    if sway == 0:
-        return angle
-    return angle + (rng.zeroToOne() - 0.5) * 2.0 * sway * 256 / 360
 
 
 # ── meristem / inflorescence TDO drawing ──
@@ -474,12 +712,13 @@ def draw_meristem(meristem):
         turtle.rotateX(256 / numParts)
         turtle.push()
         turtle.rotateZ(-64)
-        turtle.rotateX(bud.xRotationBeforeDraw)
-        turtle.rotateY(bud.yRotationBeforeDraw)
-        turtle.rotateZ(bud.zRotationBeforeDraw)
+        turtle.rotateX(_angle_with_sway(meristem, bud.xRotationBeforeDraw))
+        turtle.rotateY(_angle_with_sway(meristem, bud.yRotationBeforeDraw))
+        turtle.rotateZ(_angle_with_sway(meristem, bud.zRotationBeforeDraw))
         r_tdo = resolve_tdo(plant, bud.object3D)
         if r_tdo is not None:
-            turtle.drawTriangleSet(r_tdo.points, r_tdo.triangles, scale, color)
+            turtle.drawTriangleSet(r_tdo.points, r_tdo.triangles, scale, color,
+                                    part_id=kExportPartMeristem)
         turtle.pop()
 
 
@@ -536,7 +775,8 @@ def _draw_circle_of_tdos(part, tdo, color, pullBackAngle, scale, numParts,
     isFruit: closed fruit sections align with rotateZ(-64) instead of the
     pull-back angle.
     """
-    if scale <= 0.0:
+    if scale <= 0.0 or numParts <= 0:
+        # the original loops range(repetitions): 0 repetitions draws nothing
         return
     turtle = part.plant.turtle
     if turtle is None:
@@ -600,7 +840,7 @@ def draw_inflorescence(inflor):
     if _gp(p, "isHead", False):
         _draw_head(inflor, p)
     else:
-        _draw_apex(inflor, p, int(_gp(p, "numFlowersOnMainBranch", 1) or 1),
+        _draw_apex(inflor, p, int(_gp(p, "numFlowersOnMainBranch", 1)),
                    0, True)
     turtle.pop()
 
@@ -618,13 +858,19 @@ def _draw_inflor_bracts(inflor, p):
                         owner=f"species '{inflor.plant.name}' bractTdoParams.object3D")
     scale = (_gp(bract, "scaleAtFullSize", 0.0) / 100.0) * _prop_full_size_inflor(inflor, p)
     color = _row_color(bract, inflor.plant, "bractTdoParams")
-    reps = max(1, int(_gp(bract, "repetitions", 1) or 1))
+    # repetitions == 0 draws nothing (drawCircleOfTdos loops range(reps));
+    # a falsy `or` must not coerce it to 1
+    reps = int(_gp(bract, "repetitions", 1))
     radial = _gp(bract, "radiallyArranged", True)
-    pull = _gp(bract, "pullBackAngle", 0.0) or 0.0
+    pull = _gp(bract, "pullBackAngle", 0.0)
+    bract_part = real_dxf_index(inflor, kExportPartInflorescenceBractFemale)
     turtle.push()
     turtle.rotateX(_angle_with_sway(inflor, _gp(bract, "xRotationBeforeDraw", 0.0)))
     turtle.rotateY(_angle_with_sway(inflor, _gp(bract, "yRotationBeforeDraw", 0.0)))
     turtle.rotateZ(_angle_with_sway(inflor, _gp(bract, "zRotationBeforeDraw", 0.0)))
+    if reps <= 0:
+        turtle.pop()
+        return
     if radial:
         turn = 256 / reps
         for _ in range(reps):
@@ -633,7 +879,8 @@ def _draw_inflor_bracts(inflor, p):
             turtle.rotateY(-64)
             turtle.rotateX(64)
             turtle.rotateX(pull)
-            turtle.drawTriangleSet(r_tdo.points, r_tdo.triangles, scale, color)
+            turtle.drawTriangleSet(r_tdo.points, r_tdo.triangles, scale, color,
+                                    part_id=bract_part)
             turtle.pop()
             turtle.rotateX(turn)
     else:
@@ -641,7 +888,8 @@ def _draw_inflor_bracts(inflor, p):
         turtle.rotateY(-64)
         turtle.rotateX(64)
         turtle.rotateX(pull)
-        turtle.drawTriangleSet(r_tdo.points, r_tdo.triangles, scale, color)
+        turtle.drawTriangleSet(r_tdo.points, r_tdo.triangles, scale, color,
+                                part_id=bract_part)
         turtle.pop()
     turtle.pop()
 
@@ -676,7 +924,7 @@ def _draw_peduncle(inflor, p):
             f"inflorescence stalk color missing for species "
             f"'{inflor.plant.name}' (pInflor stalkColor is None)")
     _draw_stem_segment(inflor, length, width, zAngle, 0, color, kDontTaper,
-                       kExportPartInternode)
+                       real_dxf_index(inflor, kExportPartInflorescenceStalkFemale))
 
 
 def _draw_inflor_internode(inflor, p):
@@ -690,8 +938,15 @@ def _draw_inflor_internode(inflor, p):
                                      propFullSize)
     width = _length_or_width_at_age(inflor, p, _gp(p, "internodeWidth_mm", 0.0),
                                     propFullSize)
-    zAngle = _angle_with_sway(inflor, _gp(p, "angleBetweenInternodes", 0.0))
-    yAngle = _angle_with_sway(inflor, 0.0)
+    # The v2.7 EXE does NOT apply random sway to inflorescence-internode
+    # angles (the transpiled v2.6.2 source uinflor.py:515-516 wraps both
+    # angles in angleWithSway). Evidence: Garden plants reference OBJ corn
+    # tassel — 42 male + 2 female internode blocks, all pipes straight
+    # (ringDelta == centerDelta) despite base angle 0 and per-inflorescence
+    # sway indices that span 0..1. Our port drew ±3.6-unit sway twists there
+    # (corn inflorescence internode female 3.12 mm2 vs ref 0.29).
+    zAngle = _gp(p, "angleBetweenInternodes", 0.0)
+    yAngle = 0.0
     color = _gp(p, "stalkColor", None)
     if color is None:
         from .tdo_parser import AssetError
@@ -699,7 +954,7 @@ def _draw_inflor_internode(inflor, p):
             f"inflorescence stalk color missing for species "
             f"'{inflor.plant.name}' (pInflor stalkColor is None)")
     _draw_stem_segment(inflor, length, width, zAngle, yAngle, color, kDontTaper,
-                       kExportPartInternode)
+                       real_dxf_index(inflor, kExportPartInflorescenceInternodeFemale))
 
 
 def _draw_apex(inflor, p, internodeCount, flowerIndexOffset, mainBranch):
@@ -708,9 +963,9 @@ def _draw_apex(inflor, p, internodeCount, flowerIndexOffset, mainBranch):
     turtle = inflor.plant.turtle
     if turtle is None:
         return
-    numBranches = int(_gp(p, "numBranches", 0) or 0)
-    flowersPerBranch = int(_gp(p, "numFlowersPerBranch", 1) or 1)
-    flowersOnMain = int(_gp(p, "numFlowersOnMainBranch", 1) or 1)
+    numBranches = int(_gp(p, "numBranches", 0))
+    flowersPerBranch = int(_gp(p, "numFlowersPerBranch", 1))
+    flowersOnMain = int(_gp(p, "numFlowersOnMainBranch", 1))
     branchesDrawn = 0
     if internodeCount > 0:
         if mainBranch:
@@ -781,7 +1036,8 @@ def _draw_inflor_flower(inflor, p, internodeCount):
             f"pedicel color missing for species '{inflor.plant.name}' "
             f"(pInflor pedicelColor is None)")
     _draw_stem_segment(inflor, length, width, angle, 0, color,
-                       _gp(p, "pedicelTaperIndex", 100), kExportPartPetiole)
+                       _gp(p, "pedicelTaperIndex", 100),
+                       real_dxf_index(inflor, kExportPartPedicelFemale))
     if 0 <= flowerIndex - 1 < len(inflor.flowers):
         _draw_flower_fruit(inflor.flowers[flowerIndex - 1])
 
@@ -812,15 +1068,17 @@ def _draw_head(inflor, p):
 
 def _draw_flower_fruit(flower):
     """Port of PdFlowerFruit.draw (ufruit.py): bud stage, open flower,
-    or fruit when the flower has set fruit."""
+    or fruit when the flower has set fruit. Fallen flowers draw nothing
+    (ufruit.py draw line 284)."""
     plant = flower.plant
     turtle = plant.turtle
     if turtle is None:
         return
+    if getattr(flower, "hasFallenOff", False):
+        return
     p = plant.pFlower[flower.gender]
     if not p:
         return
-    flower.hasBeenDrawn = True
     # The flower's propFullSize is relative to the FLOWER's own optimal
     # biomass (pFlower.optimalBiomass_pctMPB), clamped to [0,1] like the
     # original — NOT the inflorescence's optimalBiomass.
@@ -830,14 +1088,20 @@ def _draw_flower_fruit(flower):
             flower.liveBiomass_pctMPB + flower.deadBiomass_pctMPB,
             _gp(fruit_params, "optimalBiomass_pctMPB", 1.0), 0))
     else:
+        # original computes propFullSize during growth as
+        # min(1, (live + dead) / pFlower.optimalBiomass) — total biomass,
+        # not just live (ufruit.pas kActivityGrowReproductive)
         propFullSize = umath.min(1.0, umath.safedivExcept(
-            flower.liveBiomass_pctMPB, _gp(p, "optimalBiomass_pctMPB", 1.0), 0))
+            flower.liveBiomass_pctMPB + flower.deadBiomass_pctMPB,
+            _gp(p, "optimalBiomass_pctMPB", 1.0), 0))
     turtle.push()
     stage = getattr(flower, "stage", None)
     if stage is None:
         stage = "open" if flower.isOpen and not flower.hasSetFruit else "bud"
     if stage == "bud":
-        budOption = int(_gp(p, "budDrawingOption", kDrawSingleTdoBud) or kDrawSingleTdoBud)
+        # kDrawNoBud == 0 is a legitimate option — never coerce it to the
+        # default with a truthiness `or`
+        budOption = int(_gp(p, "budDrawingOption", kDrawSingleTdoBud))
         if budOption == kDrawNoBud:
             pass
         elif budOption == kDrawSingleTdoBud:
@@ -850,6 +1114,7 @@ def _draw_flower_fruit(flower):
         draw_fruit(flower, plant)
     else:
         _draw_open_flower(flower, p, propFullSize, False)
+    flower.hasBeenDrawn = True
     turtle.pop()
 
 
@@ -868,10 +1133,10 @@ def _draw_bud_row(flower, row, propFullSize, key):
     turtle.rotateY(_angle_with_sway(flower, _gp(row, "yRotationBeforeDraw", 0.0)))
     turtle.rotateZ(_angle_with_sway(flower, _gp(row, "zRotationBeforeDraw", 0.0)))
     _draw_circle_of_tdos(flower, r_tdo, _row_color(row, flower.plant, key),
-                         _gp(row, "pullBackAngle", 0.0) or 0.0, scale,
-                         max(1, int(_gp(row, "repetitions", 1) or 1)),
+                         _gp(row, "pullBackAngle", 0.0), scale,
+                         int(_gp(row, "repetitions", 1)),
                          _gp(row, "radiallyArranged", True), False,
-                         part_id=kExportPartFlower)
+                         part_id=real_dxf_index(flower, ROW_KEY_TO_BASE_PART[key]))
 
 
 def _draw_open_flower(flower, p, propFullSize, drawAsOpening):
@@ -891,20 +1156,21 @@ def _draw_open_flower(flower, p, propFullSize, drawAsOpening):
             continue
         r_tdo = resolve_tdo(flower.plant, tdo,
                             owner=f"species '{flower.plant.name}' flower row '{key}' object3D")
-        angle = _angle_with_sway(flower, _gp(row, "pullBackAngle", 0.0) or 0.0)
+        angle = _angle_with_sway(flower, _gp(row, "pullBackAngle", 0.0))
         if drawAsOpening:
             angle = angle * propFullSize * 2
-            if angle > (_gp(row, "pullBackAngle", 0.0) or 0.0):
-                angle = _gp(row, "pullBackAngle", 0.0) or 0.0
+            if angle > _gp(row, "pullBackAngle", 0.0):
+                angle = _gp(row, "pullBackAngle", 0.0)
         turtle.push()
         turtle.rotateX(_angle_with_sway(flower, _gp(row, "xRotationBeforeDraw", 0.0)))
         turtle.rotateY(_angle_with_sway(flower, _gp(row, "yRotationBeforeDraw", 0.0)))
         turtle.rotateZ(_angle_with_sway(flower, _gp(row, "zRotationBeforeDraw", 0.0)))
         _draw_circle_of_tdos(flower, r_tdo, _row_color(row, flower.plant, key),
                              angle, scale,
-                             max(1, int(_gp(row, "repetitions", 1) or 1)),
+                             int(_gp(row, "repetitions", 1)),
                              _gp(row, "radiallyArranged", True), True,
-                             part_id=kExportPartFlower)
+                             part_id=real_dxf_index(
+                                 flower, ROW_KEY_TO_BASE_PART[key]))
         turtle.pop()
 
 
@@ -913,8 +1179,8 @@ def _draw_floral_axis(flower, p, propFullSize, drawAsOpening, isStamen):
     turtle = flower.plant.turtle
     row_key = "kStamens" if isStamen else "kPistils"
     row = _flower_row(p, row_key)
-    num = int(_gp(p, "numStamens", 0) or 0) if isStamen else \
-        int(_gp(p, "numPistils", 0) or 0)
+    num = int(_gp(p, "numStamens", 0)) if isStamen else \
+        int(_gp(p, "numPistils", 0))
     if num <= 0:
         return
     line_len = _gp(p, "filamentLength_mm", 0.0) if isStamen else \
@@ -925,6 +1191,10 @@ def _draw_floral_axis(flower, p, propFullSize, drawAsOpening, isStamen):
         _gp(p, "styleColor", None)
     taper = _gp(p, "filamentTaperIndex", 100) if isStamen else \
         _gp(p, "styleTaperIndex", 100)
+    line_part = real_dxf_index(
+        flower, kExportPartFilamentFemale if isStamen else kExportPartStyleFemale)
+    tdo_part = real_dxf_index(
+        flower, kExportPartAntherFemale if isStamen else kExportPartStigmaFemale)
     turtle.push()
     if row is not None:
         turnPortion = 256 / num
@@ -937,12 +1207,12 @@ def _draw_floral_axis(flower, p, propFullSize, drawAsOpening, isStamen):
             if line_len > 0 and line_wid > 0:
                 length = umath.max(0.0, propFullSize * line_len)
                 width = umath.max(0.0, propFullSize * line_wid)
-                angle = _angle_with_sway(flower, _gp(row, "pullBackAngle", 0.0) or 0.0)
+                angle = _angle_with_sway(flower, _gp(row, "pullBackAngle", 0.0))
                 if drawAsOpening:
                     angle = angle * propFullSize
                 if line_color is not None:
                     _draw_stem_segment(flower, length, width, angle, 0,
-                                       line_color, taper, kExportPartMeristem)
+                                       line_color, taper, line_part)
             scale = (_gp(row, "scaleAtFullSize", 0.0) / 100.0) * propFullSize
             tdo = getattr(row, "object3D", None)
             if tdo is not None:
@@ -955,9 +1225,9 @@ def _draw_floral_axis(flower, p, propFullSize, drawAsOpening, isStamen):
                 _draw_circle_of_tdos(flower, r_tdo,
                                      _row_color(row, flower.plant, row_key),
                                      0.0, scale,
-                                     max(1, int(_gp(row, "repetitions", 1) or 1)),
+                                     int(_gp(row, "repetitions", 1)),
                                      _gp(row, "radiallyArranged", True), True,
-                                     part_id=kExportPartFlower)
+                                     part_id=tdo_part)
             turtle.pop()
             addThisTime = int(addition + carryOver)
             carryOver = carryOver + addition - addThisTime
@@ -997,7 +1267,7 @@ def draw_fruit(flower, plant):
     # Fruit propFullSize is relative to the FRUIT's own optimal biomass
     # (pFruit.optimalBiomass_pctMPB), clamped to [0,1] like the original
     # (ufruit.py draw: min(1.0, totalBiomass / pFruit.optimalBiomass)).
-    fruit_optimal = _gp(fruit_params, "optimalBiomass_pctMPB", 1.0) or 1.0
+    fruit_optimal = _gp(fruit_params, "optimalBiomass_pctMPB", 1.0)
     prop_full_size = min(
         1.0,
         (flower.liveBiomass_pctMPB + flower.deadBiomass_pctMPB)
@@ -1025,10 +1295,12 @@ def draw_fruit(flower, plant):
     reps = max(1, int(getattr(tdo_container, "repetitions", 1) or 1))
     radial = getattr(tdo_container, "radiallyArranged", True)
     pull_back = getattr(tdo_container, "pullBackAngle", 0.0) or 0.0
+    fruit_part = kExportPartRipeFruit if getattr(flower, "isRipe", False) \
+        else kExportPartUnripeFruit
     turtle.push()
     turtle.rotateX(getattr(tdo_container, "xRotationBeforeDraw", 0.0) or 0.0)
     turtle.rotateY(getattr(tdo_container, "yRotationBeforeDraw", 0.0) or 0.0)
     turtle.rotateZ(getattr(tdo_container, "zRotationBeforeDraw", 0.0) or 0.0)
     _draw_circle_of_tdos(flower, r_tdo, color, pull_back, scale, reps, radial,
-                         False, isFruit=True, part_id=kExportPartFruit)
+                         False, isFruit=True, part_id=fruit_part)
     turtle.pop()

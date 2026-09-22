@@ -101,11 +101,15 @@ DEFAULT_TDO_NAME = "Default 3D object"
 
 
 def _tdo_name_items(self, context):
-    """EnumProperty items: every named 3D object in the TDO library."""
+    """EnumProperty items: every named 3D object in the TDO library plus
+    every species-embedded 3D object (e.g. 'Petal, daylily')."""
     try:
         from .operators import get_library
-        _, tdo_lib = get_library()
-        names = sorted(tdo_lib.names()) if tdo_lib else []
+        lib, tdo_lib = get_library()
+        names = set(tdo_lib.names()) if tdo_lib else set()
+        if lib is not None:
+            names |= set(lib.embedded_tdo_names())
+        names = sorted(names)
     except Exception:
         names = []
     if not names:
@@ -169,6 +173,9 @@ _rebuild_busy = False
 _timer_handle = None
 # P2a: last-grown plant + the fingerprint of growth-affecting state it
 # was simulated with, so draw-only knob changes can skip growTo().
+# ponytail: cached plant survives undo, so a draw-only redraw could reuse
+# a pre-undo plant; drop the cache when rebuild is asked for after an undo
+# if that ever shows (pure-python object, cannot crash Blender).
 _cached_plant = None
 _cached_fingerprint = None
 
@@ -383,10 +390,14 @@ def _set_tdo_attr(tdo, attr, value):
             setattr(tdo, attr, value)
         return
     if attr in ("object3D", "object3d"):
-        if isinstance(tdo, dict):
-            tdo["object3D"] = value
-        else:
-            setattr(tdo, "object3D", value)
+        # Species .pla files embed their own 3D objects. A shape knob holds
+        # the object's NAME; when that name is the species' own embedded
+        # object, keep the embedded Tdo (with its geometry) instead of
+        # swapping in the library's version or a placeholder. Without this,
+        # dialing the age re-applied the knob string and replaced flowers
+        # with placeholder blobs.
+        from .core.tdo_parser import apply_object3d_name
+        apply_object3d_name(tdo, value, default_name=DEFAULT_TDO_NAME)
         return
     if isinstance(tdo, dict):
         tdo[attr] = float(value)
@@ -605,7 +616,12 @@ def _timer_cb():
     if _rebuild_busy:
         return 0.1
     scene = bpy.context.scene
-    knobs = scene.ps_wizard_knobs
+    # undo/redo invalidates every bpy reference — a rebuild scheduled before
+    # an undo would run against freed data and crash Blender (re-fetch
+    # everything from bpy.context here; never cache bpy data in this module)
+    knobs = getattr(scene, "ps_wizard_knobs", None)
+    if knobs is None:
+        return None  # unregistered mid-undo; stop the timer
     if knobs.dirty:
         knobs.dirty = False
         _rebuild_busy = True
@@ -673,6 +689,7 @@ def _rebuild_selected(scene, fast=False):
     else:
         plant = create_plant(params, seed=seed, tdo_library=tdo_lib)
         plant.growTo(day)
+        day = plant.age  # growTo clamps to ageAtMaturity (matches original)
         _cached_plant = plant
         _cached_fingerprint = fingerprint
     rebuild_plant_mesh(obj, plant, fast=False)

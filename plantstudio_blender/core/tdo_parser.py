@@ -107,6 +107,27 @@ class TdoLibrary:
     def get(self, name):
         return self._by_name.get(name)
 
+    def merge(self, tdos, override=False):
+        """Add TDOs to the library; returns the number added.
+
+        Used to make species-embedded 3D objects (inline in .pla files)
+        resolvable by name: the wizard shape knobs roundtrip object3D as a
+        name string, so a knob may name an embedded-only object such as
+        'Petal, daylily'. With override=False (default) existing entries
+        win — the .tdo library takes precedence over same-name embedded
+        objects, while per-species geometry is preserved separately by
+        keeping embedded Tdo objects on the params themselves.
+        """
+        added = 0
+        for t in tdos:
+            if not t.name:
+                continue
+            if not override and t.name in self._by_name:
+                continue
+            self._by_name[t.name] = t
+            added += 1
+        return added
+
     def require(self, name, owner=None):
         """Return the named TDO or raise AssetError naming it.
 
@@ -134,3 +155,34 @@ class TdoLibrary:
     @classmethod
     def from_file(cls, path):
         return cls(parse_tdo_file(path))
+
+
+def apply_object3d_name(container, name, default_name=None):
+    """Assign an object3D TDO reference by name, preserving embedded geometry.
+
+    Species .pla files embed their own copies of 3D objects (a Tdo instance
+    on the params). The wizard shape knobs roundtrip object3D as a NAME
+    string; without this preservation, applying the knobs replaced the
+    species' own embedded object with the library's same-name object — or,
+    for embedded-only objects ('Petal, daylily'), with a placeholder —
+    which is how flowers turned into placeholder blobs after dialing the
+    age up and down.
+
+    Keep the embedded Tdo when:
+    - its own name matches the incoming knob name, or
+    - it has no usable name and the knob holds the library fallback name
+      (the roundtrip substituted the fallback for an unnamed embedded TDO).
+    """
+    if isinstance(container, dict):
+        current = container.get("object3D")
+    else:
+        current = getattr(container, "object3D", None)
+    if isinstance(name, str) and isinstance(current, Tdo):
+        cur_name = getattr(current, "name", None)
+        if (cur_name and cur_name == name) or \
+                (not cur_name and name == default_name):
+            return
+    if isinstance(container, dict):
+        container["object3D"] = name
+    else:
+        setattr(container, "object3D", name)

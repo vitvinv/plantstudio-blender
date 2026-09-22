@@ -6,7 +6,9 @@ S-curve toward optimalBiomass, then grow via kActivityGrowVegetative.
 
 from . import math3d as umath
 from .meristem import (PdPlantPart, kPartTypeLeaf, kActivityFree, kActivityNextDay,
-                       kActivityDemandVegetative, kActivityGrowVegetative)
+                       kActivityDemandVegetative, kActivityGrowVegetative,
+                       kActivityVegetativeBiomassThatCanBeRemoved,
+                       kActivityRemoveVegetativeBiomass)
 
 
 class PdLeaf(PdPlantPart):
@@ -16,6 +18,7 @@ class PdLeaf(PdPlantPart):
         self.leafColor = None
         self.petioleColor = None
         self.propFullSize = 0.0
+        self.compoundLeafRandomSwayIndexes = []
 
     def partType(self):
         return kPartTypeLeaf
@@ -24,13 +27,19 @@ class PdLeaf(PdPlantPart):
         return "leaf"
 
     def newWithPlantFractionOfOptimalSize(self, plant, aFraction):
-        self.plant = plant
+        self.initialize(plant)
         self.liveBiomass_pctMPB = aFraction * PdLeaf.optimalInitialBiomass_pctMPB(plant)
         self.deadBiomass_pctMPB = 0.0
-        self.propFullSize = umath.min(1.0, umath.safedivExcept(
-            self.liveBiomass_pctMPB, plant.pLeaf.optimalBiomass_pctMPB, 0))
+        # creation propFullSize is UNCAPPED in the original
+        # (uleaf.initializeFractionOfOptimalSize: safedivExcept without min)
+        self.propFullSize = umath.safedivExcept(
+            self.liveBiomass_pctMPB, plant.pLeaf.optimalBiomass_pctMPB, 1.0)
         self.leafColor = getattr(plant.pLeaf, "faceColor", None)
         self.petioleColor = getattr(plant.pLeaf, "petioleColor", None)
+        if getattr(plant.pLeaf, "compoundNumLeaflets", 1) > 1:
+            # kNumCompoundLeafRandomSwayIndexes = 49 (uleaf.pas)
+            self.compoundLeafRandomSwayIndexes = [
+                plant.randomNumberGenerator.zeroToOne() for _ in range(50)]
         return self
 
     @staticmethod
@@ -67,7 +76,7 @@ class PdLeaf(PdPlantPart):
         newBiomass = self.biomassDemand_pctMPB * traverser.fractionOfPotentialBiomass
         self.liveBiomass_pctMPB += newBiomass
         self.propFullSize = umath.min(1.0, umath.safedivExcept(
-            self.liveBiomass_pctMPB, pLeaf.optimalBiomass_pctMPB, 0))
+            self.totalBiomass_pctMPB(), pLeaf.optimalBiomass_pctMPB, 0))
 
     def traverseActivity(self, mode, traverser):
         if self.hasFallenOff and mode != kActivityFree:
@@ -78,6 +87,13 @@ class PdLeaf(PdPlantPart):
             self.demandVegetative(traverser)
         elif mode == kActivityGrowVegetative:
             self.growVegetative(traverser)
+        elif mode == kActivityVegetativeBiomassThatCanBeRemoved:
+            traverser.total += self.liveBiomass_pctMPB
+        elif mode == kActivityRemoveVegetativeBiomass:
+            biomassToRemove = self.liveBiomass_pctMPB * \
+                traverser.fractionOfPotentialBiomass
+            self.liveBiomass_pctMPB -= biomassToRemove
+            self.deadBiomass_pctMPB += biomassToRemove
         elif mode == kActivityFree:
             pass
 

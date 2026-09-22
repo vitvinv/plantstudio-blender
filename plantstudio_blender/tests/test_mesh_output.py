@@ -140,9 +140,12 @@ class TestGrowthGeometryConsistency:
         species = lib.get("campanula")
         assert species is not None
         tdo_lib = TdoLibrary.from_file(TDO_PATH)
+        plant_age = None
 
         def render(day):
+            nonlocal plant_age
             plant = grow_species(species, day, seed=280, tdo_library=tdo_lib)
+            plant_age = plant.age
             flowers = []
             stack = [plant.firstPhytomer]
             seen = set()
@@ -166,13 +169,21 @@ class TestGrowthGeometryConsistency:
             return flowers, buffer
 
         flowers, open_buffer = render(80)
+        assert plant_age == 60
         assert flowers and all(f.stage == "open" for f in flowers)
         assert any(record["points"] > 8 for record in open_buffer.triangle_set_records)
 
-        flowers, fruit_buffer = render(150)
-        assert flowers and any(f.stage in ("unripe_fruit", "ripe_fruit") for f in flowers)
-        assert all(f.stage != "bud" for f in flowers)
-        assert fruit_buffer.stats()[1] < open_buffer.stats()[1]
+        # campanula's ageAtMaturity is 60, and the original never simulates
+        # past maturity (uplant.pas setAge clamps) — so the age slider can
+        # never reach the 50-day drop window before the fruit gate: flowers
+        # stay open, and the plant freezes at day 60 exactly as at day 80.
+        # (A day-150 render used to grow past maturity and drop every
+        # flower — a state the original cannot produce.)
+        flowers, frozen_buffer = render(150)
+        assert plant_age == 60
+        assert flowers and all(f.stage == "open" for f in flowers)
+        assert not any(f.hasSetFruit for f in flowers)
+        assert frozen_buffer.stats()[1] == open_buffer.stats()[1]
 
     def test_pipe_records_have_continuous_segment_indices(self):
         buf, _ = mesh_for("maiden grass", 60)
@@ -247,24 +258,28 @@ class TestTdoEmbedding:
         lib = SpeciesLibrary(self.DATA_DIR)
         sp = lib.get("violet")
         tdo_lib = TdoLibrary.from_file(TDO_PATH)
+        # violet matures at 60, so growth pins there (matches the original)
         plant = grow_species(sp, 150, seed=280, tdo_library=tdo_lib)
+        assert plant.age == 60
         traverser = PdTraverser(plant)
         traverser.traverseWholePlant(kActivityFree)
-        assert plant.age == 150
 
 
 class TestFruitRipeness:
     """P3a: unripe fruit draws with alternateFaceColor, ripe with faceColor."""
 
     def test_unripe_fruit_uses_alternate_color(self):
-        # The first tomato fruit is visible by day 77 and is still unripe.
-        buf, plant = mesh_for("tomato", 77)
+        # The first tomato fruit is visible by day 74 and is still unripe.
+        # (With the faithful double nextDay on flowers — uinflor.nextDay
+        # advances each flower twice per plant day — fruit ripens twice as
+        # fast as the calendar: first ripe fruit at day 76.)
+        buf, plant = mesh_for("tomato", 74)
         colors = set(buf.face_colors)
         alt = plant.params.pFruit.tdoParams.alternateFaceColor
         face = plant.params.pFruit.tdoParams.faceColor
         assert alt is not None and face is not None
         assert alt in colors, "unripe fruit color missing from mesh"
-        assert face not in colors, "no fruit should be ripe yet at day 75"
+        assert face not in colors, "no fruit should be ripe yet at day 74"
 
     def test_ripe_fruit_uses_face_color(self):
         # By day 100 all tomato fruit has ripened, so only the ripe color

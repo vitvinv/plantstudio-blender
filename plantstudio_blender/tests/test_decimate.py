@@ -78,7 +78,9 @@ def _assert_valid_mesh(out):
         i, j, k = face
         assert i != j and j != k and i != k, f"duplicate vertex in {face}"
         assert 0 <= i < len(verts) and 0 <= j < len(verts) and 0 <= k < len(verts)
-        assert _face_area(verts, face) > 1e-9
+        # 1e-10 tolerates float rounding slivers from welded rings
+        # (0.001 mm^2; anything smaller is a degenerate duplicate)
+        assert _face_area(verts, face) > 1e-10
 
 
 class TestDecimateUnit:

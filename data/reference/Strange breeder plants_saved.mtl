@@ -1,0 +1,1270 @@
+# Materials for file Strange breeder plants_age100.obj
+# Created by PlantStudio http://www.kurtz-fernhout.com
+# These files must be in the same directory for the materials to be read correctly.
+newmtl knobbly_Intrnd
+Ka  0.196 0.396 0.196
+Kd  0.196 0.396 0.196
+Ks  0.196 0.396 0.196
+d 1.0
+illum 1
+
+newmtl knobbly_Intrnd
+Ka  0.196 0.396 0.196
+Kd  0.196 0.396 0.196
+Ks  0.196 0.396 0.196
+d 1.0
+illum 1
+
+newmtl knobbly_Petiole
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl knobbly_Petiole
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl knobbly_Leaf
+Ka  0.0 0.5019 0.0
+Kd  0.0 0.5019 0.0
+Ks  0.0 0.5019 0.0
+d 1.0
+illum 1
+
+newmtl knobbly_Leaf
+Ka  0.0 0.5019 0.0
+Kd  0.0 0.5019 0.0
+Ks  0.0 0.5019 0.0
+d 1.0
+illum 1
+
+newmtl knobbly_Mrstm
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl knobbly_Mrstm
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl prettyp_Intrnd
+Ka  0.2549 0.5176 0.3215
+Kd  0.2549 0.5176 0.3215
+Ks  0.2549 0.5176 0.3215
+d 1.0
+illum 1
+
+newmtl prettyp_Intrnd
+Ka  0.2549 0.5176 0.3215
+Kd  0.2549 0.5176 0.3215
+Ks  0.2549 0.5176 0.3215
+d 1.0
+illum 1
+
+newmtl prettyp_Petiole
+Ka  0.02352 0.3176 0.2196
+Kd  0.02352 0.3176 0.2196
+Ks  0.02352 0.3176 0.2196
+d 1.0
+illum 1
+
+newmtl prettyp_Leaf
+Ka  0.3137 0.6431 0.149
+Kd  0.3137 0.6431 0.149
+Ks  0.3137 0.6431 0.149
+d 1.0
+illum 1
+
+newmtl prettyp_Leaf
+Ka  0.3137 0.6431 0.149
+Kd  0.3137 0.6431 0.149
+Ks  0.3137 0.6431 0.149
+d 1.0
+illum 1
+
+newmtl prettyp_1Pdncle
+Ka  0.2117 0.5019 0.2431
+Kd  0.2117 0.5019 0.2431
+Ks  0.2117 0.5019 0.2431
+d 1.0
+illum 1
+
+newmtl prettyp_1InfInt
+Ka  0.2117 0.5019 0.2431
+Kd  0.2117 0.5019 0.2431
+Ks  0.2117 0.5019 0.2431
+d 1.0
+illum 1
+
+newmtl prettyp_1Pdcel
+Ka  0.196 0.3921 0.196
+Kd  0.196 0.3921 0.196
+Ks  0.196 0.3921 0.196
+d 1.0
+illum 1
+
+newmtl prettyp_FruitR
+Ka  1.0 0.0 1.0
+Kd  1.0 0.0 1.0
+Ks  1.0 0.0 1.0
+d 1.0
+illum 1
+
+newmtl prettyp_FruitR
+Ka  1.0 0.0 1.0
+Kd  1.0 0.0 1.0
+Ks  1.0 0.0 1.0
+d 1.0
+illum 1
+
+newmtl prettyp_Mrstm
+Ka  0.08235 0.5058 0.1333
+Kd  0.08235 0.5058 0.1333
+Ks  0.08235 0.5058 0.1333
+d 1.0
+illum 1
+
+newmtl prettyp_Mrstm
+Ka  0.08235 0.5058 0.1333
+Kd  0.08235 0.5058 0.1333
+Ks  0.08235 0.5058 0.1333
+d 1.0
+illum 1
+
+newmtl oriental_Intrnd
+Ka  0.03529 0.8196 0.1803
+Kd  0.03529 0.8196 0.1803
+Ks  0.03529 0.8196 0.1803
+d 1.0
+illum 1
+
+newmtl oriental_Intrnd
+Ka  0.03529 0.8196 0.1803
+Kd  0.03529 0.8196 0.1803
+Ks  0.03529 0.8196 0.1803
+d 1.0
+illum 1
+
+newmtl oriental_Petiole
+Ka  0.1372 0.4784 0.03529
+Kd  0.1372 0.4784 0.03529
+Ks  0.1372 0.4784 0.03529
+d 1.0
+illum 1
+
+newmtl oriental_Leaf
+Ka  1.0 0.4235 0.3176
+Kd  1.0 0.4235 0.3176
+Ks  1.0 0.4235 0.3176
+d 1.0
+illum 1
+
+newmtl oriental_Mrstm
+Ka  0.06274 0.3372 0.1176
+Kd  0.06274 0.3372 0.1176
+Ks  0.06274 0.3372 0.1176
+d 1.0
+illum 1
+
+newmtl oriental_Mrstm
+Ka  0.06274 0.3372 0.1176
+Kd  0.06274 0.3372 0.1176
+Ks  0.06274 0.3372 0.1176
+d 1.0
+illum 1
+
+newmtl Flagpla_Intrnd
+Ka  0.5803 0.1803 0.2784
+Kd  0.5803 0.1803 0.2784
+Ks  0.5803 0.1803 0.2784
+d 1.0
+illum 1
+
+newmtl Flagpla_Intrnd
+Ka  0.5803 0.1803 0.2784
+Kd  0.5803 0.1803 0.2784
+Ks  0.5803 0.1803 0.2784
+d 1.0
+illum 1
+
+newmtl Flagpla_Petiole
+Ka  0.2549 0.4862 0.1921
+Kd  0.2549 0.4862 0.1921
+Ks  0.2549 0.4862 0.1921
+d 1.0
+illum 1
+
+newmtl Flagpla_Petiole
+Ka  0.2549 0.4862 0.1921
+Kd  0.2549 0.4862 0.1921
+Ks  0.2549 0.4862 0.1921
+d 1.0
+illum 1
+
+newmtl Flagpla_Leaf
+Ka  0.8196 0.4901 0.0
+Kd  0.8196 0.4901 0.0
+Ks  0.8196 0.4901 0.0
+d 1.0
+illum 1
+
+newmtl Flagpla_Leaf
+Ka  0.8196 0.4901 0.0
+Kd  0.8196 0.4901 0.0
+Ks  0.8196 0.4901 0.0
+d 1.0
+illum 1
+
+newmtl Flagpla_Mrstm
+Ka  0.007843 0.5843 0.2
+Kd  0.007843 0.5843 0.2
+Ks  0.007843 0.5843 0.2
+d 1.0
+illum 1
+
+newmtl Flagpla_Mrstm
+Ka  0.007843 0.5843 0.2
+Kd  0.007843 0.5843 0.2
+Ks  0.007843 0.5843 0.2
+d 1.0
+illum 1
+
+newmtl Lacypla_Intrnd
+Ka  0.5333 0.6352 0.2705
+Kd  0.5333 0.6352 0.2705
+Ks  0.5333 0.6352 0.2705
+d 1.0
+illum 1
+
+newmtl Lacypla_Intrnd
+Ka  0.5333 0.6352 0.2705
+Kd  0.5333 0.6352 0.2705
+Ks  0.5333 0.6352 0.2705
+d 1.0
+illum 1
+
+newmtl Lacypla_Petiole
+Ka  0.8235 0.3686 0.1921
+Kd  0.8235 0.3686 0.1921
+Ks  0.8235 0.3686 0.1921
+d 1.0
+illum 1
+
+newmtl Lacypla_Petiole
+Ka  0.8235 0.3686 0.1921
+Kd  0.8235 0.3686 0.1921
+Ks  0.8235 0.3686 0.1921
+d 1.0
+illum 1
+
+newmtl Lacypla_Leaf
+Ka  0.898 0.4823 0.0
+Kd  0.898 0.4823 0.0
+Ks  0.898 0.4823 0.0
+d 1.0
+illum 1
+
+newmtl Lacypla_Leaf
+Ka  0.898 0.4823 0.0
+Kd  0.898 0.4823 0.0
+Ks  0.898 0.4823 0.0
+d 1.0
+illum 1
+
+newmtl Lacypla_Mrstm
+Ka  0.8588 0.02352 0.2078
+Kd  0.8588 0.02352 0.2078
+Ks  0.8588 0.02352 0.2078
+d 1.0
+illum 1
+
+newmtl Lacypla_Mrstm
+Ka  0.8588 0.02352 0.2078
+Kd  0.8588 0.02352 0.2078
+Ks  0.8588 0.02352 0.2078
+d 1.0
+illum 1
+
+newmtl Thisway_Intrnd
+Ka  0.01568 0.6705 0.2078
+Kd  0.01568 0.6705 0.2078
+Ks  0.01568 0.6705 0.2078
+d 1.0
+illum 1
+
+newmtl Thisway_Intrnd
+Ka  0.01568 0.6705 0.2078
+Kd  0.01568 0.6705 0.2078
+Ks  0.01568 0.6705 0.2078
+d 1.0
+illum 1
+
+newmtl Thisway_Petiole
+Ka  0.04313 0.9019 0.2039
+Kd  0.04313 0.9019 0.2039
+Ks  0.04313 0.9019 0.2039
+d 1.0
+illum 1
+
+newmtl Thisway_Leaf
+Ka  0.345 0.8039 0.196
+Kd  0.345 0.8039 0.196
+Ks  0.345 0.8039 0.196
+d 1.0
+illum 1
+
+newmtl Thisway_1Pdncle
+Ka  0.1254 0.5843 0.247
+Kd  0.1254 0.5843 0.247
+Ks  0.1254 0.5843 0.247
+d 1.0
+illum 1
+
+newmtl Thisway_1InfInt
+Ka  0.1254 0.5843 0.247
+Kd  0.1254 0.5843 0.247
+Ks  0.1254 0.5843 0.247
+d 1.0
+illum 1
+
+newmtl Thisway_1Pdcel
+Ka  0.3921 0.2392 0.1607
+Kd  0.3921 0.2392 0.1607
+Ks  0.3921 0.2392 0.1607
+d 1.0
+illum 1
+
+newmtl Thisway_FruitR
+Ka  0.2274 0.01176 0.03921
+Kd  0.2274 0.01176 0.03921
+Ks  0.2274 0.01176 0.03921
+d 1.0
+illum 1
+
+newmtl Thisway_FruitR
+Ka  0.2274 0.01176 0.03921
+Kd  0.2274 0.01176 0.03921
+Ks  0.2274 0.01176 0.03921
+d 1.0
+illum 1
+
+newmtl Thisway_Mrstm
+Ka  0.6549 0.3843 0.2078
+Kd  0.6549 0.3843 0.2078
+Ks  0.6549 0.3843 0.2078
+d 1.0
+illum 1
+
+newmtl Thisway_Mrstm
+Ka  0.6549 0.3843 0.2078
+Kd  0.6549 0.3843 0.2078
+Ks  0.6549 0.3843 0.2078
+d 1.0
+illum 1
+
+newmtl Bluebal_Intrnd
+Ka  0.6431 0.8313 0.02352
+Kd  0.6431 0.8313 0.02352
+Ks  0.6431 0.8313 0.02352
+d 1.0
+illum 1
+
+newmtl Bluebal_Intrnd
+Ka  0.6431 0.8313 0.02352
+Kd  0.6431 0.8313 0.02352
+Ks  0.6431 0.8313 0.02352
+d 1.0
+illum 1
+
+newmtl Bluebal_Petiole
+Ka  0.9686 0.3176 0.1882
+Kd  0.9686 0.3176 0.1882
+Ks  0.9686 0.3176 0.1882
+d 1.0
+illum 1
+
+newmtl Bluebal_Leaf
+Ka  0.6745 0.6823 0.0196
+Kd  0.6745 0.6823 0.0196
+Ks  0.6745 0.6823 0.0196
+d 1.0
+illum 1
+
+newmtl Bluebal_1Pdncle
+Ka  0.4705 0.02352 0.2
+Kd  0.4705 0.02352 0.2
+Ks  0.4705 0.02352 0.2
+d 1.0
+illum 1
+
+newmtl Bluebal_1InfInt
+Ka  0.4705 0.02352 0.2
+Kd  0.4705 0.02352 0.2
+Ks  0.4705 0.02352 0.2
+d 1.0
+illum 1
+
+newmtl Bluebal_1Pdcel
+Ka  0.1882 0.6078 0.1882
+Kd  0.1882 0.6078 0.1882
+Ks  0.1882 0.6078 0.1882
+d 1.0
+illum 1
+
+newmtl Bluebal_FruitR
+Ka  0.2 0.3333 0.9372
+Kd  0.2 0.3333 0.9372
+Ks  0.2 0.3333 0.9372
+d 1.0
+illum 1
+
+newmtl Bluebal_FruitR
+Ka  0.2 0.3333 0.9372
+Kd  0.2 0.3333 0.9372
+Ks  0.2 0.3333 0.9372
+d 1.0
+illum 1
+
+newmtl Bluebal_Mrstm
+Ka  0.8431 0.2784 0.1882
+Kd  0.8431 0.2784 0.1882
+Ks  0.8431 0.2784 0.1882
+d 1.0
+illum 1
+
+newmtl Bluebal_Mrstm
+Ka  0.8431 0.2784 0.1882
+Kd  0.8431 0.2784 0.1882
+Ks  0.8431 0.2784 0.1882
+d 1.0
+illum 1
+
+newmtl Pinkwhi_Intrnd
+Ka  0.0 0.3176 0.4235
+Kd  0.0 0.3176 0.4235
+Ks  0.0 0.3176 0.4235
+d 1.0
+illum 1
+
+newmtl Pinkwhi_Intrnd
+Ka  0.0 0.3176 0.4235
+Kd  0.0 0.3176 0.4235
+Ks  0.0 0.3176 0.4235
+d 1.0
+illum 1
+
+newmtl Pinkwhi_Petiole
+Ka  0.8156 0.498 0.2039
+Kd  0.8156 0.498 0.2039
+Ks  0.8156 0.498 0.2039
+d 1.0
+illum 1
+
+newmtl Pinkwhi_Leaf
+Ka  0.08235 0.5019 0.0
+Kd  0.08235 0.5019 0.0
+Ks  0.08235 0.5019 0.0
+d 1.0
+illum 1
+
+newmtl Pinkwhi_1Pdncle
+Ka  0.2156 0.6078 0.0
+Kd  0.2156 0.6078 0.0
+Ks  0.2156 0.6078 0.0
+d 1.0
+illum 1
+
+newmtl Pinkwhi_1Pdcel
+Ka  0.7921 0.9372 0.2784
+Kd  0.7921 0.9372 0.2784
+Ks  0.7921 0.9372 0.2784
+d 1.0
+illum 1
+
+newmtl Pinkwhi_1Petal1
+Ka  0.9686 0.5529 0.9098
+Kd  0.9686 0.5529 0.9098
+Ks  0.9686 0.5529 0.9098
+d 1.0
+illum 1
+
+newmtl Pinkwhi_1Petal1
+Ka  0.9686 0.5529 0.9098
+Kd  0.9686 0.5529 0.9098
+Ks  0.9686 0.5529 0.9098
+d 1.0
+illum 1
+
+newmtl Festival_Intrnd
+Ka  0.9254 0.2509 0.3058
+Kd  0.9254 0.2509 0.3058
+Ks  0.9254 0.2509 0.3058
+d 1.0
+illum 1
+
+newmtl Festival_Intrnd
+Ka  0.9254 0.2509 0.3058
+Kd  0.9254 0.2509 0.3058
+Ks  0.9254 0.2509 0.3058
+d 1.0
+illum 1
+
+newmtl Festival_Petiole
+Ka  0.7058 0.2588 0.2
+Kd  0.7058 0.2588 0.2
+Ks  0.7058 0.2588 0.2
+d 1.0
+illum 1
+
+newmtl Festival_Leaf
+Ka  0.2196 0.9803 0.1529
+Kd  0.2196 0.9803 0.1529
+Ks  0.2196 0.9803 0.1529
+d 1.0
+illum 1
+
+newmtl Festival_1Pdncle
+Ka  0.8941 0.06666 0.2588
+Kd  0.8941 0.06666 0.2588
+Ks  0.8941 0.06666 0.2588
+d 1.0
+illum 1
+
+newmtl Festival_1InfInt
+Ka  0.8941 0.06666 0.2588
+Kd  0.8941 0.06666 0.2588
+Ks  0.8941 0.06666 0.2588
+d 1.0
+illum 1
+
+newmtl Festival_1Pdcel
+Ka  0.6431 0.4941 0.1921
+Kd  0.6431 0.4941 0.1921
+Ks  0.6431 0.4941 0.1921
+d 1.0
+illum 1
+
+newmtl Festival_FruitU
+Ka  0.2196 0.3764 0.6352
+Kd  0.2196 0.3764 0.6352
+Ks  0.2196 0.3764 0.6352
+d 1.0
+illum 1
+
+newmtl Festival_FruitU
+Ka  0.2196 0.3764 0.6352
+Kd  0.2196 0.3764 0.6352
+Ks  0.2196 0.3764 0.6352
+d 1.0
+illum 1
+
+newmtl Droopyp_Intrnd
+Ka  0.6901 0.7764 0.1647
+Kd  0.6901 0.7764 0.1647
+Ks  0.6901 0.7764 0.1647
+d 1.0
+illum 1
+
+newmtl Droopyp_Intrnd
+Ka  0.6901 0.7764 0.1647
+Kd  0.6901 0.7764 0.1647
+Ks  0.6901 0.7764 0.1647
+d 1.0
+illum 1
+
+newmtl Droopyp_Petiole
+Ka  0.4901 0.9607 0.1803
+Kd  0.4901 0.9607 0.1803
+Ks  0.4901 0.9607 0.1803
+d 1.0
+illum 1
+
+newmtl Droopyp_Leaf
+Ka  0.0 0.3647 0.0549
+Kd  0.0 0.3647 0.0549
+Ks  0.0 0.3647 0.0549
+d 1.0
+illum 1
+
+newmtl Droopyp_Mrstm
+Ka  0.07843 0.6745 0.196
+Kd  0.07843 0.6745 0.196
+Ks  0.07843 0.6745 0.196
+d 1.0
+illum 1
+
+newmtl Droopyp_Mrstm
+Ka  0.07843 0.6745 0.196
+Kd  0.07843 0.6745 0.196
+Ks  0.07843 0.6745 0.196
+d 1.0
+illum 1
+
+newmtl hourglas_Intrnd
+Ka  0.9333 0.3843 0.7803
+Kd  0.9333 0.3843 0.7803
+Ks  0.9333 0.3843 0.7803
+d 1.0
+illum 1
+
+newmtl hourglas_Intrnd
+Ka  0.9333 0.3843 0.7803
+Kd  0.9333 0.3843 0.7803
+Ks  0.9333 0.3843 0.7803
+d 1.0
+illum 1
+
+newmtl hourglas_Petiole
+Ka  0.1725 0.9176 0.07843
+Kd  0.1725 0.9176 0.07843
+Ks  0.1725 0.9176 0.07843
+d 1.0
+illum 1
+
+newmtl hourglas_Leaf
+Ka  0.3058 0.7803 0.8588
+Kd  0.3058 0.7803 0.8588
+Ks  0.3058 0.7803 0.8588
+d 1.0
+illum 1
+
+newmtl hourglas_Mrstm
+Ka  0.9921 0.3843 0.1803
+Kd  0.9921 0.3843 0.1803
+Ks  0.9921 0.3843 0.1803
+d 1.0
+illum 1
+
+newmtl hourglas_Mrstm
+Ka  0.9921 0.3843 0.1803
+Kd  0.9921 0.3843 0.1803
+Ks  0.9921 0.3843 0.1803
+d 1.0
+illum 1
+
+newmtl flatvin_Intrnd
+Ka  0.3411 0.7098 0.2156
+Kd  0.3411 0.7098 0.2156
+Ks  0.3411 0.7098 0.2156
+d 1.0
+illum 1
+
+newmtl flatvin_Intrnd
+Ka  0.3411 0.7098 0.2156
+Kd  0.3411 0.7098 0.2156
+Ks  0.3411 0.7098 0.2156
+d 1.0
+illum 1
+
+newmtl flatvin_Petiole
+Ka  0.2 0.6352 0.2
+Kd  0.2 0.6352 0.2
+Ks  0.2 0.6352 0.2
+d 1.0
+illum 1
+
+newmtl flatvin_Leaf
+Ka  0.6352 0.003921 0.2
+Kd  0.6352 0.003921 0.2
+Ks  0.6352 0.003921 0.2
+d 1.0
+illum 1
+
+newmtl flatvin_Mrstm
+Ka  0.5019 0.1843 0.2196
+Kd  0.5019 0.1843 0.2196
+Ks  0.5019 0.1843 0.2196
+d 1.0
+illum 1
+
+newmtl flatvin_Mrstm
+Ka  0.5019 0.1843 0.2196
+Kd  0.5019 0.1843 0.2196
+Ks  0.5019 0.1843 0.2196
+d 1.0
+illum 1
+
+newmtl feathery_Intrnd
+Ka  0.4392 0.6431 0.4156
+Kd  0.4392 0.6431 0.4156
+Ks  0.4392 0.6431 0.4156
+d 1.0
+illum 1
+
+newmtl feathery_Intrnd
+Ka  0.4392 0.6431 0.4156
+Kd  0.4392 0.6431 0.4156
+Ks  0.4392 0.6431 0.4156
+d 1.0
+illum 1
+
+newmtl feathery_Petiole
+Ka  0.6078 0.1686 0.196
+Kd  0.6078 0.1686 0.196
+Ks  0.6078 0.1686 0.196
+d 1.0
+illum 1
+
+newmtl feathery_Leaf
+Ka  0.8352 0.3176 0.2
+Kd  0.8352 0.3176 0.2
+Ks  0.8352 0.3176 0.2
+d 1.0
+illum 1
+
+newmtl feathery_Mrstm
+Ka  0.1764 0.796 0.1843
+Kd  0.1764 0.796 0.1843
+Ks  0.1764 0.796 0.1843
+d 1.0
+illum 1
+
+newmtl feathery_Mrstm
+Ka  0.1764 0.796 0.1843
+Kd  0.1764 0.796 0.1843
+Ks  0.1764 0.796 0.1843
+d 1.0
+illum 1
+
+newmtl feathery_1Pdncle
+Ka  0.1882 0.4588 0.247
+Kd  0.1882 0.4588 0.247
+Ks  0.1882 0.4588 0.247
+d 1.0
+illum 1
+
+newmtl feathery_1InfInt
+Ka  0.1882 0.4588 0.247
+Kd  0.1882 0.4588 0.247
+Ks  0.1882 0.4588 0.247
+d 1.0
+illum 1
+
+newmtl feathery_1Pdcel
+Ka  0.2666 0.149 0.145
+Kd  0.2666 0.149 0.145
+Ks  0.2666 0.149 0.145
+d 1.0
+illum 1
+
+newmtl feathery_FruitR
+Ka  0.1568 0.7568 0.8039
+Kd  0.1568 0.7568 0.8039
+Ks  0.1568 0.7568 0.8039
+d 1.0
+illum 1
+
+newmtl feathery_FruitR
+Ka  0.1568 0.7568 0.8039
+Kd  0.1568 0.7568 0.8039
+Ks  0.1568 0.7568 0.8039
+d 1.0
+illum 1
+
+newmtl bush-lik_Intrnd
+Ka  0.2039 0.2352 0.1882
+Kd  0.2039 0.2352 0.1882
+Ks  0.2039 0.2352 0.1882
+d 1.0
+illum 1
+
+newmtl bush-lik_Intrnd
+Ka  0.2039 0.2352 0.1882
+Kd  0.2039 0.2352 0.1882
+Ks  0.2039 0.2352 0.1882
+d 1.0
+illum 1
+
+newmtl bush-lik_Petiole
+Ka  0.8705 0.9176 0.1882
+Kd  0.8705 0.9176 0.1882
+Ks  0.8705 0.9176 0.1882
+d 1.0
+illum 1
+
+newmtl bush-lik_Petiole
+Ka  0.8705 0.9176 0.1882
+Kd  0.8705 0.9176 0.1882
+Ks  0.8705 0.9176 0.1882
+d 1.0
+illum 1
+
+newmtl bush-lik_Leaf
+Ka  0.6156 0.4901 0.1882
+Kd  0.6156 0.4901 0.1882
+Ks  0.6156 0.4901 0.1882
+d 1.0
+illum 1
+
+newmtl bush-lik_Leaf
+Ka  0.6156 0.4901 0.1882
+Kd  0.6156 0.4901 0.1882
+Ks  0.6156 0.4901 0.1882
+d 1.0
+illum 1
+
+newmtl bush-lik_Mrstm
+Ka  0.3725 0.4 0.1882
+Kd  0.3725 0.4 0.1882
+Ks  0.3725 0.4 0.1882
+d 1.0
+illum 1
+
+newmtl bush-lik_Mrstm
+Ka  0.3725 0.4 0.1882
+Kd  0.3725 0.4 0.1882
+Ks  0.3725 0.4 0.1882
+d 1.0
+illum 1
+
+newmtl bush-lik_1Pdncle
+Ka  0.05882 0.7921 0.2039
+Kd  0.05882 0.7921 0.2039
+Ks  0.05882 0.7921 0.2039
+d 1.0
+illum 1
+
+newmtl bush-lik_1InfInt
+Ka  0.05882 0.7921 0.2039
+Kd  0.05882 0.7921 0.2039
+Ks  0.05882 0.7921 0.2039
+d 1.0
+illum 1
+
+newmtl bush-lik_1InfInt
+Ka  0.05882 0.7921 0.2039
+Kd  0.05882 0.7921 0.2039
+Ks  0.05882 0.7921 0.2039
+d 1.0
+illum 1
+
+newmtl bush-lik_1Pdcel
+Ka  0.3058 0.396 0.2039
+Kd  0.3058 0.396 0.2039
+Ks  0.3058 0.396 0.2039
+d 1.0
+illum 1
+
+newmtl bush-lik_1Petal1
+Ka  0.7529 0.7137 0.3686
+Kd  0.7529 0.7137 0.3686
+Ks  0.7529 0.7137 0.3686
+d 1.0
+illum 1
+
+newmtl bush-lik_1Petal1
+Ka  0.7529 0.7137 0.3686
+Kd  0.7529 0.7137 0.3686
+Ks  0.7529 0.7137 0.3686
+d 1.0
+illum 1
+
+newmtl spiderp_Intrnd
+Ka  0.09411 0.3176 0.1843
+Kd  0.09411 0.3176 0.1843
+Ks  0.09411 0.3176 0.1843
+d 1.0
+illum 1
+
+newmtl spiderp_1stPetiole
+Ka  0.08627 0.3137 0.1921
+Kd  0.08627 0.3137 0.1921
+Ks  0.08627 0.3137 0.1921
+d 1.0
+illum 1
+
+newmtl spiderp_1stLeaf
+Ka  0.4509 0.7372 0.1882
+Kd  0.4509 0.7372 0.1882
+Ks  0.4509 0.7372 0.1882
+d 1.0
+illum 1
+
+newmtl spiderp_1stLeaf
+Ka  0.4509 0.7372 0.1882
+Kd  0.4509 0.7372 0.1882
+Ks  0.4509 0.7372 0.1882
+d 1.0
+illum 1
+
+newmtl spiderp_Petiole
+Ka  0.08627 0.3137 0.1921
+Kd  0.08627 0.3137 0.1921
+Ks  0.08627 0.3137 0.1921
+d 1.0
+illum 1
+
+newmtl spiderp_Petiole
+Ka  0.08627 0.3137 0.1921
+Kd  0.08627 0.3137 0.1921
+Ks  0.08627 0.3137 0.1921
+d 1.0
+illum 1
+
+newmtl spiderp_Leaf
+Ka  0.1882 0.5176 0.0
+Kd  0.1882 0.5176 0.0
+Ks  0.1882 0.5176 0.0
+d 1.0
+illum 1
+
+newmtl spiderp_Leaf
+Ka  0.1882 0.5176 0.0
+Kd  0.1882 0.5176 0.0
+Ks  0.1882 0.5176 0.0
+d 1.0
+illum 1
+
+newmtl spiderp_Mrstm
+Ka  0.945 0.5411 0.196
+Kd  0.945 0.5411 0.196
+Ks  0.945 0.5411 0.196
+d 1.0
+illum 1
+
+newmtl spiderp_Mrstm
+Ka  0.945 0.5411 0.196
+Kd  0.945 0.5411 0.196
+Ks  0.945 0.5411 0.196
+d 1.0
+illum 1
+
+newmtl pharoah_Intrnd
+Ka  0.6274 0.5921 0.3372
+Kd  0.6274 0.5921 0.3372
+Ks  0.6274 0.5921 0.3372
+d 1.0
+illum 1
+
+newmtl pharoah_1stPetiole
+Ka  0.9058 0.4078 0.1764
+Kd  0.9058 0.4078 0.1764
+Ks  0.9058 0.4078 0.1764
+d 1.0
+illum 1
+
+newmtl pharoah_1stLeaf
+Ka  0.7294 0.396 0.1843
+Kd  0.7294 0.396 0.1843
+Ks  0.7294 0.396 0.1843
+d 1.0
+illum 1
+
+newmtl pharoah_1stLeaf
+Ka  0.7294 0.396 0.1843
+Kd  0.7294 0.396 0.1843
+Ks  0.7294 0.396 0.1843
+d 1.0
+illum 1
+
+newmtl pharoah_Petiole
+Ka  0.9058 0.4078 0.1764
+Kd  0.9058 0.4078 0.1764
+Ks  0.9058 0.4078 0.1764
+d 1.0
+illum 1
+
+newmtl pharoah_Petiole
+Ka  0.9058 0.4078 0.1764
+Kd  0.9058 0.4078 0.1764
+Ks  0.9058 0.4078 0.1764
+d 1.0
+illum 1
+
+newmtl pharoah_Leaf
+Ka  0.4549 0.498 0.0
+Kd  0.4549 0.498 0.0
+Ks  0.4549 0.498 0.0
+d 1.0
+illum 1
+
+newmtl pharoah_Leaf
+Ka  0.4549 0.498 0.0
+Kd  0.4549 0.498 0.0
+Ks  0.4549 0.498 0.0
+d 1.0
+illum 1
+
+newmtl pharoah_Mrstm
+Ka  0.7098 0.745 0.2039
+Kd  0.7098 0.745 0.2039
+Ks  0.7098 0.745 0.2039
+d 1.0
+illum 1
+
+newmtl pharoah_Mrstm
+Ka  0.7098 0.745 0.2039
+Kd  0.7098 0.745 0.2039
+Ks  0.7098 0.745 0.2039
+d 1.0
+illum 1
+
+newmtl pharoah_1Pdncle
+Ka  0.5411 0.5568 0.0
+Kd  0.5411 0.5568 0.0
+Ks  0.5411 0.5568 0.0
+d 1.0
+illum 1
+
+newmtl pharoah_1InfInt
+Ka  0.5411 0.5568 0.0
+Kd  0.5411 0.5568 0.0
+Ks  0.5411 0.5568 0.0
+d 1.0
+illum 1
+
+newmtl pharoah_1Pdcel
+Ka  0.8 0.8745 0.2078
+Kd  0.8 0.8745 0.2078
+Ks  0.8 0.8745 0.2078
+d 1.0
+illum 1
+
+newmtl pharoah_FruitR
+Ka  0.9803 0.6627 0.9215
+Kd  0.9803 0.6627 0.9215
+Ks  0.9803 0.6627 0.9215
+d 1.0
+illum 1
+
+newmtl pharoah_FruitR
+Ka  0.9803 0.6627 0.9215
+Kd  0.9803 0.6627 0.9215
+Ks  0.9803 0.6627 0.9215
+d 1.0
+illum 1
+
+newmtl loopypl_Intrnd
+Ka  0.1137 0.7294 0.196
+Kd  0.1137 0.7294 0.196
+Ks  0.1137 0.7294 0.196
+d 1.0
+illum 1
+
+newmtl loopypl_Intrnd
+Ka  0.1137 0.7294 0.196
+Kd  0.1137 0.7294 0.196
+Ks  0.1137 0.7294 0.196
+d 1.0
+illum 1
+
+newmtl loopypl_Petiole
+Ka  0.6666 0.5411 0.1176
+Kd  0.6666 0.5411 0.1176
+Ks  0.6666 0.5411 0.1176
+d 1.0
+illum 1
+
+newmtl loopypl_Leaf
+Ka  0.996 0.9058 0.2156
+Kd  0.996 0.9058 0.2156
+Ks  0.996 0.9058 0.2156
+d 1.0
+illum 1
+
+newmtl loopypl_Leaf
+Ka  0.996 0.9058 0.2156
+Kd  0.996 0.9058 0.2156
+Ks  0.996 0.9058 0.2156
+d 1.0
+illum 1
+
+newmtl loopypl_Mrstm
+Ka  0.9333 0.5607 0.2509
+Kd  0.9333 0.5607 0.2509
+Ks  0.9333 0.5607 0.2509
+d 1.0
+illum 1
+
+newmtl loopypl_Mrstm
+Ka  0.9333 0.5607 0.2509
+Kd  0.9333 0.5607 0.2509
+Ks  0.9333 0.5607 0.2509
+d 1.0
+illum 1
+
+newmtl coralpl_Intrnd
+Ka  0.6901 0.2039 0.1882
+Kd  0.6901 0.2039 0.1882
+Ks  0.6901 0.2039 0.1882
+d 1.0
+illum 1
+
+newmtl coralpl_Intrnd
+Ka  0.6901 0.2039 0.1882
+Kd  0.6901 0.2039 0.1882
+Ks  0.6901 0.2039 0.1882
+d 1.0
+illum 1
+
+newmtl coralpl_Petiole
+Ka  0.4352 0.2392 0.2274
+Kd  0.4352 0.2392 0.2274
+Ks  0.4352 0.2392 0.2274
+d 1.0
+illum 1
+
+newmtl coralpl_Petiole
+Ka  0.4352 0.2392 0.2274
+Kd  0.4352 0.2392 0.2274
+Ks  0.4352 0.2392 0.2274
+d 1.0
+illum 1
+
+newmtl coralpl_Leaf
+Ka  0.647 0.7176 0.2
+Kd  0.647 0.7176 0.2
+Ks  0.647 0.7176 0.2
+d 1.0
+illum 1
+
+newmtl coralpl_Leaf
+Ka  0.647 0.7176 0.2
+Kd  0.647 0.7176 0.2
+Ks  0.647 0.7176 0.2
+d 1.0
+illum 1
+
+newmtl coralpl_Mrstm
+Ka  0.4196 0.9058 0.1568
+Kd  0.4196 0.9058 0.1568
+Ks  0.4196 0.9058 0.1568
+d 1.0
+illum 1
+
+newmtl coralpl_Mrstm
+Ka  0.4196 0.9058 0.1568
+Kd  0.4196 0.9058 0.1568
+Ks  0.4196 0.9058 0.1568
+d 1.0
+illum 1
+
+newmtl redloop_Intrnd
+Ka  0.7843 0.06666 0.1882
+Kd  0.7843 0.06666 0.1882
+Ks  0.7843 0.06666 0.1882
+d 1.0
+illum 1
+
+newmtl redloop_Intrnd
+Ka  0.7843 0.06666 0.1882
+Kd  0.7843 0.06666 0.1882
+Ks  0.7843 0.06666 0.1882
+d 1.0
+illum 1
+
+newmtl redloop_Petiole
+Ka  0.1137 0.4196 0.196
+Kd  0.1137 0.4196 0.196
+Ks  0.1137 0.4196 0.196
+d 1.0
+illum 1
+
+newmtl redloop_Petiole
+Ka  0.1137 0.4196 0.196
+Kd  0.1137 0.4196 0.196
+Ks  0.1137 0.4196 0.196
+d 1.0
+illum 1
+
+newmtl redloop_Leaf
+Ka  0.1254 0.1372 0.1803
+Kd  0.1254 0.1372 0.1803
+Ks  0.1254 0.1372 0.1803
+d 1.0
+illum 1
+
+newmtl redloop_Leaf
+Ka  0.1254 0.1372 0.1803
+Kd  0.1254 0.1372 0.1803
+Ks  0.1254 0.1372 0.1803
+d 1.0
+illum 1
+
+newmtl redloop_Mrstm
+Ka  0.6196 0.796 0.1411
+Kd  0.6196 0.796 0.1411
+Ks  0.6196 0.796 0.1411
+d 1.0
+illum 1
+
+newmtl redloop_Mrstm
+Ka  0.6196 0.796 0.1411
+Kd  0.6196 0.796 0.1411
+Ks  0.6196 0.796 0.1411
+d 1.0
+illum 1
+
+newmtl seriousl_Intrnd
+Ka  0.4431 0.5098 0.1568
+Kd  0.4431 0.5098 0.1568
+Ks  0.4431 0.5098 0.1568
+d 1.0
+illum 1
+
+newmtl seriousl_1stPetiole
+Ka  0.8078 0.4784 0.1725
+Kd  0.8078 0.4784 0.1725
+Ks  0.8078 0.4784 0.1725
+d 1.0
+illum 1
+
+newmtl seriousl_1stLeaf
+Ka  0.796 0.07843 0.2862
+Kd  0.796 0.07843 0.2862
+Ks  0.796 0.07843 0.2862
+d 1.0
+illum 1
+
+newmtl seriousl_1stLeaf
+Ka  0.796 0.07843 0.2862
+Kd  0.796 0.07843 0.2862
+Ks  0.796 0.07843 0.2862
+d 1.0
+illum 1
+
+newmtl seriousl_Petiole
+Ka  0.8078 0.4784 0.1725
+Kd  0.8078 0.4784 0.1725
+Ks  0.8078 0.4784 0.1725
+d 1.0
+illum 1
+
+newmtl seriousl_Petiole
+Ka  0.8078 0.4784 0.1725
+Kd  0.8078 0.4784 0.1725
+Ks  0.8078 0.4784 0.1725
+d 1.0
+illum 1
+
+newmtl seriousl_Leaf
+Ka  0.1882 0.9725 0.2274
+Kd  0.1882 0.9725 0.2274
+Ks  0.1882 0.9725 0.2274
+d 1.0
+illum 1
+
+newmtl seriousl_Leaf
+Ka  0.1882 0.9725 0.2274
+Kd  0.1882 0.9725 0.2274
+Ks  0.1882 0.9725 0.2274
+d 1.0
+illum 1
+
+newmtl seriousl_Mrstm
+Ka  0.4823 0.2313 0.1254
+Kd  0.4823 0.2313 0.1254
+Ks  0.4823 0.2313 0.1254
+d 1.0
+illum 1
+

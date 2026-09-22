@@ -15,7 +15,15 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
-from plantstudio_blender.core.draw import draw_plant, kExportPartFlower
+from plantstudio_blender.core.draw import (
+    draw_plant,
+    kExportPartFlowerBudFemale, kExportPartFlowerBudMale,
+    kExportPartStigmaFemale, kExportPartAntherFemale,
+    kExportPartFirstPetalsFemale, kExportPartFirstPetalsMale,
+    kExportPartSecondPetalsFemale, kExportPartThirdPetalsFemale,
+    kExportPartFourthPetalsFemale, kExportPartFifthPetalsFemale,
+    kExportPartSepalsFemale, kExportPartSepalsMale,
+)
 from plantstudio_blender.core.factory import create_plant, grow_species
 from plantstudio_blender.core.mesh_buffer import MeshBuffer
 from plantstudio_blender.core.plant_library import SpeciesLibrary
@@ -68,8 +76,16 @@ def iter_parts(plant):
 def flower_signature(plant, buffer):
     flowers = [part for part in iter_parts(plant)
                if type(part).__name__ == "PdFlowerFruit"]
+    flower_part_ids = {
+        kExportPartFlowerBudFemale, kExportPartFlowerBudMale,
+        kExportPartStigmaFemale, kExportPartAntherFemale,
+        kExportPartFirstPetalsFemale, kExportPartFirstPetalsMale,
+        kExportPartSecondPetalsFemale, kExportPartThirdPetalsFemale,
+        kExportPartFourthPetalsFemale, kExportPartFifthPetalsFemale,
+        kExportPartSepalsFemale, kExportPartSepalsMale,
+    }
     flower_records = [record for record in buffer.triangle_set_records
-                      if record.get("part_id") == kExportPartFlower]
+                      if record.get("part_id") in flower_part_ids]
     return {
         "age": plant.age,
         "stages": [getattr(flower, "stage", "bud") for flower in flowers],

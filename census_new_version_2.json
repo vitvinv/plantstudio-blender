@@ -1,0 +1,1290 @@
+{
+ "meta": {
+  "ages": "per .pla kStateAge",
+  "generated": "2026-09-21T00:05:38",
+  "seed": "per .pla",
+  "species_count": 4,
+  "tool": "plant_census.py"
+ },
+ "species": {
+  "Daylily": {
+   "ages": {
+    "100": {
+     "parts": {
+      "anther female": {
+       "area_mm2": 103.034,
+       "bbox_mm": [
+        204.4207861060809,
+        256.07763286512943,
+        24.214801051281317,
+        67.23495198629846,
+        -59.18368620827239,
+        -15.592273297014994
+       ],
+       "faces": 600,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 1.1127,
+       "tdo_instances": 75,
+       "tdo_mean_scale": 0.02,
+       "tdo_triangles": 600
+      },
+      "filament female": {
+       "area_mm2": 263.6,
+       "bbox_mm": [
+        197.93500586290745,
+        254.0843782197697,
+        26.343607997758824,
+        65.1299111938543,
+        -57.475189350339825,
+        -17.711729000434573
+       ],
+       "faces": 450,
+       "pipe_length_mm": 400.0,
+       "pipe_radius_mm": 0.127,
+       "pipe_segments": 75,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      },
+      "inflorescence internode female": {
+       "area_mm2": 259.729,
+       "bbox_mm": [
+        173.1877944790002,
+        220.97282431917844,
+        28.632617275029567,
+        42.483432397523615,
+        -38.33726542781596,
+        -25.925601948023164
+       ],
+       "faces": 90,
+       "pipe_length_mm": 50.0,
+       "pipe_radius_mm": 1.0,
+       "pipe_segments": 15,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      },
+      "inflorescence stalk female": {
+       "area_mm2": 924.915,
+       "bbox_mm": [
+        -0.1962251228289792,
+        173.65650302463115,
+        -0.6867546537271425,
+        30.450555471457285,
+        -27.638467922026813,
+        0.9436050231378046
+       ],
+       "faces": 18,
+       "pipe_length_mm": 178.0,
+       "pipe_radius_mm": 1.0,
+       "pipe_segments": 3,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      },
+      "internode": {
+       "area_mm2": 3.003,
+       "bbox_mm": [
+        -0.2129260505618872,
+        0.24211187192237305,
+        -0.9984586068545922,
+        0.9881868449653181,
+        -0.9898928117511007,
+        0.9868086270378374
+       ],
+       "faces": 132,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": 0.8664,
+       "pipe_segments": 33,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      },
+      "leaf": {
+       "area_mm2": 9571.088,
+       "bbox_mm": [
+        0.18306636777145943,
+        173.5868773178736,
+        -102.68462891792188,
+        100.92320850458223,
+        -101.2233690659735,
+        100.21989399990143
+       ],
+       "faces": 120,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 71.4447,
+       "tdo_instances": 10,
+       "tdo_mean_scale": 0.475521,
+       "tdo_triangles": 120
+      },
+      "pedicel female": {
+       "area_mm2": 366.024,
+       "bbox_mm": [
+        182.40644307887936,
+        239.18170545872775,
+        31.520787706967333,
+        51.98164833674057,
+        -43.813055360627615,
+        -27.418113849338454
+       ],
+       "faces": 90,
+       "pipe_length_mm": 100.0,
+       "pipe_radius_mm": 0.7067,
+       "pipe_segments": 15,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      },
+      "petals row 1 female": {
+       "area_mm2": 2910.504,
+       "bbox_mm": [
+        198.0522126544352,
+        260.75285039223616,
+        17.05673979833993,
+        72.97036253756866,
+        -64.67693801228985,
+        -7.688711499554409
+       ],
+       "faces": 450,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 12.4971,
+       "tdo_instances": 15,
+       "tdo_mean_scale": 0.3,
+       "tdo_triangles": 450
+      },
+      "petals row 2 female": {
+       "area_mm2": 2376.912,
+       "bbox_mm": [
+        195.23307255084728,
+        253.23349867083243,
+        21.574341144795394,
+        66.94031743872156,
+        -58.665384765506964,
+        -12.57079565013949
+       ],
+       "faces": 750,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 8.748,
+       "tdo_instances": 25,
+       "tdo_mean_scale": 0.21,
+       "tdo_triangles": 750
+      },
+      "petiole": {
+       "area_mm2": 19.421,
+       "bbox_mm": [
+        -0.13657480482342388,
+        1.1416795072102686,
+        -0.6755611560857655,
+        0.6490627063905029,
+        -0.8063849819836405,
+        0.608108206252733
+       ],
+       "faces": 180,
+       "pipe_length_mm": 8.199,
+       "pipe_radius_mm": 0.4099,
+       "pipe_segments": 30,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      },
+      "sepals female": {
+       "area_mm2": 581.771,
+       "bbox_mm": [
+        197.64719484989882,
+        243.52472604991266,
+        32.40891506169611,
+        56.03919650298904,
+        -47.7732653936228,
+        -24.30728603924892
+       ],
+       "faces": 1050,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 3.1483,
+       "tdo_instances": 35,
+       "tdo_mean_scale": 0.05,
+       "tdo_triangles": 1050
+      },
+      "stigma female": {
+       "area_mm2": 45.975,
+       "bbox_mm": [
+        207.3785984017049,
+        256.48850623667,
+        22.277229847052748,
+        70.81554612716356,
+        -63.80185361156177,
+        -13.62843172203352
+       ],
+       "faces": 120,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 3.8002,
+       "tdo_instances": 15,
+       "tdo_mean_scale": 0.04,
+       "tdo_triangles": 120
+      },
+      "style female": {
+       "area_mm2": 84.619,
+       "bbox_mm": [
+        197.88865121618252,
+        251.73977326072156,
+        27.10933189260762,
+        65.05590710053647,
+        -57.61993986723375,
+        -18.376504311128684
+       ],
+       "faces": 90,
+       "pipe_length_mm": 85.0,
+       "pipe_radius_mm": 0.1917,
+       "pipe_segments": 15,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      }
+     },
+     "whole_plant": {
+      "depth_mm": 201.443,
+      "faces": 4140,
+      "height_mm": 260.966,
+      "live_biomass_by_class": {
+       "PdFlowerFruit": 5.0,
+       "PdInflorescence": 3.0,
+       "PdInternode": 38.12075,
+       "PdLeaf": 44.720941,
+       "PdMeristem": 0.0
+      },
+      "vertices": 3096,
+      "width_mm": 203.608
+     }
+    }
+   },
+   "category": "New version 2 plants",
+   "seed": 743
+  },
+  "flower to test all parts": {
+   "ages": {
+    "100": {
+     "parts": {
+      "anther female": {
+       "area_mm2": 10.291,
+       "bbox_mm": [
+        37.01754400458827,
+        41.221108068266005,
+        -7.911073542022366,
+        -2.5661720035138043,
+        13.65888038463727,
+        18.840407054177287
+       ],
+       "faces": 150,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 2.2527,
+       "tdo_instances": 15,
+       "tdo_mean_scale": 0.02,
+       "tdo_triangles": 150
+      },
+      "filament female": {
+       "area_mm2": 7.932,
+       "bbox_mm": [
+        34.78380965669816,
+        37.77403540817225,
+        -5.69754022801199,
+        -3.72788250388285,
+        14.004666248960334,
+        16.11284411536025
+       ],
+       "faces": 90,
+       "pipe_length_mm": 15.0,
+       "pipe_radius_mm": 0.102,
+       "pipe_segments": 15,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      },
+      "inflorescence internode female": {
+       "area_mm2": 10.392,
+       "bbox_mm": [
+        16.366305120982556,
+        25.69640373743832,
+        -3.339237272552337,
+        -1.8562415636846883,
+        6.553582910029049,
+        10.5937433565138
+       ],
+       "faces": 18,
+       "pipe_length_mm": 10.0,
+       "pipe_radius_mm": 0.2,
+       "pipe_segments": 3,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      },
+      "inflorescence stalk female": {
+       "area_mm2": 0.0,
+       "bbox_mm": null,
+       "faces": 0,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": 0.2,
+       "pipe_segments": 3,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      },
+      "internode": {
+       "area_mm2": 27.642,
+       "bbox_mm": [
+        -0.0976832575359179,
+        16.51684555197108,
+        -2.20353024756552,
+        0.2760627477081179,
+        -0.2622722893673769,
+        6.912398935848226
+       ],
+       "faces": 162,
+       "pipe_length_mm": 17.864,
+       "pipe_radius_mm": 0.2977,
+       "pipe_segments": 27,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      },
+      "leaf": {
+       "area_mm2": 245.175,
+       "bbox_mm": [
+        6.775629299531722,
+        30.02243970889208,
+        -17.808830976876077,
+        16.165156878842144,
+        -11.168125853605385,
+        25.486311873528518
+       ],
+       "faces": 480,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 2.5052,
+       "tdo_instances": 40,
+       "tdo_mean_scale": 0.027796,
+       "tdo_triangles": 480
+      },
+      "leaf stipule": {
+       "area_mm2": 21.207,
+       "bbox_mm": [
+        1.0230234185279719,
+        16.443782794886452,
+        -3.2985753053315814,
+        0.6832995467155297,
+        0.4719091239174689,
+        6.9242591352370475
+       ],
+       "faces": 112,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 1.1124,
+       "tdo_instances": 8,
+       "tdo_mean_scale": 0.01853,
+       "tdo_triangles": 112
+      },
+      "pedicel female": {
+       "area_mm2": 10.392,
+       "bbox_mm": [
+        25.57135365550696,
+        34.901452271962725,
+        -4.481624533798812,
+        -2.998628824931164,
+        10.290163274800014,
+        14.330323721284763
+       ],
+       "faces": 18,
+       "pipe_length_mm": 10.0,
+       "pipe_radius_mm": 0.2,
+       "pipe_segments": 3,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      },
+      "petals row 1 female": {
+       "area_mm2": 279.06,
+       "bbox_mm": [
+        34.8094074978126,
+        41.60248012891903,
+        -10.327472402329334,
+        0.2886017634048171,
+        10.753340795787231,
+        21.029436654511965
+       ],
+       "faces": 190,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 3.997,
+       "tdo_instances": 5,
+       "tdo_mean_scale": 0.08,
+       "tdo_triangles": 190
+      },
+      "petals row 2 female": {
+       "area_mm2": 353.185,
+       "bbox_mm": [
+        34.85387986393526,
+        41.81565377028948,
+        -11.719435164596819,
+        1.9385150950290315,
+        9.478253469595424,
+        22.097379640076273
+       ],
+       "faces": 190,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 4.4966,
+       "tdo_instances": 5,
+       "tdo_mean_scale": 0.09,
+       "tdo_triangles": 190
+      },
+      "petals row 3 female": {
+       "area_mm2": 436.031,
+       "bbox_mm": [
+        34.14411144446979,
+        41.607810807837836,
+        -13.054255960755867,
+        3.4797436383971942,
+        7.756853246378875,
+        23.34295847659649
+       ],
+       "faces": 190,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 4.9963,
+       "tdo_instances": 5,
+       "tdo_mean_scale": 0.1,
+       "tdo_triangles": 190
+      },
+      "petals row 4 female": {
+       "area_mm2": 350.582,
+       "bbox_mm": [
+        32.686445201512015,
+        42.899438532719785,
+        -16.935182103814977,
+        7.394152958479223,
+        4.198839824105892,
+        27.008460338949085
+       ],
+       "faces": 96,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 8.8936,
+       "tdo_instances": 8,
+       "tdo_mean_scale": 0.08,
+       "tdo_triangles": 96
+      },
+      "petals row 5 female": {
+       "area_mm2": 350.582,
+       "bbox_mm": [
+        30.794191041975814,
+        41.39230447863924,
+        -16.907401946810953,
+        7.875136067402946,
+        3.234410877914361,
+        26.202328378844516
+       ],
+       "faces": 96,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 8.8936,
+       "tdo_instances": 8,
+       "tdo_mean_scale": 0.08,
+       "tdo_triangles": 96
+      },
+      "petiole": {
+       "area_mm2": 35.801,
+       "bbox_mm": [
+        3.5896643084125186,
+        29.186755776041668,
+        -12.997949467501709,
+        11.038058531372675,
+        -5.950674356672895,
+        21.53007995062853
+       ],
+       "faces": 1438,
+       "pipe_length_mm": 155.393,
+       "pipe_radius_mm": 0.0238,
+       "pipe_segments": 240,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      },
+      "sepals female": {
+       "area_mm2": 63.564,
+       "bbox_mm": [
+        26.718778602335355,
+        34.85387986393526,
+        -8.78592886514741,
+        2.469717732616359,
+        6.19707902219659,
+        16.949796913122828
+       ],
+       "faces": 40,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 4.928,
+       "tdo_instances": 5,
+       "tdo_mean_scale": 0.07,
+       "tdo_triangles": 40
+      },
+      "stigma female": {
+       "area_mm2": 13.081,
+       "bbox_mm": [
+        39.08240696647717,
+        40.529975088088065,
+        -6.101178314290047,
+        -3.8710879644560774,
+        15.160866752240658,
+        17.300239821712378
+       ],
+       "faces": 570,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 0.4996,
+       "tdo_instances": 15,
+       "tdo_mean_scale": 0.01,
+       "tdo_triangles": 570
+      },
+      "style female": {
+       "area_mm2": 33.766,
+       "bbox_mm": [
+        34.729573624547704,
+        39.677150368948794,
+        -5.59767822079971,
+        -4.030242153230648,
+        13.866749819022168,
+        16.67102213031815
+       ],
+       "faces": 90,
+       "pipe_length_mm": 25.0,
+       "pipe_radius_mm": 0.26,
+       "pipe_segments": 15,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      }
+     },
+     "whole_plant": {
+      "depth_mm": 38.177,
+      "faces": 3930,
+      "height_mm": 42.997,
+      "live_biomass_by_class": {
+       "PdFlowerFruit": 1.0,
+       "PdInflorescence": 3.0,
+       "PdInternode": 35.727748,
+       "PdLeaf": 45.823241,
+       "PdMeristem": 0.0
+      },
+      "vertices": 2861,
+      "width_mm": 33.974
+     }
+    }
+   },
+   "category": "New version 2 plants",
+   "seed": 2378
+  },
+  "purple flower plant": {
+   "ages": {
+    "100": {
+     "parts": {
+      "anther female": {
+       "area_mm2": 10.291,
+       "bbox_mm": [
+        84.52407889230618,
+        108.45925323713763,
+        -2.9821818352554996,
+        18.67361133522942,
+        -38.05640742301761,
+        -20.82134255878863
+       ],
+       "faces": 600,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 1.1264,
+       "tdo_instances": 60,
+       "tdo_mean_scale": 0.01,
+       "tdo_triangles": 600
+      },
+      "filament female": {
+       "area_mm2": 31.717,
+       "bbox_mm": [
+        82.88704062362284,
+        106.7385567222231,
+        -1.6375598542468819,
+        17.407977859510524,
+        -36.48537786910874,
+        -21.242630302813915
+       ],
+       "faces": 360,
+       "pipe_length_mm": 60.0,
+       "pipe_radius_mm": 0.102,
+       "pipe_segments": 60,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      },
+      "inflorescence internode female": {
+       "area_mm2": 83.125,
+       "bbox_mm": [
+        60.44979644721817,
+        92.19523285494361,
+        2.094495589689831,
+        10.35211315591819,
+        -26.751160717156008,
+        -19.69342445210542
+       ],
+       "faces": 180,
+       "pipe_length_mm": 80.0,
+       "pipe_radius_mm": 0.2,
+       "pipe_segments": 30,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      },
+      "inflorescence stalk female": {
+       "area_mm2": 0.012,
+       "bbox_mm": [
+        60.43279805238013,
+        60.53072565172073,
+        4.642143938648016,
+        4.986214305758405,
+        -20.011242565825167,
+        -19.70102916343327
+       ],
+       "faces": 12,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": 0.2,
+       "pipe_segments": 3,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      },
+      "internode": {
+       "area_mm2": 93.757,
+       "bbox_mm": [
+        -0.10056173963841476,
+        60.54518631909271,
+        -0.6719562085107972,
+        4.929447150491164,
+        -19.96793534971345,
+        0.1499126079310493
+       ],
+       "faces": 126,
+       "pipe_length_mm": 64.176,
+       "pipe_radius_mm": 0.275,
+       "pipe_segments": 21,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      },
+      "leaf": {
+       "area_mm2": 192.429,
+       "bbox_mm": [
+        18.798356520355195,
+        71.2964803626519,
+        -19.425644305528312,
+        23.00673080606218,
+        -32.60669711932603,
+        7.024283977246934
+       ],
+       "faces": 960,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 1.6893,
+       "tdo_instances": 120,
+       "tdo_mean_scale": 0.023996,
+       "tdo_triangles": 960
+      },
+      "pedicel female": {
+       "area_mm2": 49.794,
+       "bbox_mm": [
+        73.63788654956883,
+        103.87828450971374,
+        -0.2695048099843652,
+        15.595413636985507,
+        -34.11292969032558,
+        -19.936833497290035
+       ],
+       "faces": 72,
+       "pipe_length_mm": 48.0,
+       "pipe_radius_mm": 0.2,
+       "pipe_segments": 12,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      },
+      "petals row 1 female": {
+       "area_mm2": 112.662,
+       "bbox_mm": [
+        82.98828961402882,
+        107.79632305713129,
+        -3.149504271555518,
+        19.55985323517472,
+        -38.314630025407475,
+        -19.67813898457182
+       ],
+       "faces": 160,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 2.2156,
+       "tdo_instances": 20,
+       "tdo_mean_scale": 0.04,
+       "tdo_triangles": 160
+      },
+      "petals row 2 female": {
+       "area_mm2": 106.069,
+       "bbox_mm": [
+        80.00652892426014,
+        105.76001094200011,
+        -3.85745734207537,
+        19.136868878157735,
+        -37.20059919909499,
+        -17.099854476360445
+       ],
+       "faces": 320,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 2.1641,
+       "tdo_instances": 20,
+       "tdo_mean_scale": 0.03,
+       "tdo_triangles": 320
+      },
+      "petals row 3 female": {
+       "area_mm2": 141.176,
+       "bbox_mm": [
+        82.34086882196641,
+        108.24225932115365,
+        -4.040194235202181,
+        20.72833012734775,
+        -39.35096446980307,
+        -18.166878184149688
+       ],
+       "faces": 240,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 2.7039,
+       "tdo_instances": 20,
+       "tdo_mean_scale": 0.03,
+       "tdo_triangles": 240
+      },
+      "petals row 4 female": {
+       "area_mm2": 225.881,
+       "bbox_mm": [
+        81.32923779026017,
+        107.30279796177594,
+        -5.0613199950972,
+        20.7431909315207,
+        -39.016138240926885,
+        -17.03993753471303
+       ],
+       "faces": 384,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 2.7039,
+       "tdo_instances": 32,
+       "tdo_mean_scale": 0.03,
+       "tdo_triangles": 384
+      },
+      "petals row 5 female": {
+       "area_mm2": 225.881,
+       "bbox_mm": [
+        80.62815996630057,
+        106.57703175787121,
+        -5.468083350909731,
+        20.602631299997533,
+        -38.746987890623124,
+        -16.869100323406062
+       ],
+       "faces": 384,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 2.7039,
+       "tdo_instances": 32,
+       "tdo_mean_scale": 0.03,
+       "tdo_triangles": 384
+      },
+      "petiole": {
+       "area_mm2": 303.028,
+       "bbox_mm": [
+        17.142314092274543,
+        70.14846969933512,
+        -16.712342908604388,
+        21.168143351537204,
+        -31.821841580660454,
+        4.766055627441326
+       ],
+       "faces": 4303,
+       "pipe_length_mm": 296.984,
+       "pipe_radius_mm": 0.0999,
+       "pipe_segments": 720,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      },
+      "sepals female": {
+       "area_mm2": 37.868,
+       "bbox_mm": [
+        79.40363629334479,
+        104.58170050769145,
+        -4.3431590848402415,
+        19.22751850458303,
+        -37.09268538069174,
+        -17.557852337936623
+       ],
+       "faces": 200,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 2.7344,
+       "tdo_instances": 20,
+       "tdo_mean_scale": 0.03,
+       "tdo_triangles": 200
+      },
+      "stigma female": {
+       "area_mm2": 52.324,
+       "bbox_mm": [
+        85.59586106624117,
+        108.5576353496579,
+        -1.9478287801039993,
+        18.118643187650125,
+        -37.689194427970705,
+        -21.6216098366262
+       ],
+       "faces": 2280,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 0.4996,
+       "tdo_instances": 60,
+       "tdo_mean_scale": 0.01,
+       "tdo_triangles": 2280
+      },
+      "style female": {
+       "area_mm2": 70.224,
+       "bbox_mm": [
+        82.86507739946603,
+        107.67721931129674,
+        -1.3506571454357683,
+        17.504539653662345,
+        -36.910690355765524,
+        -21.40282369156816
+       ],
+       "faces": 360,
+       "pipe_length_mm": 80.0,
+       "pipe_radius_mm": 0.169,
+       "pipe_segments": 60,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      }
+     },
+     "whole_plant": {
+      "depth_mm": 46.375,
+      "faces": 10941,
+      "height_mm": 108.658,
+      "live_biomass_by_class": {
+       "PdFlowerFruit": 4.0,
+       "PdInflorescence": 3.0,
+       "PdInternode": 25.670348,
+       "PdLeaf": 55.621209,
+       "PdMeristem": 0.0
+      },
+      "vertices": 8177,
+      "width_mm": 42.432
+     }
+    }
+   },
+   "category": "New version 2 plants",
+   "seed": 333
+  },
+  "rose": {
+   "ages": {
+    "100": {
+     "parts": {
+      "anther female": {
+       "area_mm2": 10.291,
+       "bbox_mm": [
+        271.60876406018633,
+        276.7327822205366,
+        60.76629417577718,
+        67.32965663431679,
+        55.532118679258986,
+        61.78970253750025
+       ],
+       "faces": 150,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 2.2527,
+       "tdo_instances": 15,
+       "tdo_mean_scale": 0.02,
+       "tdo_triangles": 150
+      },
+      "filament female": {
+       "area_mm2": 17.492,
+       "bbox_mm": [
+        268.1868232518933,
+        273.1602955723003,
+        61.85671619019075,
+        65.09551346804828,
+        55.16481301046142,
+        58.83991658852688
+       ],
+       "faces": 90,
+       "pipe_length_mm": 25.0,
+       "pipe_radius_mm": 0.135,
+       "pipe_segments": 15,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      },
+      "inflorescence internode female": {
+       "area_mm2": 0.154,
+       "bbox_mm": [
+        268.07680820030316,
+        268.3283009851366,
+        62.18160672794755,
+        62.689131601665615,
+        54.9871445787537,
+        55.47855123485483
+       ],
+       "faces": 18,
+       "pipe_length_mm": 0.099,
+       "pipe_radius_mm": 0.3,
+       "pipe_segments": 3,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      },
+      "inflorescence stalk female": {
+       "area_mm2": 0.0,
+       "bbox_mm": null,
+       "faces": 0,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": 0.3,
+       "pipe_segments": 3,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      },
+      "internode": {
+       "area_mm2": 685.34,
+       "bbox_mm": [
+        -0.028727530210484995,
+        268.27431344482784,
+        -0.12806508574401967,
+        62.61945213516948,
+        -0.17546133176211767,
+        56.83547373505304
+       ],
+       "faces": 198,
+       "pipe_length_mm": 285.906,
+       "pipe_radius_mm": 0.4332,
+       "pipe_segments": 33,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      },
+      "leaf": {
+       "area_mm2": 327.994,
+       "bbox_mm": [
+        34.65864184492331,
+        273.05307106187786,
+        -5.880649683096762,
+        67.23001694531945,
+        3.4600306868796618,
+        71.99424369829443
+       ],
+       "faces": 80,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 7.5033,
+       "tdo_instances": 10,
+       "tdo_mean_scale": 0.106582,
+       "tdo_triangles": 80
+      },
+      "leaf stipule": {
+       "area_mm2": 42.138,
+       "bbox_mm": [
+        29.21614100199526,
+        268.43017795750444,
+        1.1175266461970097,
+        62.44531208029408,
+        3.147289660458622,
+        56.77594828765322
+       ],
+       "faces": 80,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 1.8165,
+       "tdo_instances": 10,
+       "tdo_mean_scale": 0.032795,
+       "tdo_triangles": 80
+      },
+      "pedicel female": {
+       "area_mm2": 0.036,
+       "bbox_mm": [
+        268.1292831552978,
+        268.37487141275534,
+        62.195073577590264,
+        62.686771235051076,
+        55.0185610962742,
+        55.47609717125584
+       ],
+       "faces": 12,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": 0.3,
+       "pipe_segments": 3,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      },
+      "petals row 1 female": {
+       "area_mm2": 588.642,
+       "bbox_mm": [
+        267.8467749020195,
+        281.9767539611115,
+        56.00519993243348,
+        72.03984331521634,
+        50.492600109296696,
+        66.85120099404926
+       ],
+       "faces": 114,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 7.4944,
+       "tdo_instances": 3,
+       "tdo_mean_scale": 0.15,
+       "tdo_triangles": 114
+      },
+      "petals row 2 female": {
+       "area_mm2": 736.893,
+       "bbox_mm": [
+        267.73059246999037,
+        280.0694377653499,
+        56.389734651908725,
+        72.29349099223924,
+        50.87823814040443,
+        66.15528170022209
+       ],
+       "faces": 190,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 6.4951,
+       "tdo_instances": 5,
+       "tdo_mean_scale": 0.13,
+       "tdo_triangles": 190
+      },
+      "petals row 3 female": {
+       "area_mm2": 981.07,
+       "bbox_mm": [
+        267.7435309327638,
+        280.9941237764538,
+        54.063478082841414,
+        75.11894143429524,
+        48.779913383366605,
+        68.61838928685225
+       ],
+       "faces": 190,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 7.4944,
+       "tdo_instances": 5,
+       "tdo_mean_scale": 0.15,
+       "tdo_triangles": 190
+      },
+      "petals row 4 female": {
+       "area_mm2": 736.893,
+       "bbox_mm": [
+        267.82721820388997,
+        279.2911456735661,
+        55.003263916456405,
+        73.37777501030402,
+        50.00260197925292,
+        67.00053717834197
+       ],
+       "faces": 190,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 6.4951,
+       "tdo_instances": 5,
+       "tdo_mean_scale": 0.13,
+       "tdo_triangles": 190
+      },
+      "petals row 5 female": {
+       "area_mm2": 1116.24,
+       "bbox_mm": [
+        267.55382942524005,
+        281.0882817155482,
+        52.04622299864055,
+        76.52354072612113,
+        47.3804614778827,
+        69.89425993376183
+       ],
+       "faces": 190,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 7.994,
+       "tdo_instances": 5,
+       "tdo_mean_scale": 0.16,
+       "tdo_triangles": 190
+      },
+      "petiole": {
+       "area_mm2": 217.183,
+       "bbox_mm": [
+        29.59001986280343,
+        270.38166902900093,
+        -1.2156571076159703,
+        64.28016582235966,
+        3.011491146735271,
+        61.646564953797935
+       ],
+       "faces": 180,
+       "pipe_length_mm": 114.781,
+       "pipe_radius_mm": 0.3279,
+       "pipe_segments": 30,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      },
+      "sepals female": {
+       "area_mm2": 44.008,
+       "bbox_mm": [
+        263.1254607539193,
+        268.26677751080126,
+        57.89152992700367,
+        65.53707241825353,
+        50.022822689945755,
+        57.101631483201004
+       ],
+       "faces": 40,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 2.7695,
+       "tdo_instances": 5,
+       "tdo_mean_scale": 0.05,
+       "tdo_triangles": 40
+      },
+      "stigma female": {
+       "area_mm2": 9.506,
+       "bbox_mm": [
+        272.6408553126094,
+        275.66788531898885,
+        63.32114584007049,
+        64.82337023661776,
+        57.293577011351935,
+        59.08485298921222
+       ],
+       "faces": 24,
+       "pipe_length_mm": 0.0,
+       "pipe_radius_mm": null,
+       "pipe_segments": 0,
+       "ring_radius_mm": 1.6617,
+       "tdo_instances": 3,
+       "tdo_mean_scale": 0.03,
+       "tdo_triangles": 24
+      },
+      "style female": {
+       "area_mm2": 6.495,
+       "bbox_mm": [
+        268.15205111710446,
+        272.73181965414256,
+        62.24187994780063,
+        63.850949249637566,
+        55.07622482337903,
+        57.54382010369979
+       ],
+       "faces": 18,
+       "pipe_length_mm": 5.0,
+       "pipe_radius_mm": 0.25,
+       "pipe_segments": 3,
+       "ring_radius_mm": null,
+       "tdo_instances": 0,
+       "tdo_mean_scale": 0.0,
+       "tdo_triangles": 0
+      }
+     },
+     "whole_plant": {
+      "depth_mm": 72.17,
+      "faces": 1764,
+      "height_mm": 282.005,
+      "live_biomass_by_class": {
+       "PdFlowerFruit": 1.6,
+       "PdInflorescence": 3.0,
+       "PdInternode": 38.12075,
+       "PdLeaf": 44.720941,
+       "PdMeristem": 0.0
+      },
+      "vertices": 1357,
+      "width_mm": 82.404
+     }
+    }
+   },
+   "category": "New version 2 plants",
+   "seed": 1516
+  }
+ }
+}

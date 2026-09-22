@@ -74,6 +74,19 @@ class PdPlantPart:
         self.age = 0
         self.gender = kGenderFemale
         self.traversingDirection = kTraverseNone
+        self.randomSwayIndex = 0.0
+
+    def initialize(self, plant):
+        """Port of PdPlantPart.initialize (upart.pas): every part created
+        consumes ONE RNG draw for its stored randomSwayIndex — this keeps the
+        growth RNG stream aligned with the original."""
+        self.plant = plant
+        self.plant.partsCreated += 1
+        self.partID = self.plant.partsCreated
+        self.age = 0
+        self.gender = kGenderFemale
+        self.hasFallenOff = False
+        self.randomSwayIndex = self.plant.randomNumberGenerator.zeroToOne()
 
     def partType(self):
         raise NotImplementedError
@@ -88,6 +101,10 @@ class PdPlantPart:
         self.age += 1
         if self.plant.needToRecalculateColors:
             pass
+
+    def totalBiomass_pctMPB(self):
+        """Port of PdPlantPart.totalBiomass_pctMPB (upart.pas)."""
+        return self.liveBiomass_pctMPB + self.deadBiomass_pctMPB
 
     # ── biomass helpers ──
 
@@ -132,6 +149,7 @@ class PdMeristem(PdPlantPart):
         return "meristem"
 
     def initializeWithPlant(self):
+        self.initialize(self.plant)
         self.isApical = True
         self.liveBiomass_pctMPB = 0.0
         self.deadBiomass_pctMPB = 0.0
@@ -482,26 +500,35 @@ class PdMeristem(PdPlantPart):
             self.plant.pInflor[kGenderMale].get("isTerminal", False))
 
     def decideIfActiveFemale(self):
-        return self.isApical == bool(
+        """Separate-sex case: if this meristem is already male but both
+        male and female flowers are apical (or axillary), override to
+        female only half the time (consumes one RNG draw)."""
+        result = self.isApical == bool(
             self.plant.pInflor[kGenderFemale].get("isTerminal", True))
+        if result and self.gender == kGenderMale:
+            result = self.plant.randomNumberGenerator.zeroToOne() < 0.5
+        return result
 
     def willCreateInflorescence(self):
         """Port of the original: probability based on inflorescences still
-        needed vs meristems still available."""
+        needed vs meristems still available. numExpected stays a float
+        (no int truncation) and the inactive count is passed to
+        safedivExcept raw — a 0 divisor yields the 0 fallback, exactly as
+        in the original."""
         result = False
         if self.phytomerAttachedTo is not None and \
                 self.phytomerAttachedTo.isFirstPhytomer and not self.isApical:
             return False
         if self.isApical:
-            numExpected = int(self.plant.pGeneral.numApicalInflors)
+            numExpected = self.plant.pGeneral.numApicalInflors
             numAlready = self.plant.numApicalActiveReproductiveMeristemsOrInflorescences
-            numInactive = max(1, self.plant.numApicalInactiveReproductiveMeristems)
-            inflorProb = umath.safedivExcept(numExpected - numAlready, numInactive, 0)
+            inflorProb = umath.safedivExcept(numExpected - numAlready,
+                                             self.plant.numApicalInactiveReproductiveMeristems, 0)
         else:
-            numExpected = int(self.plant.pGeneral.numAxillaryInflors)
+            numExpected = self.plant.pGeneral.numAxillaryInflors
             numAlready = self.plant.numAxillaryActiveReproductiveMeristemsOrInflorescences
-            numInactive = max(1, self.plant.numAxillaryInactiveReproductiveMeristems)
-            inflorProb = umath.safedivExcept(numExpected - numAlready, numInactive, 0)
+            inflorProb = umath.safedivExcept(numExpected - numAlready,
+                                             self.plant.numAxillaryInactiveReproductiveMeristems, 0)
         if numExpected <= 3:
             inflorProb = 1.0
         if self.plant.randomNumberGenerator.zeroToOne() < inflorProb:
