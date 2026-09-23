@@ -38,7 +38,7 @@ python -m pytest plantstudio_blender/tests/ -q
 
 ---
 ## Plans
-- [ ] Make sure every plant matches its original PlantStudio counterpart
+- [x] Make sure every plant matches its original PlantStudio counterpart
 - [ ] Polish the UI
 - [ ] Switch to vertex colors
 - [ ] Implement the decimation algorithm for headless mode
