@@ -7,12 +7,12 @@ modules are loaded only while the extension is registered.
 import sys
 
 
-PACKAGE_VERSION = "0.3.0"
+PACKAGE_VERSION = "0.4.0"
 
 bl_info = {
     "name": "PlantStudio-Blender",
     "author": "Kurtz-Fernhout Software (ported)",
-    "version": (0, 3, 0),
+    "version": (0, 4, 0),
     "blender": (4, 2, 0),
     "location": "View3D > Sidebar > PlantStudio-Blender",
     "description": "PlantStudio-Blender plant growth simulator with a live wizard and config export",

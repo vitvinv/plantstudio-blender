@@ -116,6 +116,7 @@ def release_notes(version: str) -> str:
     if not log:
         log = f"Initial release of version {version}."
     return (
+        "I hope you enjoy this tool as much as I do. Have fun!\n\n"
         f"## What's New\n\n{log}\n\n"
         "**Install:** Edit → Preferences → Add-ons → Install from Disk → select "
         "`plantstudio_blender.zip`."
