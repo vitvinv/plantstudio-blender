@@ -10,8 +10,8 @@ Wizard steps (matching the original PlantStudio wizard):
   6. Flowers                 (active only if placement enabled)
   7. Fruits                  (active only if placement enabled)
 
-Always-live: every knob change sets a dirty flag; a lightweight timer
-(bpy.app.timers) rebuilds the selected plant's mesh in place. Per-plant
+Always-live: every knob change saves onto the active plant object and the
+lightweight timer (bpy.app.timers) rebuilds stale meshes in place. Per-plant
 parameters are stored on each object (ps_knobs JSON).
 """
 
@@ -22,7 +22,7 @@ from bpy.types import PropertyGroup
 from bpy.props import (FloatProperty, IntProperty, BoolProperty,
                        EnumProperty, FloatVectorProperty)
 
-from .scene_bridge import COLLECTION_NAME
+from types import SimpleNamespace
 
 # ── knob definitions:
 # (prop name, param path, label, min, max, default, step)
@@ -109,6 +109,9 @@ def _tdo_name_items(self, context):
         names = set(tdo_lib.names()) if tdo_lib else set()
         if lib is not None:
             names |= set(lib.embedded_tdo_names())
+        # 'Default tdo' (embedded in a few .pla files) is byte-identical to
+        # 'Default 3D object' — hide the alias so the picker lists it once.
+        names.discard("Default tdo")
         names = sorted(names)
     except Exception:
         names = []
@@ -150,34 +153,12 @@ def knobs_for_step(step):
     return result
 
 
-KNOB_INDEX = {d[0]: i for i, d in enumerate(KNOB_DEFS)}
-
-# ── knob classification (P2a: draw-only knobs skip re-simulation) ──
-# Growth-affecting knobs change the plant's structure/biomass during growTo()
-# and therefore require a full create_plant + growTo. Draw-only knobs only
-# affect geometry/material emitted at draw time and can reuse a cached plant.
-GROWTH_KNOBS = {
-    "knob_branch_index", "knob_branch_dist", "knob_determinate", "knob_symp",
-    "knob_secondary", "knob_curve", "knob_first_curve",
-    "knob_internode_biomass", "knob_internode_days",
-    "knob_leaf_biomass", "knob_leaf_days",
-    "knob_flower_start", "knob_num_apical", "knob_num_axillary",
-    "knob_repro_alloc", "knob_flr_main", "knob_flr_branch",
-    "knob_flr_branches", "knob_flr_days",
-    "knob_flower_biomass", "knob_fruit_days", "knob_fruit_biomass",
-}
-DRAW_ONLY_KNOBS = {d[0] for d in KNOB_DEFS} - GROWTH_KNOBS
+# ── knob classification: growth-affecting knobs change the plant's
+# structure during growTo(); draw-only knobs only affect what is drawn.
 
 _loading = False      # guard: programmatic knob sets must not trigger rebuild
 _rebuild_busy = False
 _timer_handle = None
-# P2a: last-grown plant + the fingerprint of growth-affecting state it
-# was simulated with, so draw-only knob changes can skip growTo().
-# ponytail: cached plant survives undo, so a draw-only redraw could reuse
-# a pre-undo plant; drop the cache when rebuild is asked for after an undo
-# if that ever shows (pure-python object, cannot crash Blender).
-_cached_plant = None
-_cached_fingerprint = None
 
 
 def placement_enabled(knobs):
@@ -185,40 +166,45 @@ def placement_enabled(knobs):
     return int(knobs.knob_num_apical) > 0 or int(knobs.knob_num_axillary) > 0
 
 
-def _knob_update(self, context):
-    """Knob changed by the user — save to the selected plant, rebuild live.
+def _selected_plant():
+    """The plant the wizard edits: the active object, when it's a plant."""
+    from .animator import _active_plant
+    return _active_plant()
 
-    P2d: only mark dirty when an actual value changed since the last rebuild
+
+def _knob_update(self, context):
+    """Knob changed by the user — save to the active plant, rebuild live.
+
+    P2d: only rebuild when an actual value changed since the last rebuild
     (float epsilon comparison), so spurious update callbacks don't waste
     rebuilds."""
-    global _loading
+    global _loading, _needs_rebuild
     if _loading:
         return
-    coll = bpy.data.collections.get(COLLECTION_NAME)
-    if coll is None or not (0 <= self.selected_index < len(coll.objects)):
+    obj = _selected_plant()
+    if obj is None:
         return
-    obj = coll.objects[self.selected_index]
     if _knobs_match_last_applied(obj, self):
         return
-    self.dirty = True
     try:
         save_knobs_to_obj(obj, self)
+        # mark stale so the timer rebuilds it (even if selection moves first)
+        obj["ps_built_day"] = -1
+        from .animator import _poison
+        _poison.discard(obj.name)  # new knobs may fix a plant that failed
     except Exception:
         pass
     _ensure_timer()
 
 
 def _knobs_match_last_applied(obj, knobs):
-    """True when every knob + day matches what was last rebuilt onto obj."""
+    """True when every knob matches what was last rebuilt onto obj."""
     stored = obj.get("ps_knobs")
     if not stored:
         return False
     try:
         prev = json.loads(stored)
     except Exception:
-        return False
-    day = obj.get("ps_day")
-    if day is not None and float(day) != float(knobs.knob_day):
         return False
     for pn, *_ in KNOB_DEFS:
         if pn in prev and abs(float(prev[pn]) - float(getattr(knobs, pn))) > 1e-6:
@@ -235,29 +221,8 @@ def _knobs_match_last_applied(obj, knobs):
     return True
 
 
-def _on_select(self, context):
-    """Plant list selection changed — load that plant's stored knobs."""
-    global _loading
-    if _loading:
-        return
-    _loading = True
-    try:
-        coll = bpy.data.collections.get(COLLECTION_NAME)
-        if coll is not None and 0 <= self.selected_index < len(coll.objects):
-            obj = coll.objects[self.selected_index]
-            load_knobs_from_obj(obj, self)
-            self.knob_day = int(obj.get("ps_day", 60))
-    finally:
-        _loading = False
-
-
 class PSWizardKnobs(PropertyGroup):
-    """Knob values for the selected plant."""
-
-    selected_index: IntProperty(name="Selected plant", default=-1, update=_on_select)
-    dirty: BoolProperty(name="Dirty", default=False)
-    wizard_step: IntProperty(name="Wizard step", default=0, min=0, max=7)
-    knob_day: IntProperty(name="Age (days)", default=60, min=0, max=3650, update=_knob_update)
+    """Knob values for the active plant (knobs live on each object's ps_knobs)."""
 
     knob_branch_index: FloatProperty(name="Branching index", min=0, max=100, default=30, update=_knob_update)
     knob_branch_dist: FloatProperty(name="Branching distance", min=0, max=10, default=3, update=_knob_update)
@@ -577,6 +542,14 @@ def _dict_to_knobs(d, knobs):
                 pass
 
 
+def load_knobs_to_namespace(params):
+    """Full wizard knob set (species defaults) as a plain namespace."""
+    from types import SimpleNamespace
+    ns = SimpleNamespace()
+    load_knobs_from_params(params, ns)
+    return ns
+
+
 def save_knobs_to_obj(obj, knobs):
     obj["ps_knobs"] = json.dumps(_knobs_to_dict(knobs))
 
@@ -588,6 +561,7 @@ def load_knobs_from_obj(obj, knobs):
             _dict_to_knobs(json.loads(raw), knobs)
         except Exception:
             pass
+    return knobs
 
 
 # ── live rebuild timer ──
@@ -615,83 +589,20 @@ def _timer_cb():
     global _rebuild_busy
     if _rebuild_busy:
         return 0.1
-    scene = bpy.context.scene
-    # undo/redo invalidates every bpy reference — a rebuild scheduled before
-    # an undo would run against freed data and crash Blender (re-fetch
-    # everything from bpy.context here; never cache bpy data in this module)
-    knobs = getattr(scene, "ps_wizard_knobs", None)
-    if knobs is None:
+    # undo/redo invalidates every bpy reference — re-fetch everything from
+    # bpy.context here; never cache bpy data in this module
+    if getattr(bpy.context.scene, "ps_wizard_knobs", None) is None:
         return None  # unregistered mid-undo; stop the timer
-    if knobs.dirty:
-        knobs.dirty = False
-        _rebuild_busy = True
-        try:
-            _rebuild_selected(scene)
-        except Exception:
-            import traceback
-            traceback.print_exc()
-        finally:
-            _rebuild_busy = False
+    _rebuild_busy = True
+    try:
+        from .animator import refresh_stale_plants
+        refresh_stale_plants()
+    except Exception:
+        import traceback
+        traceback.print_exc()
+    finally:
+        _rebuild_busy = False
     return 0.1
 
 
-def _growth_fingerprint(base, knobs, day, seed):
-    """Fingerprint of everything that affects simulation (not drawing)."""
-    species = getattr(base, "name", "plant")
-    return (species, int(day), int(seed)) + tuple(
-        round(float(getattr(knobs, pn)), 9) for pn in sorted(GROWTH_KNOBS))
 
-
-def _attach_params_to_plant(plant, params):
-    """Point a PdPlant at a fresh params object (draw-only redraw path)."""
-    plant.params = params
-    plant.pGeneral = params.pGeneral
-    plant.pMeristem = params.pMeristem
-    plant.pInternode = params.pInternode
-    plant.pLeaf = params.pLeaf
-    plant.pSeedlingLeaf = params.pSeedlingLeaf
-    plant.pAxillaryBud = params.pAxillaryBud
-    plant.pFlower = {
-        0: params.flowers.get("kGenderFemale", {}),
-        1: params.flowers.get("kGenderMale", {}),
-    }
-    plant.pInflor = {
-        0: params.inflors.get("kGenderFemale", {}),
-        1: params.inflors.get("kGenderMale", {}),
-    }
-    return plant
-
-
-def _rebuild_selected(scene, fast=False):
-    """Rebuild the selected plant's mesh in place using current knobs.
-
-    P2a: when only draw-only knobs changed (same species/seed/day/growth
-    knobs), reuse the cached grown plant and only re-draw; a growth-affecting
-    change re-simulates from scratch."""
-    from .operators import _get_species, get_library
-    global _cached_plant, _cached_fingerprint
-    knobs = scene.ps_wizard_knobs
-    coll = bpy.data.collections.get(COLLECTION_NAME)
-    if coll is None or not (0 <= knobs.selected_index < len(coll.objects)):
-        return
-    obj = coll.objects[knobs.selected_index]
-    _, tdo_lib = get_library()
-    base = _get_species(obj.get("ps_base_species") or obj.get("ps_species", "plant"))
-    params = apply_knobs_to_params(base, knobs)
-    day = int(knobs.knob_day)
-    seed = int(obj.get("ps_seed", 280))
-
-    from .core.factory import create_plant
-    from .scene_bridge import rebuild_plant_mesh
-    fingerprint = _growth_fingerprint(base, knobs, day, seed)
-    if (_cached_plant is not None and _cached_fingerprint == fingerprint):
-        plant = _attach_params_to_plant(_cached_plant, params)
-    else:
-        plant = create_plant(params, seed=seed, tdo_library=tdo_lib)
-        plant.growTo(day)
-        day = plant.age  # growTo clamps to ageAtMaturity (matches original)
-        _cached_plant = plant
-        _cached_fingerprint = fingerprint
-    rebuild_plant_mesh(obj, plant, fast=False)
-    obj["ps_day"] = day
-    save_knobs_to_obj(obj, knobs)

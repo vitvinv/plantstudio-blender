@@ -21,6 +21,11 @@ class MeshTurtle:
         self.currentColor = (100, 200, 100)
         self.currentLineWidth = 1.0
         self.lineDivisions = 3
+        # optional preview floor on pipe radii (meters). The original clamped
+        # its 2D pen to >=1 pixel so hair-thin petioles stayed visible; in 3D
+        # they vanish. 0 = faithful radii (used by tests/tools); the Blender
+        # bridge sets this to keep petioles visible in the viewport.
+        self.min_pipe_radius = 0.0
         self._stroke_counter = 0
 
     def reset(self):
@@ -108,7 +113,8 @@ class MeshTurtle:
         start = self.position()
         self.currentMatrix.move(mm * self.scale_pixelsPerMm)
         end = self.position()
-        radius = self.currentLineWidth * self.scale_pixelsPerMm * 0.5
+        radius = max(self.currentLineWidth * self.scale_pixelsPerMm * 0.5,
+                     self.min_pipe_radius)
         self.mesh_buffer.add_pipe(
             (start.x, start.y, start.z),
             (end.x, end.y, end.z),
@@ -122,6 +128,9 @@ class MeshTurtle:
                  basis_start=None, basis_end=None, cap_start=True, cap_end=True,
                  part_id=None, segment_index=None, segment_count=None,
                  stroke_id=None):
+        if self.min_pipe_radius > 0.0:
+            radiusStart = max(radiusStart, self.min_pipe_radius)
+            radiusEnd = max(radiusEnd, self.min_pipe_radius)
         self.mesh_buffer.add_pipe(
             (start.x, start.y, start.z),
             (end.x, end.y, end.z),

@@ -46,7 +46,14 @@ seed = int(obj["ps_seed"])
 check(day == 100, f"placement age == species saved age 100 (got {day})")
 
 knobs = bpy.context.scene.ps_wizard_knobs
-print("wizard knob_day =", knobs.knob_day)
+# the UI loads the active plant's knobs via the depsgraph handler on
+# selection; emulate its body (the handler itself no-ops headless)
+from plantstudio_blender import wizard
+wizard._loading = True
+try:
+    wizard.load_knobs_from_obj(obj, knobs)
+finally:
+    wizard._loading = False
 print("knob_petal_shape =", knobs.knob_petal_shape)
 check(knobs.knob_petal_shape == "Petal, daylily",
       f"wizard petal shape knob roundtrips embedded name (got {knobs.knob_petal_shape!r})")
@@ -76,22 +83,17 @@ def top_z(obj):
 
 
 # ── 2. dial the age down (like the user does) ──
-knobs.knob_day = 30
-# emulate what the update callback does: save + rebuild via the timer path
-from plantstudio_blender.wizard import (save_knobs_to_obj, apply_knobs_to_params,
-                                        _rebuild_selected)
-save_knobs_to_obj(obj, knobs)
+# age is the plant's own ps_day property; rebuild via the refresh path
+from plantstudio_blender.animator import rebuild_plant_at_day
 obj["ps_day"] = 30
-_rebuild_selected(bpy.context.scene)
+rebuild_plant_at_day(obj)
 day30 = int(obj["ps_day"])
 v30, f30 = mesh_stats(obj)
 print(f"day 30: vertices={v30} faces={f30}")
 
 # ── 3. dial the age back up ──
-knobs.knob_day = 100
-save_knobs_to_obj(obj, knobs)
 obj["ps_day"] = 100
-_rebuild_selected(bpy.context.scene)
+rebuild_plant_at_day(obj)
 day100 = int(obj["ps_day"])
 v100, f100 = mesh_stats(obj)
 print(f"day 100: vertices={v100} faces={f100}")
@@ -136,6 +138,23 @@ check(v100 > 500, f"day-100 mesh has real geometry ({v100} vertices)")
 stored = json.loads(obj["ps_knobs"])
 check(stored.get("knob_petal_shape") == "Petal, daylily",
       f"stored ps_knobs keep embedded petal name (got {stored.get('knob_petal_shape')!r})")
+
+# ── 4b. seed change must rebuild the plant (per-plant seed like age) ──
+# compare vertex positions: seed variation moves geometry (sway angles),
+# it does not necessarily change vertex/face counts
+def vert_sig(o):
+    return tuple(sorted((round(v.co.x, 5), round(v.co.y, 5), round(v.co.z, 5))
+                        for v in o.data.vertices))
+
+sig_before = vert_sig(obj)
+obj["ps_seed"] = seed + 421  # adjacent seeds can draw identical daylily fans
+rebuild_plant_at_day(obj)
+sig_after = vert_sig(obj)
+check(sig_after != sig_before,
+      f"seed change rebuilds the mesh ({len(sig_before)} verts, geometry changed: "
+      f"{sig_after != sig_before})")
+check(int(obj["ps_built_seed"]) == seed + 421,
+      f"ps_built_seed tracks the new seed (got {obj['ps_built_seed']})")
 
 # ── 5. species saved age for all four plants of the folder ──
 for species_name in ("rose", "flower to test all parts", "purple flower plant"):

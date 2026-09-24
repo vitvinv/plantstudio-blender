@@ -9,7 +9,8 @@ from bpy.props import IntProperty, StringProperty, BoolProperty, EnumProperty
 from .core.plant_library import SpeciesLibrary
 from .core.tdo_parser import TdoLibrary
 from .scene_bridge import (ensure_collection, build_plant_object,
-                           COLLECTION_NAME, plant_object_name)
+                           COLLECTION_NAME, is_plant as _is_plant,
+                           plants as plant_objects)
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 USER_PRESETS_DIR = os.path.join(DATA_DIR, "user-presets")
@@ -65,18 +66,15 @@ def _named_params(params, name):
 
 def _create_plant_object(params, base_species, seed, day, context, name=None):
     """Grow + link a new plant from params; select it and sync the wizard."""
-    from .wizard import load_knobs_from_params, save_knobs_to_obj
-    from .ui_panel import sync_plant_list
+    from .wizard import load_knobs_to_namespace, save_knobs_to_obj
     _, tdo_lib = get_library()
     coll = ensure_collection(COLLECTION_NAME)
     wrapped = _named_params(params, name or "plant")
     obj = build_plant_object(wrapped, seed, day, coll, tdo_lib)
     obj["ps_base_species"] = base_species
-    knobs = context.scene.ps_wizard_knobs
-    load_knobs_from_params(params, knobs)
-    save_knobs_to_obj(obj, knobs)
-    knobs.selected_index = len(coll.objects) - 1
-    sync_plant_list(context.scene)
+    # store the full knob set on the object so refreshes rebuild exactly
+    # what was created (per-plant knobs, no global wizard state)
+    save_knobs_to_obj(obj, load_knobs_to_namespace(params))
     context.view_layer.objects.active = obj
     obj.select_set(True)
     return obj
@@ -259,24 +257,6 @@ class PS_OT_load_preset(Operator):
         return {'FINISHED'}
 
 
-class PS_OT_wizard_step(Operator):
-    bl_idname = "plantstudio.wizard_step"
-    bl_label = "Wizard Step"
-    bl_description = "Navigate the plant wizard"
-    step: IntProperty(name="Step", default=0)
-
-    def execute(self, context):
-        knobs = context.scene.ps_wizard_knobs
-        from .wizard import STEP_NAMES, placement_enabled
-        can_repro = placement_enabled(knobs)
-        step = max(0, min(7, self.step))
-        # skip steps 5-7 if inflorescence placement disabled
-        if not can_repro and step >= 5:
-            step = 4
-        knobs.wizard_step = step
-        return {'FINISHED'}
-
-
 class PS_OT_save_preset(Operator):
     bl_idname = "plantstudio.save_preset"
     bl_label = "Save Preset"
@@ -288,10 +268,8 @@ class PS_OT_save_preset(Operator):
     def invoke(self, context, event):
         # prefill the name from the selected plant
         if not self.preset_name:
-            knobs = context.scene.ps_wizard_knobs
-            coll = bpy.data.collections.get(COLLECTION_NAME)
-            if coll is not None and 0 <= knobs.selected_index < len(coll.objects):
-                obj = coll.objects[knobs.selected_index]
+            obj = context.active_object
+            if _is_plant(obj):
                 self.preset_name = obj.get("ps_base_species", "") or \
                     obj.name.split("_")[0]
         return context.window_manager.invoke_props_dialog(self)
@@ -304,12 +282,10 @@ class PS_OT_save_preset(Operator):
             layout.prop(self, "new_category")
 
     def execute(self, context):
-        knobs = context.scene.ps_wizard_knobs
-        coll = bpy.data.collections.get(COLLECTION_NAME)
-        if coll is None or not (0 <= knobs.selected_index < len(coll.objects)):
-            self.report({'ERROR'}, "Select a plant in the list first")
+        obj = context.active_object
+        if not _is_plant(obj):
+            self.report({'ERROR'}, "Select a PlantStudio plant")
             return {'CANCELLED'}
-        obj = coll.objects[knobs.selected_index]
         name = _sanitize_name(self.preset_name) or "preset"
         if self.category == "NEW":
             category = _sanitize_name(self.new_category) or "My Presets"
@@ -341,24 +317,12 @@ class PS_OT_regrow(Operator):
 
     def execute(self, context):
         obj = context.active_object
-        if obj is None or "ps_species" not in obj:
+        if not _is_plant(obj):
             self.report({'ERROR'}, "Select a PlantStudio plant")
             return {'CANCELLED'}
-        _, tdo_lib = get_library()
-        species_name = obj["ps_species"]
-        species = _get_species(species_name)
-        day = int(obj["ps_day"])
-        seed = int(obj["ps_seed"])
-        new_obj = build_plant_object(species, seed, day,
-                                     obj.users_collection[0], tdo_lib)
-        new_obj.matrix_world = obj.matrix_world
-        bpy.data.objects.remove(obj, do_unlink=True)
-        # Blender may have auto-suffixed the fresh object (".001") while the
-        # old one still held the canonical name; claim the canonical name now.
-        new_obj.name = plant_object_name(species_name, seed, day)
-        context.view_layer.objects.active = new_obj
-        new_obj.select_set(True)
-        self.report({'INFO'}, f"Regrew to day {day}")
+        from .animator import rebuild_plant_at_day
+        rebuild_plant_at_day(obj)
+        self.report({'INFO'}, f"Regrew to day {int(obj['ps_day'])}")
         return {'FINISHED'}
 
 
@@ -370,34 +334,12 @@ class PS_OT_step_day(Operator):
 
     def execute(self, context):
         obj = context.active_object
-        if obj is None or "ps_day" not in obj:
+        if not _is_plant(obj):
             self.report({'ERROR'}, "Select a PlantStudio plant")
             return {'CANCELLED'}
         obj["ps_day"] = int(obj["ps_day"]) + 1
-        bpy.ops.plantstudio.regrow()
-        return {'FINISHED'}
-
-
-class PS_OT_delete_plant(Operator):
-    bl_idname = "plantstudio.delete_plant"
-    bl_label = "Delete Plant"
-    bl_description = "Remove the selected plant from the scene"
-    bl_options = {'REGISTER', 'UNDO'}
-
-    def execute(self, context):
-        knobs = context.scene.ps_wizard_knobs
-        coll = bpy.data.collections.get(COLLECTION_NAME)
-        if coll is None or not (0 <= knobs.selected_index < len(coll.objects)):
-            self.report({'ERROR'}, "Select a plant in the list first")
-            return {'CANCELLED'}
-        index = knobs.selected_index
-        obj = coll.objects[index]
-        bpy.data.objects.remove(obj, do_unlink=True)
-        # removing reallocates the collection — re-fetch objects by index
-        # instead of touching the removed reference
-        knobs.selected_index = min(index, len(coll.objects) - 1)
-        from .ui_panel import sync_plant_list
-        sync_plant_list(context.scene)
+        from .animator import rebuild_plant_at_day
+        rebuild_plant_at_day(obj)
         return {'FINISHED'}
 
 
@@ -416,7 +358,7 @@ class PS_OT_export_plant_config(Operator):
     bl_options = {'REGISTER', 'UNDO'}
     bl_idname = "plantstudio.export_plant_config"
     bl_label = "Export Plant Config"
-    bl_description = ("Write one JSON config per checked plant "
+    bl_description = ("Write one JSON config per plant in the scene "
                       "(plant_id/species/seed/planted_date) for headless/CI "
                       "pipelines; plant_id is derived from species+seed, dates "
                       "are strict ISO; target directory = panel 'Config export "
@@ -425,16 +367,9 @@ class PS_OT_export_plant_config(Operator):
     def execute(self, context):
         from datetime import date, timedelta
 
-        coll = bpy.data.collections.get(COLLECTION_NAME)
-        if coll is None:
-            self.report({'ERROR'}, "No PlantStudio plant collection in the scene")
-            return {'CANCELLED'}
-
-        objects = {o.name: o for o in coll.objects}
-        selected = [i.name for i in context.scene.ps_plant_list.plants
-                    if i.selected]
+        selected = plant_objects()
         if not selected:
-            self.report({'ERROR'}, "Check at least one plant in the list to export")
+            self.report({'ERROR'}, "No PlantStudio plants in the scene")
             return {'CANCELLED'}
 
         plants_dir = export_dir_for(context)
@@ -444,11 +379,8 @@ class PS_OT_export_plant_config(Operator):
         seen = set()
         warnings = []
         exported = []
-        for name in selected:
-            obj = objects.get(name)
-            if obj is None or "ps_species" not in obj:
-                warnings.append(f"'{name}' is not a PlantStudio plant")
-                continue
+        for obj in selected:
+            name = obj.name
             species = str(obj["ps_species"])
             seed = int(obj["ps_seed"])
             day = int(obj["ps_day"])

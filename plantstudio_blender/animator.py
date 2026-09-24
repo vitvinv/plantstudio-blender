@@ -1,91 +1,109 @@
-"""PlantStudio-Blender growth animation operator."""
+"""PlantStudio-Blender growth animation and mesh refresh.
+
+A plant's age is its own `ps_day` custom property — animate it with
+keyframes or drivers, whatever you already use. Refresh paths:
+- frame_change_post: rebuilds plants whose ps_day moved (scrub/play; Blender
+  evaluates keyed/driven properties before this handler runs)
+- depsgraph_update_post -> debounced timer: rebuilds plants whose ps_day
+  was edited directly, and the active plant after wizard knob edits
+"""
 
 import bpy
-from bpy.types import Operator
-from bpy.props import IntProperty
 
-from .scene_bridge import build_plant_object, plant_object_name
-from .operators import get_library
+from .scene_bridge import is_plant as _is_plant, plants as _plants
+
+try:
+    _persistent = bpy.app.handlers.persistent
+except AttributeError:
+    _persistent = lambda fn: fn  # bpy-stubbed tests import this module headless
+
+# plants whose rebuild raised: skip until their data changes, so one bad
+# plant can't retry-crash every frame
+_poison = set()
 
 
-class PS_OT_animate_growth(Operator):
-    """Animate the selected plant's growth over frames."""
-    bl_idname = "plantstudio.animate_growth"
-    bl_label = "Animate Growth"
-    bl_description = "Animate plant growth day by day over frames"
+def _active_plant():
+    view_layer = bpy.context.view_layer
+    obj = view_layer.objects.active if view_layer else None
+    return obj if _is_plant(obj) else None
 
-    days_per_frame: IntProperty(name="Days per frame", default=2, min=1, max=50)
 
-    _timer = None
-    _obj = None
-    _species = None
-    _tdo_lib = None
-    _current_day = 0
-    _target_day = 0
+def stale_plants():
+    """Plants whose age or seed no longer matches the last built mesh."""
+    return [o for o in _plants()
+            if o.name not in _poison
+            and (int(o.get("ps_day", -1)) != int(o.get("ps_built_day", -2))
+                 or int(o.get("ps_seed", -1)) != int(o.get("ps_built_seed", -2)))]
 
-    def modal(self, context, event):
-        if event.type in {'RIGHTMOUSE', 'ESC'}:
-            self.cancel(context)
-            return {'CANCELLED'}
-        if event.type == 'TIMER':
-            if self._current_day >= self._target_day:
-                self.cancel(context)
-                return {'CANCELLED'}
-            self._current_day = min(self._current_day + self.days_per_frame,
-                                    self._target_day)
-            obj = self._obj
-            obj["ps_day"] = self._current_day
-            # rebuild the mesh in place
-            species_name = getattr(self._species, "name", "plant")
-            seed = int(obj["ps_seed"])
-            new_obj = build_plant_object(self._species, seed,
-                                         self._current_day,
-                                         obj.users_collection[0], self._tdo_lib)
-            new_obj.matrix_world = obj.matrix_world
-            bpy.data.objects.remove(obj, do_unlink=True)
-            # re-claim the canonical name (Blender may have added ".001")
-            new_obj.name = plant_object_name(species_name, seed,
-                                             self._current_day)
-            self._obj = new_obj
-            context.view_layer.objects.active = new_obj
-            new_obj.select_set(True)
-            context.scene.frame_set(self._current_day)
-            # update the timeline to reflect current day
-            self._refresh_timeline(context)
-        return {'PASS_THROUGH'}
 
-    def _refresh_timeline(self, context):
-        scene = context.scene
-        if scene.frame_end < self._target_day:
-            scene.frame_end = self._target_day
+def rebuild_plant_at_day(obj):
+    """Rebuild a plant object's mesh in place at its current ps_day.
 
-    def execute(self, context):
-        obj = context.active_object
-        if obj is None or "ps_species" not in obj:
-            self.report({'ERROR'}, "Select a PlantStudio plant")
-            return {'CANCELLED'}
-        self._obj = obj
-        self._current_day = int(obj["ps_day"])
-        self._target_day = 0
-        # grow to maturity for the animation end
+    Re-simulates from the object's saved wizard knobs (ps_knobs) and seed;
+    preserves transform, name and object reference. growTo clamps the day
+    at ageAtMaturity (matches the original PlantStudio). Returns the object
+    or None when obj is not a rebuildable plant.
+    """
+    # ponytail: full re-simulation on every refresh (the old draw-only
+    # fingerprint cache belonged to the global-slider model); add a cache
+    # back if dragging knobs feels slow.
+    if not _is_plant(obj):
+        return None
+    from types import SimpleNamespace
+    from .operators import _get_species, get_library
+    from .core.factory import create_plant
+    from .scene_bridge import rebuild_plant_mesh
+    from .wizard import (load_knobs_from_params, load_knobs_from_obj,
+                         apply_knobs_to_params)
+
+    try:
         lib, tdo_lib = get_library()
-        self._species = lib.get(obj["ps_species"])
-        self._tdo_lib = tdo_lib
-        if self._species is None:
-            self.report({'ERROR'}, "Species not found")
-            return {'CANCELLED'}
-        maturity = int(self._species.params.pGeneral.ageAtMaturity)
-        self._target_day = max(self._current_day + 1, maturity)
-        context.scene.frame_start = 0
-        context.scene.frame_end = self._target_day
-        wm = context.window_manager
-        self._timer = wm.event_timer_add(0.05, window=context.window)
-        wm.modal_handler_add(self)
-        self.report({'INFO'}, f"Animating growth to day {self._target_day}")
-        return {'RUNNING_MODAL'}
+        # ps_species may be a display name (saved presets, Create button) —
+        # anything that isn't a library species falls back to default params
+        base = _get_species(obj.get("ps_base_species") or obj["ps_species"])
+        seed = int(obj["ps_seed"])
+        day = max(0, int(obj.get("ps_day", 0)))
+        knobs = SimpleNamespace()
+        load_knobs_from_params(base, knobs)   # full wizard defaults
+        load_knobs_from_obj(obj, knobs)       # this plant's stored overrides
+        params = apply_knobs_to_params(base, knobs)
+        plant = create_plant(params, seed=seed, tdo_library=tdo_lib)
+        plant.growTo(day)
+    except Exception:
+        _poison.add(obj.name)
+        raise
+    rebuild_plant_mesh(obj, plant)
+    obj["ps_day"] = plant.age
+    obj["ps_built_day"] = plant.age
+    obj["ps_built_seed"] = seed
+    _poison.discard(obj.name)
+    return obj
 
-    def cancel(self, context):
-        wm = context.window_manager
-        if self._timer is not None:
-            wm.event_timer_remove(self._timer)
-            self._timer = None
+
+def refresh_stale_plants():
+    """Rebuild every plant whose age moved or whose knobs were edited."""
+    for obj in stale_plants():
+        rebuild_plant_at_day(obj)
+
+
+@_persistent
+def _frame_change_rebuild(scene=None, depsgraph=None):
+    """Playback/scrub: follow keyed or driver-driven ps_day/ps_seed values.
+
+    No fcurve reading: Blender evaluates all animation (5.x slotted actions,
+    drivers) into the property BEFORE frame_change_post fires, so comparing
+    ps_day/ps_seed against what the mesh was built at covers every animation
+    method.
+    """
+    if bpy.app.background:
+        return
+    for obj in _plants():
+        day = int(obj.get("ps_day", 0))
+        seed = int(obj.get("ps_seed", 0))
+        stale = (day != int(obj.get("ps_built_day", -2))
+                 or seed != int(obj.get("ps_built_seed", -2)))
+        if stale and obj.name not in _poison:
+            try:
+                rebuild_plant_at_day(obj)
+            except Exception:
+                pass  # already poisoned; timer/depsgraph paths will report it

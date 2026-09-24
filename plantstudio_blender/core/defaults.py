@@ -375,6 +375,14 @@ def make_default_params():
             continue
         ftype = entry["type"]
         tdo = parse_tdo_compact(value) if ftype == 5 else None
+        if tdo is not None and tdo.points:
+            # parameters.tab stored the default 3D object at its capture
+            # position (first point 134 245 150); drawing treats points as
+            # relative to the draw origin, so unrebased leaves draw displaced
+            # off the plant. Rebase to the first point — matching the same
+            # shape as shipped in the .tdo library.
+            x0, y0, z0 = tdo.points[0]
+            tdo.points = [(x - x0, y - y0, z - z0) for x, y, z in tdo.points]
         set_param(params, entry["access"], ftype, value, tdo)
     normalize_params(params)
     return params

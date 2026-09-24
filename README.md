@@ -75,11 +75,15 @@ plantstudio_blender/
 ├── operators.py             # Blender operators (create, load, save, regrow, export…)
 ├── wizard.py                # Realtime wizard: knobs ↔ params, live rebuild timer
 ├── scene_bridge.py          # Mesh build, material creation, collection management
-├── animator.py              # Growth animation operator (modal timer)
-├── export/                  # glTF/OBJ export (WIP)
+├── animator.py              # Age/seed keyframing + frame-change/refresh engine
 ├── data/                    # Bundled .pla files + 3D object library.tdo
-├── tools/                   # Validation / comparison scripts
 └── tests/                   # Pytest suite (mesh output, LOD, parser round-trips)
+
+Outside the addon package (not shipped in the zip):
+```
+tools/                      # Validation / comparison scripts (repo root)
+scripts/                    # Maintainer verification scripts (headless Blender)
+```
 ```
 
 </details>
@@ -122,8 +126,8 @@ The parameter registry (1,000+ entries) maps **field IDs** (e.g., `kGeneralAgeAt
    - **Load Preset** menu → pick a library species (grouped by category) or a saved user preset.
    - **Seed** spinner (default 280) — changes the stochastic shape.
    - **Create** button → grows a new plant at the current *Age (days)*.
-3. **Plant List** — list of all plants in the `PlantStudio Plants` collection. Checkbox = include in export. Select one to edit.
-4. **Wizard** (for selected plant) — 8 steps, each a collapsible box with labeled sliders/enum pickers/color pickers:
+3. **Pick a plant** — select it in the viewport or Outliner (plants live in the `PlantStudio Plants` collection). The wizard edits the active plant.
+4. **Wizard** (for the active plant) — 8 steps, each a collapsible box with labeled sliders/enum pickers/color pickers:
    - **Meristems** — branching index/distance/angle, determinate probability, sympodial, secondary branching.
    - **Internodes** — length, width, biomass, curving, days to create.
    - **Leaves** — petiole length/width/angle, leaf biomass, leaf size (TDO scale), grow days.
@@ -134,11 +138,12 @@ The parameter registry (1,000+ entries) maps **field IDs** (e.g., `kGeneralAgeAt
    - **Fruits** — fruit biomass threshold, days to fruit.
    - **Shape pickers** (per step) — choose any TDO library object for bud, leaf, stipule, petal, fruit.
    - **Color picker** — unripe fruit color.
-   - **Age (days)** slider — rebuilds at any age instantly.
+   - **Age (days)** — the plant's own `ps_day` property; dragging it rebuilds instantly, and hovering it and pressing **I** keyframes it for animation.
    - **Save Preset** button → writes a `.json` preset (base species + knob deltas).
-5. **Live rebuild** — every knob change triggers a lightweight timer (`bpy.app.timers`) that re-draws the mesh in place (growth-affecting knobs re-simulate; draw-only knobs reuse the cached grown plant).
-6. **Export Plant Config** — writes one JSON config per checked plant to the export dir (see *Config export dir* above the button).
-7. **Animate Growth** operator — modal timer that steps the plant day-by-day over frames, updating the timeline.
+5. **Live rebuild** — every knob change triggers a lightweight timer (`bpy.app.timers`) that re-simulates and re-draws the mesh in place.
+6. **Export Plant Config** — writes one JSON config per plant in the scene to the export dir (see *Config export dir* above the button).
+7. **Animate growth yourself** — the age is the plant's own `ps_day` property: hover the *Age (days)* slider and press **I** to keyframe it (or add a driver), then scrub/play the timeline; a frame-change handler rebuilds the mesh as animation plays. Per plant: keying one plant never moves another.
+8. **Delete** — plants are ordinary Blender objects: select and press `X` / `Delete`.
 
 **Requirements:** Python 3.11+, Blender 4.2 LTS or 5.x LTS. No external Python packages (stdlib only).
 

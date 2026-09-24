@@ -1,43 +1,37 @@
 """N-panel UI for the PlantStudio-Blender addon.
 
 Layout:
-  - New Plant box: preset Load menu + Create button + seed (shared panel)
-  - Plant list (Blender-style UIList of all plants in the scene)
-  - Wizard: step navigation (Meristems/Internodes/Leaves/...),
-    live knobs for the selected plant + Save Preset dialog
+  - New Plant box: preset Load menu + Create button + seed
+  - Selected Plant box: per-plant age (keyable) + wizard knobs
+  - Export box: config export dir + export button
+
+Plants are picked in the viewport or Outliner (active object) — no separate
+plant list. Per-plant knobs and age live on each object (ps_knobs / ps_day);
+a depsgraph handler loads the active plant's knobs into the wizard.
 """
 
 import os
 import re
 import bpy
-from bpy.types import Panel, UIList, PropertyGroup
-from bpy.props import (StringProperty, IntProperty, PointerProperty,
-                       EnumProperty, CollectionProperty, BoolProperty)
+from bpy.types import Panel, PropertyGroup
+from bpy.props import StringProperty, IntProperty, PointerProperty
 
 from .operators import get_library, USER_PRESETS_DIR
 
+# last object name whose knobs were loaded into the wizard, so switching
+# selection reloads knobs exactly once per switch
+_active_knob_source = None
 
-def _species_items(self, context):
-    """Dynamic enum items, grouped by category (.pla file name).
-    Tutorial categories are excluded."""
-    try:
-        lib, _ = get_library()
-        by_cat = lib.names_by_category() if lib else {}
-    except Exception:
-        by_cat = {}
-    items = []
-    skip_cats = [c for c in by_cat if "tutorial" in c.lower()]
-    for cat in sorted(by_cat.keys()):
-        if cat in skip_cats:
-            continue
-        names = by_cat[cat]
-        if names:
-            items.append(("", cat, "", 'NONE', 0))
-            for n in names[:100]:
-                items.append((n, n, ""))
-    if not items:
-        items.append(("maiden grass", "maiden grass", ""))
-    return items
+
+def _seed_update(self, context):
+    """Seed changed — retarget the active plant (its mesh rebuilds via the
+    refresh timer because ps_seed now differs from ps_built_seed)."""
+    from .animator import _active_plant
+    obj = _active_plant()
+    if obj is not None:
+        obj["ps_seed"] = int(self.seed)
+        from .wizard import _ensure_timer
+        _ensure_timer()
 
 
 def _library_categories():
@@ -137,22 +131,9 @@ def register_category_menus():
         ensure_category_menu(cat)
 
 
-def _seed_update(self, context):
-    """Seed changed — rebuild the selected plant with the new seed."""
-    knobs = context.scene.ps_wizard_knobs
-    coll = bpy.data.collections.get("PlantStudio Plants")
-    if coll is not None and 0 <= knobs.selected_index < len(coll.objects):
-        obj = coll.objects[knobs.selected_index]
-        obj["ps_seed"] = int(self.seed)
-        knobs.dirty = True
-        from .wizard import _ensure_timer
-        _ensure_timer()
-
-
 class PSProperties(bpy.types.PropertyGroup):
-    species_name: EnumProperty(name="Species", items=_species_items)
-    base_species: StringProperty(name="Base species", default="")
-    seed: IntProperty(name="Seed", default=280, min=1, max=99999, update=_seed_update)
+    seed: IntProperty(name="Seed", default=280, min=1, max=99999,
+                      update=_seed_update)
     day: IntProperty(name="Age (days)", default=60, min=0, max=1000)
     export_dir: StringProperty(
         name="Export Dir",
@@ -163,58 +144,42 @@ class PSProperties(bpy.types.PropertyGroup):
     )
 
 
-class PSPlantListItem(PropertyGroup):
-    name: StringProperty()
-    selected: BoolProperty(name="Export", default=True)
-
-
-class PSPlantList(PropertyGroup):
-    plants: CollectionProperty(type=PSPlantListItem)
-
-
-def sync_plant_list(scene):
-    """Reconcile the ps_plant_list collection with the scene collection.
-
-    Must NOT be called during panel draw (Blender forbids writing to
-    ID data in draw). Called from operators and a depsgraph handler.
-    """
-    from .scene_bridge import COLLECTION_NAME
-    try:
-        plist = scene.ps_plant_list
-    except AttributeError:
-        return
-    coll = bpy.data.collections.get(COLLECTION_NAME)
-    names = [o.name for o in coll.objects] if coll else []
-    current = [i.name for i in plist.plants]
-    if names != current:
-        plist.plants.clear()
-        for n in names:
-            item = plist.plants.add()
-            item.name = n
-
-
 @bpy.app.handlers.persistent
-def _depsgraph_sync_plant_list(scene, depsgraph):
-    """Keep the plant list in sync when objects are added/removed/renamed."""
+def _depsgraph_load_active_knobs(scene, depsgraph):
+    """Load the active plant's stored knobs into the wizard on selection."""
+    global _active_knob_source
+    if bpy.app.background:
+        return
+    view_layer = bpy.context.view_layer
+    obj = view_layer.objects.active if view_layer else None
+    name = obj.name if (obj is not None and obj.type == 'MESH'
+                        and "ps_species" in obj) else None
+    if name == _active_knob_source:
+        return
+    _active_knob_source = name
+    if name is None:
+        return
+    # guard against re-entrant depsgraph updates during data changes
+    if getattr(bpy.context.scene, "ps_wizard_knobs", None) is None:
+        return
     try:
-        sync_plant_list(scene)
+        from . import wizard
+        # loading programmatically must not fire _knob_update (which would
+        # save the half-loaded group back onto the plant)
+        wizard._loading = True
+        try:
+            wizard.load_knobs_from_obj(obj, bpy.context.scene.ps_wizard_knobs)
+        finally:
+            wizard._loading = False
     except Exception:
         pass
 
 
-class PS_UL_plants(UIList):
-    """Blender-style list of plants in the scene."""
-
-    def draw_item(self, context, layout, data, item, icon, active_data,
-                  active_propname, index):
-        if self.layout_type in {'DEFAULT', 'COMPACT'}:
-            row = layout.row(align=True)
-            row.prop(item, "selected", text="")
-            row.prop(item, "name", text="", emboss=False,
-                     icon='OUTLINER_OB_MESH')
-        elif self.layout_type in {'GRID'}:
-            layout.alignment = 'CENTER'
-            layout.label(text="", icon='OUTLINER_OB_MESH')
+def _draw_export(layout, props):
+    box = layout.box()
+    box.prop(props, "export_dir", text="Config export dir")
+    box.operator("plantstudio.export_plant_config",
+                 text="export with metadata", icon='EXPORT')
 
 
 class PS_PT_panel(Panel):
@@ -233,17 +198,15 @@ class PS_PT_panel(Panel):
             self.layout.label(text=f"PlantStudio-Blender error: {e}", icon='ERROR')
 
     def _draw(self, context):
-        from .scene_bridge import COLLECTION_NAME
         from .wizard import knobs_for_step, STEP_NAMES, placement_enabled
 
         layout = self.layout
         props = context.scene.ps_props
         knobs = context.scene.ps_wizard_knobs
-        plist = context.scene.ps_plant_list
 
-        coll = bpy.data.collections.get(COLLECTION_NAME)
-        plants = list(coll.objects) if coll else []
-        selected_valid = (0 <= knobs.selected_index < len(plants))
+        obj = context.view_layer.objects.active
+        is_plant = (obj is not None and obj.type == 'MESH'
+                    and "ps_species" in obj)
 
         # ── New Plant: Load and Create share this panel ──
         box = layout.box()
@@ -255,51 +218,38 @@ class PS_PT_panel(Panel):
         row2.label(text="Seed:")
         row2.prop(props, "seed", text="")
 
-        # ── Plant list ──
+        if not is_plant:
+            box = layout.box()
+            box.label(text="Select a plant", icon='INFO')
+            box.label(text="(or Create / Load Preset above)")
+            _draw_export(layout, props)
+            return
         box = layout.box()
-        box.label(text=f"Plants ({len(plants)})", icon='OUTLINER_OB_MESH')
-        box.template_list("PS_UL_plants", "", plist, "plants",
-                          knobs, "selected_index")
-        box.prop(props, "export_dir", text="Config export dir")
-        box.operator("plantstudio.export_plant_config",
-                     text="export with metadata", icon='EXPORT')
-        box.operator("plantstudio.delete_plant", text="Delete Plant",
-                     icon='TRASH')
+        box.label(text=f"Plant — {obj.name}", icon='OUTLINER_OB_MESH')
+        col = box.column(align=True)
+        # ps_day / ps_seed are the plant's own age and seed; drawn from the
+        # object so keyframes and per-plant values just work (keyable by
+        # hovering + pressing I, or by any driver you add to it)
+        col.prop(obj, '["ps_day"]', text="Age (days)")
+        col.prop(obj, '["ps_seed"]', text="Seed")
 
-        # ── Wizard (selected plant) ──
-        if selected_valid:
-            obj = plants[knobs.selected_index]
-            box = layout.box()
-            box.label(text=f"Wizard — {obj.name}", icon='TOOL_SETTINGS')
+        # all wizard sections in one panel, in order
+        can_repro = placement_enabled(knobs)
+        for s, section_name in enumerate(STEP_NAMES):
+            if s >= 5 and not can_repro:
+                continue  # inflor drawing / flowers / fruits hidden
+            sub = box.box()
+            sub.label(text=section_name, icon='OPTIONS')
+            col = sub.column(align=True)
+            col.scale_y = 0.7
+            for defn in knobs_for_step(s):
+                if len(defn) == 7:
+                    prop_name, _path, label, _lo, _hi, _default, kstep = defn
+                elif len(defn) == 4:
+                    prop_name, _path, label, kstep = defn
+                else:
+                    continue
+                col.prop(knobs, prop_name, text=label)
 
-            row = box.row(align=True)
-            row.label(text="Age (days):")
-            row.prop(knobs, "knob_day", text="")
-            row.operator("plantstudio.save_preset", text="Save Preset",
-                         icon='FILE_TICK')
-
-            # all wizard sections in one panel, in order
-            can_repro = placement_enabled(knobs)
-            for s, section_name in enumerate(STEP_NAMES):
-                if s >= 5 and not can_repro:
-                    continue  # inflor drawing / flowers / fruits hidden
-                sub = box.box()
-                sub.label(text=section_name, icon='OPTIONS')
-                col = sub.column(align=True)
-                col.scale_y = 0.7
-                for defn in knobs_for_step(s):
-                    if len(defn) == 7:
-                        prop_name, _path, label, _lo, _hi, _default, kstep = defn
-                    elif len(defn) == 4:
-                        prop_name, _path, label, kstep = defn
-                    else:
-                        continue
-                    col.prop(knobs, prop_name, text=label)
-        else:
-            box = layout.box()
-            box.label(text="No plant selected.", icon='INFO')
-            box.label(text="Click Create to make a new plant.")
-
-
-def register_panel_classes():
-    pass
+        # ── Export ──
+        _draw_export(layout, props)

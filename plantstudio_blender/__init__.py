@@ -7,12 +7,12 @@ modules are loaded only while the extension is registered.
 import sys
 
 
-PACKAGE_VERSION = "0.4.0"
+PACKAGE_VERSION = "0.5.0"
 
 bl_info = {
     "name": "PlantStudio-Blender",
     "author": "Kurtz-Fernhout Software (ported)",
-    "version": (0, 4, 0),
+    "version": (0, 5, 0),
     "blender": (4, 2, 0),
     "location": "View3D > Sidebar > PlantStudio-Blender",
     "description": "PlantStudio-Blender plant growth simulator with a live wizard and config export",
@@ -40,12 +40,14 @@ def _unregister_loaded_classes(bpy):
 
 
 def _unregister_loaded_handlers(bpy):
-    for handler in list(bpy.app.handlers.depsgraph_update_post):
-        if _module_is_ours(handler):
-            try:
-                bpy.app.handlers.depsgraph_update_post.remove(handler)
-            except (ValueError, RuntimeError):
-                pass
+    for stack_names in ("depsgraph_update_post", "frame_change_post"):
+        stack = getattr(bpy.app.handlers, stack_names, [])
+        for handler in list(stack):
+            if _module_is_ours(handler):
+                try:
+                    stack.remove(handler)
+                except (ValueError, RuntimeError):
+                    pass
 
 
 def _cancel_loaded_timers():
@@ -89,22 +91,17 @@ def register():
     _clear_runtime_state(bpy)
     _purge_submodules()
 
-    from .ui_panel import (PSProperties, PS_PT_panel, PSPlantListItem,
-                           PSPlantList, PS_UL_plants, PS_MT_presets,
-                           register_category_menus, _depsgraph_sync_plant_list)
+    from .ui_panel import (PSProperties, PS_PT_panel, PS_MT_presets,
+                           register_category_menus, _depsgraph_load_active_knobs)
     from .operators import (PS_OT_add_plant, PS_OT_load_preset,
                             PS_OT_save_preset, PS_OT_regrow, PS_OT_step_day,
-                            PS_OT_delete_plant, PS_OT_random_seed,
-                            PS_OT_wizard_step, PS_OT_export_plant_config)
-    from .animator import PS_OT_animate_growth
+                            PS_OT_random_seed, PS_OT_export_plant_config)
+    from .animator import (_frame_change_rebuild as _ps_frame_change_rebuild)
     from .wizard import PSWizardKnobs
 
     classes = [
         PSProperties,
-        PSPlantListItem,
-        PSPlantList,
         PSWizardKnobs,
-        PS_UL_plants,
         PS_MT_presets,
         PS_PT_panel,
         PS_OT_add_plant,
@@ -112,10 +109,6 @@ def register():
         PS_OT_save_preset,
         PS_OT_regrow,
         PS_OT_step_day,
-        PS_OT_delete_plant,
-        PS_OT_random_seed,
-        PS_OT_wizard_step,
-        PS_OT_animate_growth,
         PS_OT_export_plant_config,
     ]
     for cls in classes:
@@ -123,9 +116,14 @@ def register():
     register_category_menus()
     bpy.types.Scene.ps_props = bpy.props.PointerProperty(type=PSProperties)
     bpy.types.Scene.ps_wizard_knobs = bpy.props.PointerProperty(type=PSWizardKnobs)
-    bpy.types.Scene.ps_plant_list = bpy.props.PointerProperty(type=PSPlantList)
-    if _depsgraph_sync_plant_list not in bpy.app.handlers.depsgraph_update_post:
-        bpy.app.handlers.depsgraph_update_post.append(_depsgraph_sync_plant_list)
+    if _depsgraph_load_active_knobs not in bpy.app.handlers.depsgraph_update_post:
+        bpy.app.handlers.depsgraph_update_post.append(_depsgraph_load_active_knobs)
+    if _ps_frame_change_rebuild not in bpy.app.handlers.frame_change_post:
+        bpy.app.handlers.frame_change_post.append(_ps_frame_change_rebuild)
+    # keeps direct ps_day edits + wizard knob changes rebuilding without any
+    # keyframes present; the frame handler alone only fires on scrub/play
+    from .wizard import _ensure_timer as _ps_ensure_timer
+    _ps_ensure_timer()
 
 
 def unregister():

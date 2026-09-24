@@ -14,7 +14,25 @@ from .core.turtle import MeshTurtle
 from .core.draw import draw_plant
 
 COLLECTION_NAME = "PlantStudio Plants"
-GARDEN_COLLECTION_PREFIX = "PS Garden"
+
+# Preview floor on pipe radii (meters). The original clamped its 2D pen to
+# >=1 pixel, so hair-thin petioles (0.06-0.5mm) stayed visible; in 3D they
+# vanish and leaf blades look detached from branches. 1mm radius matches the
+# original's pen at its default zoom. Set turtle.min_pipe_radius = 0 for
+# faithful radii (tests/tools do).
+MIN_PREVIEW_PIPE_RADIUS = 0.001
+
+
+def is_plant(obj):
+    """True when obj is a PlantStudio plant object (never in bpy-stubbed tests)."""
+    return (obj is not None and getattr(obj, "type", None) == 'MESH'
+            and "ps_species" in obj)
+
+
+def plants():
+    """All PlantStudio plant objects in the scene collection."""
+    coll = bpy.data.collections.get(COLLECTION_NAME)
+    return [o for o in coll.objects if is_plant(o)] if coll else []
 
 
 def ensure_collection(name, parent=None):
@@ -61,6 +79,9 @@ def build_mesh_object(plant, name):
     buffer = MeshBuffer()
     turtle = MeshTurtle(buffer)
     turtle.setScale_pixelsPerMm(0.001)  # mm -> meters
+    # original drew sub-mm petioles as >=1-pixel-wide 2D lines; in 3D they
+    # vanish and leaf blades look detached from branches
+    turtle.min_pipe_radius = MIN_PREVIEW_PIPE_RADIUS
     draw_plant(plant, turtle)
     data = buffer.to_mesh_data()
     data["vertices"] = orient_vertices(data["vertices"])
@@ -108,6 +129,10 @@ def build_plant_object(species, seed, day, collection, tdo_library):
     obj["ps_species"] = sp_name
     obj["ps_seed"] = seed
     obj["ps_day"] = day
+    # day/seed the mesh was last built at; refresh handlers rebuild when
+    # ps_day/ps_seed (possibly keyframed/animated) differ from these
+    obj["ps_built_day"] = day
+    obj["ps_built_seed"] = seed
     collection.objects.link(obj)
     return obj
 
@@ -121,6 +146,7 @@ def rebuild_plant_mesh(obj, plant, fast=False):
     buffer = MeshBuffer()
     turtle = MeshTurtle(buffer)
     turtle.setScale_pixelsPerMm(0.001)  # mm -> meters
+    turtle.min_pipe_radius = MIN_PREVIEW_PIPE_RADIUS  # see build_mesh_object
     if fast:
         # realtime preview: 1 division per stem, low pipe faces
         try:
@@ -131,14 +157,20 @@ def rebuild_plant_mesh(obj, plant, fast=False):
     data = buffer.to_mesh_data()
     data["vertices"] = orient_vertices(data["vertices"])
 
-    mesh = obj.data
+    # draw BEFORE clearing: a rebuild that raises mid-draw must leave the
+    # previous (correct) mesh, not an empty (vanished) plant
     name = obj.name
-    mesh.clear_geometry()
-    mesh.from_pydata(data["vertices"], [], data["faces"])
-    mesh.update()
+    new_mesh = bpy.data.meshes.new(name + "_tmp")
+    if data["faces"]:
+        new_mesh.from_pydata(data["vertices"], [], data["faces"])
+        new_mesh.update()
+    else:
+        new_mesh.update()
+        new_mesh.use_fake_user = True
 
     # rebuild material slots to match current colors (slots before foreach_set)
     color_to_slot = {}
+    mesh = new_mesh
     mesh.materials.clear()
     indices = []
     for color in data["face_colors"]:
@@ -152,4 +184,12 @@ def rebuild_plant_mesh(obj, plant, fast=False):
     # polygons count is the truth (face indices may have welded to zero)
     if indices and len(mesh.polygons) == len(indices):
         mesh.polygons.foreach_set("material_index", indices)
+
+    # swap in the finished mesh only after it is fully built; the object
+    # keeps its previous mesh if anything above raised (no vanishing plants)
+    old = obj.data
+    obj.data = new_mesh
+    if old.users == 0:
+        bpy.data.meshes.remove(old)
+
     return obj

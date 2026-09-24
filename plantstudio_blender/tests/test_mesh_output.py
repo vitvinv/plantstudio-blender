@@ -126,7 +126,7 @@ class TestPipeOptimization:
 
 class TestGrowthGeometryConsistency:
     def test_campanula_age_round_trip_matches_direct_orthographic_render(self, tmp_path):
-        from plantstudio_blender.tools.compare_campanula import compare_campanula
+        from tools.compare_campanula import compare_campanula
 
         result = compare_campanula(output_path=str(tmp_path / "campanula.ppm"))
         assert result["mesh_equal"]
@@ -340,8 +340,7 @@ class TestPlaValidation:
                             "3D object library.tdo")
 
     def test_no_unresolved_tdo_refs(self):
-        from plantstudio_blender.tools.validate_pla import (iter_tdo_refs,
-                                                      validate_dir)
+        from tools.validate_pla import (iter_tdo_refs, validate_dir)
         tdo_lib = TdoLibrary.from_file(self.TDO_PATH)
         unresolved = []
         mismatches = []

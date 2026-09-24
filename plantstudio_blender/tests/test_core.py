@@ -90,6 +90,18 @@ class TestOriginalDefaults:
         assert set(DEFAULT_PARAMS) <= set(reg)
         assert len(DEFAULT_PARAMS) >= 300
 
+    def test_default_tdos_are_origin_relative(self):
+        """parameters.tab stored default 3D objects at their capture position
+        (first point 134 245 150); draw() treats points as origin-relative, so
+        unrebased defaults draw displaced — the 'floating leaves' bug."""
+        from plantstudio_blender.core.defaults import make_default_params
+        p = make_default_params()
+        for tdo in (p.leafTdoParams.object3D, p.pFruit.tdoParams.object3D,
+                    p.stipuleTdoParams.object3D,
+                    p.seedlingTdoParams.object3D):
+            if tdo is not None:
+                assert tdo.points[0] == (0.0, 0.0, 0.0), tdo.name
+
     def test_default_params_are_complete(self):
         from plantstudio_blender.core.defaults import make_default_params
         p = make_default_params()
