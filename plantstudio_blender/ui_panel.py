@@ -1,8 +1,8 @@
 """N-panel UI for the PlantStudio-Blender addon.
 
 Layout:
-  - New Plant box: preset Load menu + Create button + seed
-  - Selected Plant box: per-plant age (keyable) + wizard knobs
+  - New Plant box: preset Load menu + Create button
+  - Selected Plant box: per-plant age + growth % (keyable) + wizard knobs
   - Export box: config export dir + export button
 
 Plants are picked in the viewport or Outliner (active object) — no separate
@@ -21,17 +21,6 @@ from .operators import get_library, USER_PRESETS_DIR
 # last object name whose knobs were loaded into the wizard, so switching
 # selection reloads knobs exactly once per switch
 _active_knob_source = None
-
-
-def _seed_update(self, context):
-    """Seed changed — retarget the active plant (its mesh rebuilds via the
-    refresh timer because ps_seed now differs from ps_built_seed)."""
-    from .animator import _active_plant
-    obj = _active_plant()
-    if obj is not None:
-        obj["ps_seed"] = int(self.seed)
-        from .wizard import _ensure_timer
-        _ensure_timer()
 
 
 def _library_categories():
@@ -132,8 +121,6 @@ def register_category_menus():
 
 
 class PSProperties(bpy.types.PropertyGroup):
-    seed: IntProperty(name="Seed", default=280, min=1, max=99999,
-                      update=_seed_update)
     day: IntProperty(name="Age (days)", default=60, min=0, max=1000)
     export_dir: StringProperty(
         name="Export Dir",
@@ -214,9 +201,6 @@ class PS_PT_panel(Panel):
         row = box.row(align=True)
         row.menu("PS_MT_presets", text="Load Preset", icon='FILE_FOLDER')
         row.operator("plantstudio.add_plant", text="Create", icon='ADD')
-        row2 = box.row(align=True)
-        row2.label(text="Seed:")
-        row2.prop(props, "seed", text="")
 
         if not is_plant:
             box = layout.box()
@@ -227,10 +211,14 @@ class PS_PT_panel(Panel):
         box = layout.box()
         box.label(text=f"Plant — {obj.name}", icon='OUTLINER_OB_MESH')
         col = box.column(align=True)
-        # ps_day / ps_seed are the plant's own age and seed; drawn from the
-        # object so keyframes and per-plant values just work (keyable by
-        # hovering + pressing I, or by any driver you add to it)
+        # ps_day / ps_pct / ps_seed are the plant's own age, growth-% mirror
+        # and seed; drawn from the object so keyframes and per-plant values
+        # just work (keyable by hovering + pressing I, or by any driver you
+        # add to it). The animator keeps day and % in sync — whichever you
+        # move last wins, so driving one plant's % and copying that driver
+        # onto others makes them grow in lockstep.
         col.prop(obj, '["ps_day"]', text="Age (days)")
+        col.prop(obj, '["ps_pct"]', text="Growth (% of full)")
         col.prop(obj, '["ps_seed"]', text="Seed")
 
         # all wizard sections in one panel, in order

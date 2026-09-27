@@ -1,9 +1,11 @@
 """PlantStudio-Blender growth animation and mesh refresh.
 
 A plant's age is its own `ps_day` custom property — animate it with
-keyframes or drivers, whatever you already use. Refresh paths:
-- frame_change_post: rebuilds plants whose ps_day moved (scrub/play; Blender
-  evaluates keyed/driven properties before this handler runs)
+keyframes or drivers, whatever you already use. `ps_pct` (0-100% of the
+plant's full-growth day, ps_maturity) mirrors ps_day, so either can be
+keyed or driven; see reconcile_growth(). Refresh paths:
+- frame_change_post: rebuilds plants whose ps_day/ps_pct moved (scrub/play;
+  Blender evaluates keyed/driven properties before this handler runs)
 - depsgraph_update_post -> debounced timer: rebuilds plants whose ps_day
   was edited directly, and the active plant after wizard knob edits
 """
@@ -28,12 +30,42 @@ def _active_plant():
     return obj if _is_plant(obj) else None
 
 
-def stale_plants():
-    """Plants whose age or seed no longer matches the last built mesh."""
-    return [o for o in _plants()
-            if o.name not in _poison
-            and (int(o.get("ps_day", -1)) != int(o.get("ps_built_day", -2))
-                 or int(o.get("ps_seed", -1)) != int(o.get("ps_built_seed", -2)))]
+def reconcile_growth(obj):
+    """Sync the day/pct pair, then rebuild if either moved.
+
+    ps_day (days) and ps_pct (percent of full growth) both describe the
+    plant's age; users edit or keyframe/drive either one. The last-built
+    state (ps_built_day) is the anchor: whichever property moved away from
+    it wins. A ps_pct move recomputes ps_day (so a driver on ps_pct wins
+    over ps_day); a ps_day move just re-mirrors ps_pct. Then rebuild the
+    mesh when the age changed. Returns the rebuilt object or None.
+    """
+    from .core.growth import PCT_PROP, pct_for_days, days_for_pct
+    day = max(0, int(obj.get("ps_day", 0)))
+    seed = int(obj.get("ps_seed", -1))
+    maturity = int(obj.get("ps_maturity", 0) or 0)
+    if maturity <= 0:  # legacy object: no pct mirror, days-only staleness
+        if (int(obj.get("ps_built_day", -2)) != day
+                or seed != int(obj.get("ps_built_seed", -2))):
+            return rebuild_plant_at_day(obj)
+        return None
+    built_day = int(obj.get("ps_built_day", -2))
+    if built_day < 0:  # knob edit / never built: just rebuild (old behavior)
+        return rebuild_plant_at_day(obj)
+    pct = float(obj.get(PCT_PROP, pct_for_days(day, maturity)))
+    anchor = pct_for_days(built_day, maturity)
+    d_pct = abs(pct - anchor)                           # ps_pct moved
+    d_day = abs(pct_for_days(day, maturity) - anchor)   # ps_day moved
+    if d_pct > 0.05 and d_pct >= d_day:
+        # ps_pct moved (driver/keyframe/slider) — it wins over ps_day
+        obj["ps_day"] = day = days_for_pct(pct, maturity)
+    else:
+        # ps_day moved (or nothing moved) — mirror it into ps_pct
+        obj[PCT_PROP] = pct_for_days(day, maturity)
+    if (int(obj.get("ps_built_day", -2)) != day
+            or seed != int(obj.get("ps_built_seed", -2))):
+        return rebuild_plant_at_day(obj)
+    return None
 
 
 def rebuild_plant_at_day(obj):
@@ -63,6 +95,7 @@ def rebuild_plant_at_day(obj):
         base = _get_species(obj.get("ps_base_species") or obj["ps_species"])
         seed = int(obj["ps_seed"])
         day = max(0, int(obj.get("ps_day", 0)))
+        maturity = int(obj.get("ps_maturity", 0) or 0)
         knobs = SimpleNamespace()
         load_knobs_from_params(base, knobs)   # full wizard defaults
         load_knobs_from_obj(obj, knobs)       # this plant's stored overrides
@@ -72,8 +105,12 @@ def rebuild_plant_at_day(obj):
     except Exception:
         _poison.add(obj.name)
         raise
+    from .core.growth import PCT_PROP, pct_for_days
     rebuild_plant_mesh(obj, plant)
     obj["ps_day"] = plant.age
+    # maturity from the simulated plant (also upgrades pre-ps_pct objects)
+    obj["ps_maturity"] = int(getattr(plant.pGeneral, "ageAtMaturity", 100) or 100)
+    obj[PCT_PROP] = pct_for_days(plant.age, obj["ps_maturity"])
     obj["ps_built_day"] = plant.age
     obj["ps_built_seed"] = seed
     _poison.discard(obj.name)
@@ -81,29 +118,30 @@ def rebuild_plant_at_day(obj):
 
 
 def refresh_stale_plants():
-    """Rebuild every plant whose age moved or whose knobs were edited."""
-    for obj in stale_plants():
-        rebuild_plant_at_day(obj)
+    """Rebuild every plant whose age, growth-%, or knobs were edited."""
+    for obj in _plants():
+        if obj.name in _poison:
+            continue
+        try:
+            reconcile_growth(obj)
+        except Exception:
+            pass  # already poisoned; frame-change path will retry/report
 
 
 @_persistent
 def _frame_change_rebuild(scene=None, depsgraph=None):
-    """Playback/scrub: follow keyed or driver-driven ps_day/ps_seed values.
+    """Playback/scrub: follow keyed or driver-driven ps_day/ps_pct/ps_seed.
 
     No fcurve reading: Blender evaluates all animation (5.x slotted actions,
     drivers) into the property BEFORE frame_change_post fires, so comparing
-    ps_day/ps_seed against what the mesh was built at covers every animation
-    method.
+    against what the mesh was built at covers every animation method.
     """
     if bpy.app.background:
         return
     for obj in _plants():
-        day = int(obj.get("ps_day", 0))
-        seed = int(obj.get("ps_seed", 0))
-        stale = (day != int(obj.get("ps_built_day", -2))
-                 or seed != int(obj.get("ps_built_seed", -2)))
-        if stale and obj.name not in _poison:
-            try:
-                rebuild_plant_at_day(obj)
-            except Exception:
-                pass  # already poisoned; timer/depsgraph paths will report it
+        if obj.name in _poison:
+            continue
+        try:
+            reconcile_growth(obj)
+        except Exception:
+            pass  # already poisoned; timer/depsgraph paths will report it

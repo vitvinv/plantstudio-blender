@@ -95,7 +95,7 @@ def register():
                            register_category_menus, _depsgraph_load_active_knobs)
     from .operators import (PS_OT_add_plant, PS_OT_load_preset,
                             PS_OT_save_preset, PS_OT_regrow, PS_OT_step_day,
-                            PS_OT_random_seed, PS_OT_export_plant_config)
+                            PS_OT_export_plant_config)
     from .animator import (_frame_change_rebuild as _ps_frame_change_rebuild)
     from .wizard import PSWizardKnobs
 
@@ -110,7 +110,7 @@ def register():
         PS_OT_regrow,
         PS_OT_step_day,
         PS_OT_export_plant_config,
-    ]
+    ]  # PS_OT_random_seed removed: seed now auto-rolls per new plant
     for cls in classes:
         bpy.utils.register_class(cls)
     register_category_menus()

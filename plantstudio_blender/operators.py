@@ -15,6 +15,25 @@ from .scene_bridge import (ensure_collection, build_plant_object,
 DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 USER_PRESETS_DIR = os.path.join(DATA_DIR, "user-presets")
 
+# seed for the next Create / Load Preset: a rolling random, so every new
+# plant gets a fresh look with no seed slider in the panel (per-plant seed
+# slider handles variation afterwards)
+_next_seed = None
+
+
+def _next_random_seed():
+    import random
+    return random.randint(1, 9999)
+
+
+def _take_next_seed(context):
+    """Consume the pending random seed and roll the next one."""
+    global _next_seed
+    seed = _next_seed if _next_seed is not None else _next_random_seed()
+    _next_seed = _next_random_seed()
+    return seed
+
+
 # module-level cache: parsing 9 .pla files on every UI draw is slow
 _lib_cache = None
 _tdo_cache = None
@@ -199,8 +218,8 @@ class PS_OT_add_plant(Operator):
         props = context.scene.ps_props
         from .core.defaults import make_default_params
         params = make_default_params()
-        obj = _create_plant_object(params, "", props.seed, props.day, context,
-                                   name="plant")
+        obj = _create_plant_object(params, "", _take_next_seed(context),
+                                   props.day, context, name="plant")
         self.report({'INFO'}, f"Created {obj.name} from default settings "
                               f"({len(obj.data.polygons)} faces)")
         return {'FINISHED'}
@@ -250,8 +269,8 @@ class PS_OT_load_preset(Operator):
                 self.report({'ERROR'}, str(e))
                 return {'CANCELLED'}
             display = self.preset_name
-        obj = _create_plant_object(params, base_name, props.seed, day,
-                                   context, name=display)
+        obj = _create_plant_object(params, base_name, _take_next_seed(context),
+                                   day, context, name=display)
         self.report({'INFO'}, f"Created new plant from preset: {display} "
                               f"(age {day})")
         return {'FINISHED'}
@@ -340,17 +359,6 @@ class PS_OT_step_day(Operator):
         obj["ps_day"] = int(obj["ps_day"]) + 1
         from .animator import rebuild_plant_at_day
         rebuild_plant_at_day(obj)
-        return {'FINISHED'}
-
-
-class PS_OT_random_seed(Operator):
-    bl_idname = "plantstudio.random_seed"
-    bl_label = "Randomize Seed"
-    bl_options = {'REGISTER', 'UNDO'}
-
-    def execute(self, context):
-        import random
-        context.scene.ps_props.seed = random.randint(1, 9999)
         return {'FINISHED'}
 
 

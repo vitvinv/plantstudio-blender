@@ -66,6 +66,7 @@ plantstudio_blender/
 │   ├── tdo_parser.py        # .tdo file parser (3D object library)
 │   ├── normalize.py         # Post-parse normalization (s-curves, refs, units)
 │   ├── factory.py           # create_plant() / grow_species() entry points
+│   ├── growth.py            # Growth-% mirror math (ps_pct <-> ps_day)
 │   ├── rng.py               # PdRandom — deterministic LFSR (matches original)
 │   ├── math3d.py            # Vector/matrix/SCurve math
 │   ├── matrix3d.py          # KfMatrix / KfPoint3D (PlantStudio coords)
@@ -75,7 +76,7 @@ plantstudio_blender/
 ├── operators.py             # Blender operators (create, load, save, regrow, export…)
 ├── wizard.py                # Realtime wizard: knobs ↔ params, live rebuild timer
 ├── scene_bridge.py          # Mesh build, material creation, collection management
-├── animator.py              # Age/seed keyframing + frame-change/refresh engine
+├── animator.py              # Age/growth-% sync + frame-change/refresh engine
 ├── data/                    # Bundled .pla files + 3D object library.tdo
 └── tests/                   # Pytest suite (mesh output, LOD, parser round-trips)
 
@@ -138,11 +139,11 @@ The parameter registry (1,000+ entries) maps **field IDs** (e.g., `kGeneralAgeAt
    - **Fruits** — fruit biomass threshold, days to fruit.
    - **Shape pickers** (per step) — choose any TDO library object for bud, leaf, stipule, petal, fruit.
    - **Color picker** — unripe fruit color.
-   - **Age (days)** — the plant's own `ps_day` property; dragging it rebuilds instantly, and hovering it and pressing **I** keyframes it for animation.
+   - **Age (days) / Growth (%)** — the plant's own `ps_day` and `ps_pct` properties; dragging either rebuilds instantly (they stay in sync: % is measured against the species' full-growth day), and hovering one and pressing **I** keyframes it for animation.
    - **Save Preset** button → writes a `.json` preset (base species + knob deltas).
 5. **Live rebuild** — every knob change triggers a lightweight timer (`bpy.app.timers`) that re-simulates and re-draws the mesh in place.
 6. **Export Plant Config** — writes one JSON config per plant in the scene to the export dir (see *Config export dir* above the button).
-7. **Animate growth yourself** — the age is the plant's own `ps_day` property: hover the *Age (days)* slider and press **I** to keyframe it (or add a driver), then scrub/play the timeline; a frame-change handler rebuilds the mesh as animation plays. Per plant: keying one plant never moves another.
+7. **Animate growth yourself** — the age is the plant's own `ps_day` property: hover the *Age (days)* slider and press **I** to keyframe it (or add a driver), then scrub/play the timeline; a frame-change handler rebuilds the mesh as animation plays. Per plant: keying one plant never moves another. To make several species grow simultaneously, drive one plant's *Growth (%)* slider (e.g. by keyframing it), then copy that driver to the other plants' `ps_pct` — % of full growth means different species finish together regardless of their maturity days.
 8. **Delete** — plants are ordinary Blender objects: select and press `X` / `Delete`.
 
 **Requirements:** Python 3.11+, Blender 4.2 LTS or 5.x LTS. No external Python packages (stdlib only).

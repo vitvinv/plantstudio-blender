@@ -9,18 +9,12 @@ import bmesh
 import mathutils
 
 from .core.factory import create_plant
+from .core.growth import PCT_PROP, pct_for_days
 from .core.mesh_buffer import MeshBuffer
 from .core.turtle import MeshTurtle
 from .core.draw import draw_plant
 
 COLLECTION_NAME = "PlantStudio Plants"
-
-# Preview floor on pipe radii (meters). The original clamped its 2D pen to
-# >=1 pixel, so hair-thin petioles (0.06-0.5mm) stayed visible; in 3D they
-# vanish and leaf blades look detached from branches. 1mm radius matches the
-# original's pen at its default zoom. Set turtle.min_pipe_radius = 0 for
-# faithful radii (tests/tools do).
-MIN_PREVIEW_PIPE_RADIUS = 0.001
 
 
 def is_plant(obj):
@@ -79,9 +73,6 @@ def build_mesh_object(plant, name):
     buffer = MeshBuffer()
     turtle = MeshTurtle(buffer)
     turtle.setScale_pixelsPerMm(0.001)  # mm -> meters
-    # original drew sub-mm petioles as >=1-pixel-wide 2D lines; in 3D they
-    # vanish and leaf blades look detached from branches
-    turtle.min_pipe_radius = MIN_PREVIEW_PIPE_RADIUS
     draw_plant(plant, turtle)
     data = buffer.to_mesh_data()
     data["vertices"] = orient_vertices(data["vertices"])
@@ -129,8 +120,11 @@ def build_plant_object(species, seed, day, collection, tdo_library):
     obj["ps_species"] = sp_name
     obj["ps_seed"] = seed
     obj["ps_day"] = day
+    # full-growth day (ageAtMaturity) + 0-100% growth mirror of ps_day
+    obj["ps_maturity"] = int(getattr(plant.pGeneral, "ageAtMaturity", 100) or 100)
+    obj[PCT_PROP] = pct_for_days(day, obj["ps_maturity"])
     # day/seed the mesh was last built at; refresh handlers rebuild when
-    # ps_day/ps_seed (possibly keyframed/animated) differ from these
+    # ps_day/ps_seed/ps_pct (possibly keyframed/animated) differ from these
     obj["ps_built_day"] = day
     obj["ps_built_seed"] = seed
     collection.objects.link(obj)
@@ -146,7 +140,6 @@ def rebuild_plant_mesh(obj, plant, fast=False):
     buffer = MeshBuffer()
     turtle = MeshTurtle(buffer)
     turtle.setScale_pixelsPerMm(0.001)  # mm -> meters
-    turtle.min_pipe_radius = MIN_PREVIEW_PIPE_RADIUS  # see build_mesh_object
     if fast:
         # realtime preview: 1 division per stem, low pipe faces
         try:
@@ -189,7 +182,16 @@ def rebuild_plant_mesh(obj, plant, fast=False):
     # keeps its previous mesh if anything above raised (no vanishing plants)
     old = obj.data
     obj.data = new_mesh
-    if old.users == 0:
+    # Never free the old mesh from inside frame_change_post while a render
+    # job holds references: freeing IDs mid-render is the one destructive
+    # bpy.data op in the per-frame rebuild path and can leave editor caches
+    # (outliner) dangling. Orphans are purged on save anyway.
+    # ponytail: RENDER job flag only; a bg/undo-free belt is overkill here.
+    try:
+        rendering = bpy.app.is_job_running("RENDER")
+    except AttributeError:  # older Blender / bpy-stubbed tests
+        rendering = False
+    if old.users == 0 and not rendering:
         bpy.data.meshes.remove(old)
 
     return obj
