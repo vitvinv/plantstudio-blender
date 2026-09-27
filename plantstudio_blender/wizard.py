@@ -158,7 +158,6 @@ def knobs_for_step(step):
 
 _loading = False      # guard: programmatic knob sets must not trigger rebuild
 _rebuild_busy = False
-_timer_handle = None
 
 
 def placement_enabled(knobs):
@@ -565,24 +564,26 @@ def load_knobs_from_obj(obj, knobs):
 
 
 # ── live rebuild timer ──
+#
+# bpy.app.timers.register() returns None — the registered FUNCTION is the
+# handle. And without persistent=True a file load removes the timer, which
+# silently killed every manual ps_day/ps_pct/ps_seed edit for the rest of
+# the session (the frame handler still worked on scrub, so it looked
+# "random"). Always consult is_registered, never a stored return value.
 
 def _ensure_timer():
-    global _timer_handle
-    if _timer_handle is None:
-        try:
-            _timer_handle = bpy.app.timers.register(_timer_cb)
-        except Exception:
-            _timer_handle = None
+    try:
+        if not bpy.app.timers.is_registered(_timer_cb):
+            bpy.app.timers.register(_timer_cb, persistent=True)
+    except Exception:
+        pass  # bpy-stubbed tests / exotic bpy builds: no timer, purge on save
 
 
 def _cancel_timer():
-    global _timer_handle
-    if _timer_handle is not None:
-        try:
-            bpy.app.timers.unregister(_timer_handle)
-        except Exception:
-            pass
-        _timer_handle = None
+    try:
+        bpy.app.timers.unregister(_timer_cb)
+    except Exception:
+        pass
 
 
 def _timer_cb():

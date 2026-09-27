@@ -24,9 +24,27 @@ def is_plant(obj):
 
 
 def plants():
-    """All PlantStudio plant objects in the scene collection."""
-    coll = bpy.data.collections.get(COLLECTION_NAME)
-    return [o for o in coll.objects if is_plant(o)] if coll else []
+    """All PlantStudio plant objects under the PlantStudio collection tree.
+
+    Users organize plants into sub-collections (per render status etc.);
+    walk the tree so reorganizing never silently detaches a plant from
+    the rebuild loop. Only the named collection and its descendants are
+    scanned — a plant moved outside it stops being managed on purpose.
+    """
+    root = bpy.data.collections.get(COLLECTION_NAME)
+    if root is None:
+        return []
+    found = []
+
+    def walk(coll):
+        for o in coll.objects:
+            if is_plant(o):
+                found.append(o)
+        for child in coll.children:
+            walk(child)
+
+    walk(root)
+    return found
 
 
 def ensure_collection(name, parent=None):
@@ -131,9 +149,57 @@ def build_plant_object(species, seed, day, collection, tdo_library):
     return obj
 
 
+# Meshes swapped out by rebuilds wait here for the idle-timer purge;
+# names (not references) so the list never keeps a datablock alive.
+_pending_purge = []
+
+
+def _schedule_purge():
+    """Start the purge timer once (noop under bpy-stubbed tests)."""
+    try:
+        timers = bpy.app.timers
+        if getattr(timers, "is_registered", lambda f: False)(_purge_pending_meshes):
+            return
+        timers.register(_purge_pending_meshes, first_interval=0.5)
+    except Exception:
+        pass  # stubbed bpy without timers: purge on save handles orphans
+
+
+def _purge_pending_meshes():
+    """Free rebuild-orphaned meshes when nothing holds render references."""
+    try:
+        rendering = bpy.app.is_job_running("RENDER")
+    except AttributeError:  # older Blender / bpy-stubbed tests
+        rendering = False
+    if rendering:
+        return 1.0  # retry after the job finishes
+    for name in list(_pending_purge):
+        _pending_purge.remove(name)
+        mesh = bpy.data.meshes.get(name)
+        if mesh is None:
+            continue  # already gone (purged on save / file change / undo)
+        try:
+            if mesh.users == 1 and mesh.use_fake_user:
+                mesh.use_fake_user = False  # orphaned empty-mesh holder
+            if mesh.users == 0:
+                bpy.data.meshes.remove(mesh)
+        except (ReferenceError, RuntimeError):
+            pass  # freed elsewhere mid-loop; save-time purge catches strays
+    return None  # unregister; the next rebuild re-registers
+
+
 def rebuild_plant_mesh(obj, plant, fast=False):
     """
     Rebuild the mesh of an existing plant object in place (no new object).
+
+    The object's own mesh datablock is rewritten (clear_geometry +
+    from_pydata): no obj.data assignment and no temp meshes. Swapping
+    obj.data inside frame_change_post during an F12 render fires
+    rna_Object_data_update -> DEG_relations_tag_update while the render
+    job's depsgraph is mid-rebuild and crashes Blender (access violation
+    in graph_id_tag_update; a fresh-datablock swap was the crash in
+    both render crash reports). A geometry-only rewrite is what the
+    render loop re-evaluates safely, and it leaves no orphans behind.
 
     fast=True: lower-detail draw (fewer stem divisions) for realtime preview.
     """
@@ -153,45 +219,55 @@ def rebuild_plant_mesh(obj, plant, fast=False):
     # draw BEFORE clearing: a rebuild that raises mid-draw must leave the
     # previous (correct) mesh, not an empty (vanished) plant
     name = obj.name
-    new_mesh = bpy.data.meshes.new(name + "_tmp")
-    if data["faces"]:
-        new_mesh.from_pydata(data["vertices"], [], data["faces"])
-        new_mesh.update()
+    mesh = obj.data
+    fresh = mesh is None or mesh.users != 1  # shared/missing data: swap path
+    if fresh:
+        mesh = bpy.data.meshes.new(name + "_tmp")
     else:
-        new_mesh.update()
-        new_mesh.use_fake_user = True
+        mesh.clear_geometry()
 
-    # rebuild material slots to match current colors (slots before foreach_set)
+    if data["faces"]:
+        mesh.from_pydata(data["vertices"], [], data["faces"])
+        mesh.update()
+    else:
+        mesh.update()
+        if not fresh:
+            mesh.use_fake_user = False  # owned mesh: keep purgeable
+
+    # material slots: sync incrementally (assign/pop only on change) —
+    # per-frame clear+append churns depsgraph updates during renders
     color_to_slot = {}
-    mesh = new_mesh
-    mesh.materials.clear()
     indices = []
+    desired = []
     for color in data["face_colors"]:
         mat_name = f"{name}_mat_{color[0]}_{color[1]}_{color[2]}"
         if mat_name not in color_to_slot:
             mat = make_material(mat_name, color)
-            mesh.materials.append(mat)
-            color_to_slot[mat_name] = len(mesh.materials) - 1
+            color_to_slot[mat_name] = len(desired)
+            desired.append(mat)
         indices.append(color_to_slot[mat_name])
+    while len(mesh.materials) > len(desired):
+        mesh.materials.pop()
+    for i, mat in enumerate(desired):
+        if i >= len(mesh.materials):
+            mesh.materials.append(mat)
+        elif mesh.materials[i] != mat:
+            mesh.materials[i] = mat
     # empty write into foreach_set corrupts mesh memory (crash on undo) —
     # polygons count is the truth (face indices may have welded to zero)
     if indices and len(mesh.polygons) == len(indices):
         mesh.polygons.foreach_set("material_index", indices)
 
-    # swap in the finished mesh only after it is fully built; the object
-    # keeps its previous mesh if anything above raised (no vanishing plants)
-    old = obj.data
-    obj.data = new_mesh
-    # Never free the old mesh from inside frame_change_post while a render
-    # job holds references: freeing IDs mid-render is the one destructive
-    # bpy.data op in the per-frame rebuild path and can leave editor caches
-    # (outliner) dangling. Orphans are purged on save anyway.
-    # ponytail: RENDER job flag only; a bg/undo-free belt is overkill here.
-    try:
-        rendering = bpy.app.is_job_running("RENDER")
-    except AttributeError:  # older Blender / bpy-stubbed tests
-        rendering = False
-    if old.users == 0 and not rendering:
-        bpy.data.meshes.remove(old)
+    if fresh:  # fallback swap path (object shared/lost its mesh)
+        old = obj.data
+        obj.data = mesh
+        # Defer the free to an idle timer: freeing from inside
+        # frame_change_post while a render job — or an EEVEE viewport in
+        # rendered shading, which is NOT a RENDER job — still references
+        # it leaves dangling render data behind; the timer also reclaims
+        # fake-user temp meshes (file bloat).
+        if old is not None:
+            _pending_purge.append(old.name)
+            _schedule_purge()
 
     return obj

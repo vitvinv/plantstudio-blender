@@ -59,6 +59,11 @@ def reconcile_growth(obj):
     if d_pct > 0.05 and d_pct >= d_day:
         # ps_pct moved (driver/keyframe/slider) — it wins over ps_day
         obj["ps_day"] = day = days_for_pct(pct, maturity)
+        if day == built_day:
+            # slider wiggle inside the built day: same mesh, snap the %
+            # back to its canonical value so it can't sit off-mirror
+            obj[PCT_PROP] = anchor
+            return None
     else:
         # ps_day moved (or nothing moved) — mirror it into ps_pct
         obj[PCT_PROP] = pct_for_days(day, maturity)
@@ -138,9 +143,15 @@ def _frame_change_rebuild(scene=None, depsgraph=None):
     """
     if bpy.app.background:
         return
+    try:
+        rendering = bpy.app.is_job_running("RENDER")
+    except AttributeError:  # older Blender / bpy-stubbed tests
+        rendering = False
     for obj in _plants():
         if obj.name in _poison:
             continue
+        if rendering and obj.hide_render:
+            continue  # invisible to the render: skip per-frame re-simulation
         try:
             reconcile_growth(obj)
         except Exception:

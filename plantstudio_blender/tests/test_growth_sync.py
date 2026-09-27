@@ -141,6 +141,32 @@ def test_reconcile_day_moves_pct_and_clamps(animator):
         animator.rebuild_plant_at_day = orig
 
 
+def test_reconcile_subday_pct_wiggle_snaps(animator):
+    """A pct drag that maps to the already-built day can't rebuild (the
+    mesh is whole-day), so the % mirror must snap back to its canonical
+    value instead of sitting off-mirror forever."""
+    calls = []
+
+    def fake_rebuild(obj):
+        calls.append(obj)
+        return obj
+
+    orig = animator.rebuild_plant_at_day
+    animator.rebuild_plant_at_day = fake_rebuild
+    try:
+        obj = _Obj(ps_day=41, ps_maturity=120, ps_built_day=41,
+                   ps_built_seed=7, ps_seed=7)
+        obj[PCT_PROP] = pct_for_days(41, 120)  # canonical: 34.5
+        # one 0.1% step wiggle, still day 41
+        obj[PCT_PROP] = pct_for_days(41, 120) + 0.1
+        assert animator.reconcile_growth(obj) is None
+        assert calls == []                       # no pointless rebuild
+        assert obj[PCT_PROP] == pct_for_days(41, 120)  # snapped back
+        assert obj["ps_day"] == 41
+    finally:
+        animator.rebuild_plant_at_day = orig
+
+
 def test_reconcile_legacy_object_keeps_rebuilding(animator):
     """Pre-ps_pct plants still rebuild on stale day/seed (no pct mirror)."""
     seen = []
