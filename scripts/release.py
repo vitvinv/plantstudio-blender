@@ -107,19 +107,38 @@ def last_tag(version: str) -> str | None:
     return None
 
 
+# Hand-written, user-friendly release notes. End users are not programmers,
+# so each release gets plain-language highlights instead of raw commit titles.
+# Falls back to the commit log for versions without an entry here.
+FRIENDLY_CHANGES = {
+    "0.5.0": [
+        "Plants can now grow with animation: keyframe a plant's age (or growth %), "
+        "then scrub or play the timeline and watch it grow. Different species can "
+        "grow at the same time and finish together.",
+        "New Growth (%) slider that stays in sync with the plant's Age (days).",
+        "Bushes and shrubs are back to their correct original size.",
+        "Fixes: the growth sliders respond reliably again, rendering no longer "
+        "crashes, and new plants are tidily grouped in their own collection.",
+    ],
+}
+
+
 def release_notes(version: str) -> str:
-    prev = last_tag(version)
-    if prev:
-        log = run(["git", "log", "--oneline", f"{prev}..HEAD"]).stdout.strip()
-    else:
-        log = run(["git", "log", "--oneline", "-20"]).stdout.strip()
-    if not log:
-        log = f"Initial release of version {version}."
+    changes = FRIENDLY_CHANGES.get(version)
+    if changes is None:
+        prev = last_tag(version)
+        if prev:
+            log = run(["git", "log", "--oneline", f"{prev}..HEAD"]).stdout.strip()
+        else:
+            log = run(["git", "log", "--oneline", "-20"]).stdout.strip()
+        changes = log.splitlines() or [f"Initial release of version {version}."]
+    bullets = "\n".join(f"- {c}" for c in changes)
     return (
         "I hope you enjoy this tool as much as I do. Have fun!\n\n"
-        f"## What's New\n\n{log}\n\n"
-        "**Install:** Edit → Preferences → Add-ons → Install from Disk → select "
-        "`plantstudio_blender.zip`."
+        f"## What's New\n\n{bullets}\n\n"
+        "**Install:** drag `plantstudio_blender.zip` into the Blender window and "
+        "confirm the install prompt, or use Edit → Preferences → Add-ons → Install "
+        "from Disk."
     )
 
 

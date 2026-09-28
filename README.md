@@ -15,9 +15,15 @@ That said, help from anyone with actual coding experience would be very much app
 [Click here](https://github.com/vitvinv/plantstudio-blender/releases/latest/download/plantstudio_blender.zip) or go to [Releases](https://github.com/vitvinv/plantstudio-blender/releases)
 
 **Install in Blender:**
+
+Variant 1 — through Preferences:
 1. Edit → Preferences → Add-ons → Install from Disk → select plantstudio_blender.zip
 2. Enable "PlantStudio-Blender"
-3. N-panel → PlantStudio-Blender tab
+
+Variant 2 — drag and drop:
+Drag the `plantstudio_blender.zip` file into the Blender window and click **Install** when prompted. Then make sure "PlantStudio-Blender" is enabled (Edit → Preferences → Add-ons).
+
+Either way, you'll find the add-on in the sidebar (press **N**) under the PlantStudio-Blender tab.
 
 **Run without Blender:**
 ```bash
