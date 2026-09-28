@@ -1,5 +1,11 @@
 # PlantStudio-Blender ⚘
 
+<p align="center">
+  <img src="assets/gifs/clover0000-0210_.gif" alt="Clover growth animation" width="32%">
+  <img src="assets/gifs/daylily0000-0210_.gif" alt="Daylily growth animation" width="32%">
+  <img src="assets/gifs/thin_shrub0000-0210_.gif" alt="Thin shrub growth animation" width="32%">
+</p>
+
 An extension that brings the functionality of [**PlantStudio Botanical Illustration Software**](https://www.kurtz-fernhout.com/summary_plantstudio.html) to Blender. Create, grow, and tweak herbaceous plants (wildflowers, grasses, vegetables, garden flowers, shrubs) with a real-time wizard, then export them for use in your projects.
 
 > try the [original](https://www.kurtz-fernhout.com/download_new.html) or a WIP [browser version](https://plantstudio.com/plantstudio-js-alpha1/tests-interactive/Application-test.html)
