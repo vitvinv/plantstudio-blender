@@ -50,11 +50,12 @@ python -m pytest plantstudio_blender/tests/ -q
 
 ---
 ## Plans
-- [x] Make sure every plant matches its original PlantStudio counterpart
+- [x] Make sure every plant matches the original library
+- [ ] Add a plant breeder
+- [x] Add some human touch to this page
 - [ ] Polish the UI
 - [ ] Optimize materials
-- [ ] Implement the decimation algorithm for headless mode
-- [x] Add some human touch to this page
+- [ ] Add the decimation algorithm for headless mode
 
 ---
 ## Architecture Overview
