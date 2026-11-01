@@ -73,7 +73,7 @@ class PdFlowerFruit(PdPlantPart):
                 self.deadBiomass_pctMPB += anthesis_loss
                 # original resets propFullSize against the FRUIT's optimal at
                 # fruit set (ufruit.py line 85)
-                self.propFullSize = umath.min(1.0, umath.safedivExcept(
+                self.propFullSize = min(1.0, umath.safedivExcept(
                     self.totalBiomass_pctMPB(),
                     _gp(self.plant.params.pFruit, "optimalBiomass_pctMPB", 5.0),
                     0.0))
@@ -117,7 +117,7 @@ class PdFlowerFruit(PdPlantPart):
                         wanted = fraction
                     else:
                         wanted = umath.scurve(fraction, curve.c1, curve.c2)
-                    target = umath.max(0.0, umath.min(1.0, wanted)) * _gp(
+                    target = max(0.0, min(1.0, wanted)) * _gp(
                         p, "optimalBiomass_pctMPB", 5.0)
                     self.biomassDemand_pctMPB = umath.linearGrowthResult(
                         self.liveBiomass_pctMPB, target, 1)
@@ -134,7 +134,7 @@ class PdFlowerFruit(PdPlantPart):
             else:
                 optimal = _gp(self.plant.params.pFruit,
                               "optimalBiomass_pctMPB", 5.0)
-            self.propFullSize = umath.min(1.0, umath.safedivExcept(
+            self.propFullSize = min(1.0, umath.safedivExcept(
                 self.totalBiomass_pctMPB(), optimal, 0.0))
         elif mode == kActivityReproductiveBiomassThatCanBeRemoved:
             traverser.total += self.liveBiomass_pctMPB
@@ -171,7 +171,7 @@ class PdInflorescence(PdPlantPart):
         self.isApical = initAsApical
         self.daysSinceLastFlowerAppeared = 0
         self.daysSinceStartedMakingFlowers = 0
-        self.fractionOfOptimalSizeWhenCreated = umath.min(1.0, fractionOfOptimalSize)
+        self.fractionOfOptimalSizeWhenCreated = min(1.0, fractionOfOptimalSize)
         p = plant.pInflor[gender]
         daysToAllFlowers = _gp(p, "daysToAllFlowersCreated", 10)
         self.numFlowers = int(_gp(p, "numFlowersOnMainBranch", 1)) + \
@@ -218,7 +218,7 @@ class PdInflorescence(PdPlantPart):
                     else:
                         self.daysSinceLastFlowerAppeared += 1
                 else:
-                    n = umath.min(self.numFlowersEachDay, self.numFlowers - len(self.flowers))
+                    n = min(self.numFlowersEachDay, self.numFlowers - len(self.flowers))
                     for _ in range(int(n)):
                         self.createFlower()
                     self.daysSinceLastFlowerAppeared = 0

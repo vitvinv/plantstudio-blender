@@ -177,7 +177,7 @@ def _knob_update(self, context):
     P2d: only rebuild when an actual value changed since the last rebuild
     (float epsilon comparison), so spurious update callbacks don't waste
     rebuilds."""
-    global _loading, _needs_rebuild
+    global _loading
     if _loading:
         return
     obj = _selected_plant()

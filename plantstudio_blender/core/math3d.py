@@ -3,14 +3,6 @@
 import math
 
 
-def min(a, b):
-    return a if a < b else b
-
-
-def max(a, b):
-    return a if a > b else b
-
-
 def safediv(x, y):
     if y == 0:
         return 0
@@ -72,10 +64,6 @@ def linearGrowthWithFactor(current, optimal, minDays, growthFactor):
     if minDays <= 0:
         return optimal
     return current + (optimal - current) * growthFactor / minDays
-
-
-def linearGrowth(current, optimal, minDays):
-    return linearGrowthWithFactor(current, optimal, minDays, 1.0)
 
 
 def linearGrowthResult(current, optimal, minDays):

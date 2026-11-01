@@ -387,19 +387,13 @@ def parse_pla_file(path):
         ftype = entry["type"]
         if ftype == 5:  # tdo — may be a name or an embedded block
             tdo = None
-            if value.startswith("start 3D object"):
-                # inline style: '=start 3D object' on the same line
-                block = []
-                while i < len(lines) and "end 3D object" not in lines[i]:
-                    block.append(lines[i])
-                    i += 1
-                i += 1  # consume end 3D object
-                tdos = _parse_tdo_block(block)
-                tdo = tdos[0] if tdos else None
-            elif i < len(lines) and lines[i].strip().startswith("start 3D object"):
-                # standard PlantStudio format: '=Name' on the param line,
-                # then '  start 3D object' ... '  end 3D object' on the
-                # following lines. The embedded block carries the geometry.
+            # embedded block: either '=start 3D object' on the same line,
+            # or the standard format — '=Name' on the param line, then
+            # '  start 3D object' ... '  end 3D object' on the following
+            # lines. The embedded block carries the geometry.
+            if value.startswith("start 3D object") or (
+                    i < len(lines)
+                    and lines[i].strip().startswith("start 3D object")):
                 block = []
                 while i < len(lines) and "end 3D object" not in lines[i]:
                     block.append(lines[i])

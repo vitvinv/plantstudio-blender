@@ -28,23 +28,8 @@ class Tdo:
 
 def parse_tdo_file(path):
     """Parse a .tdo file into a list of Tdo objects."""
-    tdos = []
-    current = None
     with open(path, encoding="latin-1") as f:
-        for raw in f:
-            line = raw.strip()
-            if not line:
-                continue
-            if line.startswith("Name="):
-                current = Tdo(line[len("Name="):].strip(), [], [])
-                tdos.append(current)
-            elif line.startswith("Point=") and current is not None:
-                vals = line[len("Point="):].split()
-                current.points.append((float(vals[0]), float(vals[1]), float(vals[2])))
-            elif line.startswith("Triangle=") and current is not None:
-                vals = line[len("Triangle="):].split()
-                current.triangles.append((int(vals[0]), int(vals[1]), int(vals[2])))
-    return tdos
+        return parse_tdo_text(f.read())
 
 
 def parse_tdo_text(text):

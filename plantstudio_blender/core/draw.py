@@ -11,6 +11,9 @@ from .meristem import (kDirectionLeft, kDirectionRight, kArrangementOpposite,
                        kActivityDraw, kGenderFemale, kGenderMale)
 from .traverser import PdTraverser
 from .mesh_buffer import PIPE_FACES
+# single shared helper (inflorescence imports draw only lazily inside
+# methods, so this top-level import cannot cycle)
+from .inflorescence import _gp
 
 kDontTaper = 0
 kUseAmendment = 1
@@ -174,12 +177,6 @@ def real_dxf_index(part, index):
     return index
 
 
-def _gp(obj, name, default=0.0):
-    if isinstance(obj, dict):
-        return obj.get(name, default)
-    return getattr(obj, name, default)
-
-
 def require_color(color, owner):
     """Return the faceColor or raise AssetError naming the missing asset."""
     from .tdo_parser import AssetError
@@ -266,9 +263,9 @@ def draw_internode(part):
         elif part.phytomerAttachedTo.rightBranchPlantPart is part:
             zAngle = zAngle + part.plant.pMeristem.branchingAngle
             turtle.rotateX(128)
-    length = umath.max(0.0, part.propFullLength() *
+    length = max(0.0, part.propFullLength() *
                        part.plant.pInternode.lengthAtOptimalFinalBiomassAndExpansion_mm)
-    width = umath.max(0.0, part.propFullWidth() *
+    width = max(0.0, part.propFullWidth() *
                       part.plant.pInternode.widthAtOptimalFinalBiomassAndExpansion_mm)
     # NOTE: no fallback for 0-length params — the original draws zero-length
     # internodes for such species (e.g. daylily: a leaf fan with no visible
@@ -642,7 +639,7 @@ def _draw_compound_leaf(leaf, length, width, angle, petioleColor):
         full = getattr(pLeaf, "compoundCurveAngleAtFullSize", 4.0) or 4.0
         difference = abs(full - start)
         leaflet_effect = 0.75 + 0.25 * umath.safedivExcept(count, numLeaflets - 1, 0)
-        pfs_this = umath.max(0.0, umath.min(1.0, (0.25 + 0.75 * pfs) * leaflet_effect))
+        pfs_this = max(0.0, min(1.0, (0.25 + 0.75 * pfs) * leaflet_effect))
         if full > start:
             return start + difference * pfs_this
         return start - difference * pfs_this
@@ -702,7 +699,7 @@ def draw_meristem(meristem):
     if bud is None or bud.scaleAtFullSize == 0 or bud.object3D is None:
         return
     daysToFullSize = 5
-    scale = (bud.scaleAtFullSize / 100.0) * umath.min(1.0, meristem.age / daysToFullSize)
+    scale = (bud.scaleAtFullSize / 100.0) * min(1.0, meristem.age / daysToFullSize)
     if scale <= 0:
         return
     numParts = 5
@@ -751,7 +748,7 @@ def _all_flowers_drawn(inflor):
 
 def _length_or_width_at_age(inflor, p, starting, fraction):
     daysAll = _gp(p, "daysToAllFlowersCreated", 10)
-    ageBounded = umath.min(daysAll, inflor.daysSinceStartedMakingFlowers)
+    ageBounded = min(daysAll, inflor.daysSinceStartedMakingFlowers)
     if daysAll != 0:
         return umath.safedivExcept(starting * ageBounded, daysAll, 0) * fraction
     return starting * ageBounded * fraction
@@ -1084,14 +1081,14 @@ def _draw_flower_fruit(flower):
     # original — NOT the inflorescence's optimalBiomass.
     if getattr(flower, "stage", "bud") in ("unripe_fruit", "ripe_fruit"):
         fruit_params = getattr(plant.params, "pFruit", None)
-        propFullSize = umath.min(1.0, umath.safedivExcept(
+        propFullSize = min(1.0, umath.safedivExcept(
             flower.liveBiomass_pctMPB + flower.deadBiomass_pctMPB,
             _gp(fruit_params, "optimalBiomass_pctMPB", 1.0), 0))
     else:
         # original computes propFullSize during growth as
         # min(1, (live + dead) / pFlower.optimalBiomass) — total biomass,
         # not just live (ufruit.pas kActivityGrowReproductive)
-        propFullSize = umath.min(1.0, umath.safedivExcept(
+        propFullSize = min(1.0, umath.safedivExcept(
             flower.liveBiomass_pctMPB + flower.deadBiomass_pctMPB,
             _gp(p, "optimalBiomass_pctMPB", 1.0), 0))
     turtle.push()
@@ -1205,8 +1202,8 @@ def _draw_floral_axis(flower, p, propFullSize, drawAsOpening, isStamen):
         for _ in range(num):
             turtle.push()
             if line_len > 0 and line_wid > 0:
-                length = umath.max(0.0, propFullSize * line_len)
-                width = umath.max(0.0, propFullSize * line_wid)
+                length = max(0.0, propFullSize * line_len)
+                width = max(0.0, propFullSize * line_wid)
                 angle = _angle_with_sway(flower, _gp(row, "pullBackAngle", 0.0))
                 if drawAsOpening:
                     angle = angle * propFullSize

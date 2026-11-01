@@ -47,7 +47,7 @@ def plants():
     return found
 
 
-def ensure_collection(name, parent=None):
+def ensure_collection(name):
     coll = bpy.data.collections.get(name)
     if coll is None:
         coll = bpy.data.collections.new(name)
@@ -122,7 +122,7 @@ def build_mesh_object(plant, name):
     return obj
 
 
-def plant_object_name(species, seed, day=None):
+def plant_object_name(species, seed):
     return f"{species.replace(' ', '_')}_{seed}"
 
 
@@ -132,7 +132,7 @@ def build_plant_object(species, seed, day, collection, tdo_library):
     plant.growTo(day)
     day = plant.age  # growTo clamps to ageAtMaturity (matches original)
     sp_name = getattr(species, "name", "plant")
-    name = plant_object_name(sp_name, seed, day)
+    name = plant_object_name(sp_name, seed)
     obj = build_mesh_object(plant, name)
     # store metadata
     obj["ps_species"] = sp_name

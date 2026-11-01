@@ -38,7 +38,7 @@ class MeshBuffer:
         self.semantic_records = []
         self._index = {}
 
-    def add_point(self, x, y, z, color):
+    def add_point(self, x, y, z):
         """Add a vertex (deduplicated) and return its index."""
         key = (round(x, 6), round(y, 6), round(z, 6))
         idx = self._index.get(key)
@@ -49,9 +49,9 @@ class MeshBuffer:
         return idx
 
     def add_triangle(self, p0, p1, p2, color):
-        i0 = self.add_point(p0[0], p0[1], p0[2], color)
-        i1 = self.add_point(p1[0], p1[1], p1[2], color)
-        i2 = self.add_point(p2[0], p2[1], p2[2], color)
+        i0 = self.add_point(p0[0], p0[1], p0[2])
+        i1 = self.add_point(p1[0], p1[1], p1[2])
+        i2 = self.add_point(p2[0], p2[1], p2[2])
         if i0 == i1 or i1 == i2 or i0 == i2:
             return
         self.faces.append([i0, i1, i2])
