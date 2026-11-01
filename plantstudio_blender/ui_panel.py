@@ -200,6 +200,8 @@ class PS_PT_panel(Panel):
         box.label(text="New Plant", icon='PRESET')
         row = box.row(align=True)
         row.menu("PS_MT_presets", text="Load Preset", icon='FILE_FOLDER')
+        row.operator("plantstudio.save_preset", text="Save Preset",
+                     icon='FILE_TICK')
         row.operator("plantstudio.add_plant", text="Create", icon='ADD')
 
         if not is_plant:

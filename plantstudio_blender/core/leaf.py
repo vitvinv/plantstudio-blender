@@ -37,7 +37,10 @@ class PdLeaf(PdPlantPart):
         self.leafColor = getattr(plant.pLeaf, "faceColor", None)
         self.petioleColor = getattr(plant.pLeaf, "petioleColor", None)
         if getattr(plant.pLeaf, "compoundNumLeaflets", 1) > 1:
-            # kNumCompoundLeafRandomSwayIndexes = 49 (uleaf.pas)
+            # uleaf.pas: kNumCompoundLeafRandomSwayIndexes = 49 is the wrap
+            # modulus (compoundLeafAngleWithSway does count % 49); the array
+            # is array[0..kNum] = 50 entries, filled by
+            # `for i := 0 to kNum` — 50 zeroToOne() draws at creation
             self.compoundLeafRandomSwayIndexes = [
                 plant.randomNumberGenerator.zeroToOne() for _ in range(50)]
         return self
@@ -59,9 +62,9 @@ class PdLeaf(PdPlantPart):
         fractionOfMaxAge = umath.safedivExcept(self.age + 1, maxDays, 0.0)
         s = getattr(pLeaf, "sCurveParams", None)
         if s is None:
-            propFullSizeWanted = umath.min(1.0, fractionOfMaxAge)
+            propFullSizeWanted = min(1.0, fractionOfMaxAge)
         else:
-            propFullSizeWanted = umath.max(0.0, umath.min(
+            propFullSizeWanted = max(0.0, min(
                 1.0, umath.scurve(fractionOfMaxAge, s.c1, s.c2)))
         target = propFullSizeWanted * pLeaf.optimalBiomass_pctMPB
         minDays = getattr(pLeaf, "minDaysToGrow", 3)
@@ -75,7 +78,7 @@ class PdLeaf(PdPlantPart):
             return
         newBiomass = self.biomassDemand_pctMPB * traverser.fractionOfPotentialBiomass
         self.liveBiomass_pctMPB += newBiomass
-        self.propFullSize = umath.min(1.0, umath.safedivExcept(
+        self.propFullSize = min(1.0, umath.safedivExcept(
             self.totalBiomass_pctMPB(), pLeaf.optimalBiomass_pctMPB, 0))
 
     def traverseActivity(self, mode, traverser):

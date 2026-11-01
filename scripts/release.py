@@ -46,6 +46,8 @@ EXCLUDE_SUFFIXES = (".pyc", ".pyo", ".coverage", ".zip", ".tgz")
 
 VERSION_RE = re.compile(r'"version"\s*:\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)')
 TAG_RE = re.compile(r"v(\d+)\.(\d+)\.(\d+)")
+# blender_manifest.toml line written into the zip gets the bl_info version
+MANIFEST_VERSION_RE = re.compile(r'^version\s*=\s*"[^"]*"', re.MULTILINE)
 
 
 def read_version() -> str:
@@ -85,9 +87,18 @@ def build_zip() -> Path:
     )
     if not files:
         sys.exit(f"ERROR: no files found under {ADDON_DIR}")
+    version = read_version()
     with zipfile.ZipFile(ZIP_PATH, "w", zipfile.ZIP_DEFLATED) as zf:
         for f in files:
-            zf.write(f, arcname=f.relative_to(REPO_ROOT).as_posix())
+            if f.name == "blender_manifest.toml":
+                # keep the manifest version in sync with bl_info (single
+                # source of truth) so the zipped manifest never lags
+                text = MANIFEST_VERSION_RE.sub(
+                    f'version = "{version}"',
+                    f.read_text(encoding="utf-8"), count=1)
+                zf.writestr(f.relative_to(REPO_ROOT).as_posix(), text)
+            else:
+                zf.write(f, arcname=f.relative_to(REPO_ROOT).as_posix())
     return ZIP_PATH
 
 

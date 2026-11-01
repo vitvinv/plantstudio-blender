@@ -128,7 +128,7 @@ The parameter registry (1,000+ entries) maps **field IDs** (e.g., `kGeneralAgeAt
 |--------|---------|-------|
 | `.pla` | Plant species definition | Text, Latin-1 encoded. Sections: `[Species Name] start PlantStudio plant <v2.0>` + `Param Name [kFieldID] =value`. Embedded TDO blocks (`start 3D object` … `end 3D object`) for custom parts. |
 | `.tdo` | 3D object library | Text. `Name=…`, `Point=x y z`, `Triangle=i j k` (1-based). Also a compact inline form `N[name],P[x y z],T[i j k]…` used in parameters.tab. |
-| `.json` (user preset) | Saved wizard state | `{name, category, base_species, knobs: {knob_name: value}}`. Stored under `data/user-presets/<category>/<name>.json`. |
+| `.json` (user preset) | Saved wizard state | `{name, category, base_species, knobs: {knob_name: value}}`. Stored under `~/.plantstudio/presets/<category>/<name>.json` (outside the addon folder, so updates never wipe saved presets). |
 | `.json` (export config) | Headless / CI regeneration | `{plant_id, species, seed, planted_date}` (ISO date). Written to the export dir (panel *Config export dir* or `$PLANTSTUDIO_PLANTS_DIR`). |
 
 ---

@@ -34,5 +34,5 @@ LOD_PLAN.md
 .expanse.json
 .env
 .env.*
-*.local.mdLOD_PLAN.md
+*.local.md
 scripts/oracle_compare.py

@@ -13,7 +13,10 @@ from .scene_bridge import (ensure_collection, build_plant_object,
                            plants as plant_objects)
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
-USER_PRESETS_DIR = os.path.join(DATA_DIR, "user-presets")
+# presets are user data: keep them out of the addon folder so updating or
+# reinstalling the addon never wipes them (mirrors ~/.plantstudio/exports)
+USER_PRESETS_DIR = os.path.join(os.path.expanduser("~"), ".plantstudio",
+                                "presets")
 
 # seed for the next Create / Load Preset: a rolling random, so every new
 # plant gets a fresh look with no seed slider in the panel (per-plant seed
@@ -310,7 +313,15 @@ class PS_OT_save_preset(Operator):
             category = _sanitize_name(self.new_category) or "My Presets"
         else:
             category = _sanitize_name(self.category) or "My Presets"
-        from .wizard import _knobs_to_dict
+        # rebuild the knob namespace exactly like animator.rebuild_plant_at_day:
+        # species defaults + this plant's stored overrides (ps_knobs)
+        from types import SimpleNamespace
+        from .wizard import (load_knobs_from_params, load_knobs_from_obj,
+                             _knobs_to_dict)
+        base = _get_species(obj.get("ps_base_species") or obj["ps_species"])
+        knobs = SimpleNamespace()
+        load_knobs_from_params(base, knobs)
+        load_knobs_from_obj(obj, knobs)
         preset = {
             "name": name,
             "category": category,
