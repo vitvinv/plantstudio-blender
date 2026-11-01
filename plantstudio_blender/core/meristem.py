@@ -190,7 +190,7 @@ class PdMeristem(PdPlantPart):
             if pMeristem.branchingDistance == 0:
                 decisionPercent = pMeristem.branchingIndex
             else:
-                decisionPercent = pMeristem.branchingIndex * umath.min(1.0, umath.max(0.0,
+                decisionPercent = pMeristem.branchingIndex * min(1.0, max(0.0,
                     umath.safedivExcept(self.phytomerAttachedTo.distanceFromApicalMeristem(),
                                         pMeristem.branchingDistance, 0)))
         else:

@@ -17,7 +17,7 @@ Conventions handled:
 - Unregistered builds add a '<plant>_reminder' quad group — skipped.
 
 Usage:
-    python tools/compare_reference_obj.py --census plant_census.json ^
+    python tools/compare_reference_obj.py --census <census.json> ^
         --reference "data/reference/New version 2 plants_age100.obj" ^
         --tolerance 0.05
 """
