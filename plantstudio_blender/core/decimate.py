@@ -103,15 +103,6 @@ class _Decimator:
             if len(flist) == 2 and self.colors[flist[0]] == self.colors[flist[1]]:
                 self._push(lo, hi)
 
-    def _edge_cost(self, a, b):
-        shared = self.vadj[a] & self.vadj[b]
-        if len(shared) != 2:
-            return None
-        flist = list(shared)
-        if self.colors[flist[0]] != self.colors[flist[1]]:
-            return None
-        return self._pair_error(a, b)
-
     def _pair_optimum(self, a, b):
         """Best collapse cost and target for edge (a, b).
 

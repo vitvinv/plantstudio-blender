@@ -51,9 +51,6 @@ class MeshTurtle:
             self.numMatrixesUsed -= 1
         self.currentMatrix = self.matrixStack[-1]
 
-    def stackSize(self):
-        return self.numMatrixesUsed
-
     # ── positioning ──
 
     def xyz(self, x, y, z):
@@ -62,9 +59,6 @@ class MeshTurtle:
         self.currentMatrix.position.z = z
 
     def moveInMillimeters(self, mm):
-        self.currentMatrix.move(mm * self.scale_pixelsPerMm)
-
-    def moveInMillimetersAndRecord(self, mm):
         self.currentMatrix.move(mm * self.scale_pixelsPerMm)
 
     def moveInPixels(self, pixels):

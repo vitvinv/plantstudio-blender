@@ -80,24 +80,18 @@ class PdInternode(PdPlantPart):
     def nextDay(self):
         super().nextDay()
         if self.liveBiomass_pctMPB > 0:
-            try:
-                te = umath.max(0.0, umath.min(500.0,
-                    umath.safedivExcept(self.liveBiomass_pctMPB - self.newBiomassForDay_pctMPB,
-                                         self.liveBiomass_pctMPB, 0) * self.lengthExpansion
-                    + umath.safedivExcept(self.newBiomassForDay_pctMPB,
-                                          self.liveBiomass_pctMPB, 0) * 1.0))
-                self.lengthExpansion = te
-            except Exception:
-                pass
-            try:
-                te = umath.max(0.0, umath.min(50.0,
-                    umath.safedivExcept(self.liveBiomass_pctMPB - self.newBiomassForDay_pctMPB,
-                                         self.liveBiomass_pctMPB, 0) * self.widthExpansion
-                    + umath.safedivExcept(self.newBiomassForDay_pctMPB,
-                                          self.liveBiomass_pctMPB, 0) * 1.0))
-                self.widthExpansion = te
-            except Exception:
-                pass
+            # safedivExcept already handles zero division — no exception
+            # guard here (it hid real bugs, e.g. a latent NameError)
+            self.lengthExpansion = max(0.0, min(500.0,
+                umath.safedivExcept(self.liveBiomass_pctMPB - self.newBiomassForDay_pctMPB,
+                                     self.liveBiomass_pctMPB, 0) * self.lengthExpansion
+                + umath.safedivExcept(self.newBiomassForDay_pctMPB,
+                                      self.liveBiomass_pctMPB, 0) * 1.0))
+            self.widthExpansion = max(0.0, min(50.0,
+                umath.safedivExcept(self.liveBiomass_pctMPB - self.newBiomassForDay_pctMPB,
+                                     self.liveBiomass_pctMPB, 0) * self.widthExpansion
+                + umath.safedivExcept(self.newBiomassForDay_pctMPB,
+                                      self.liveBiomass_pctMPB, 0) * 1.0))
             if self.plant.floweringHasStarted:
                 self.boltingExpansion = umath.linearGrowthWithFactor(
                     self.boltingExpansion,
@@ -205,18 +199,6 @@ class PdInternode(PdPlantPart):
         if result is self:
             return None
         return result
-
-    def mainStemNodeCount(self):
-        count = 0
-        node = self.plant.firstPhytomer
-        while node is not None:
-            count += 1
-            node = node.nextPlantPart
-            if node is not None and node.isPhytomer():
-                pass
-            else:
-                break
-        return count
 
     def traverseActivity(self, mode, traverser):
         """Port of PdInternode.traverseActivity (uintern.pas).

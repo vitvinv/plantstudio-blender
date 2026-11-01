@@ -114,7 +114,7 @@ class PdPlant:
         if self.age >= int(getattr(self.pGeneral, "ageAtMaturity", 0)):
             return
         fractionToMaturity = umath.safedivExcept(self.age, self.pGeneral.ageAtMaturity, 0)
-        newTotal = umath.max(0.0, umath.min(100.0,
+        newTotal = max(0.0, min(100.0,
                             100.0 * umath.scurve(fractionToMaturity,
                                                  self.pGeneral.growthSCurve.c1,
                                                  self.pGeneral.growthSCurve.c2)))
@@ -122,7 +122,7 @@ class PdPlant:
         self.totalBiomass_pctMPB = newTotal
 
         if self.floweringHasStarted:
-            fractionRepro = umath.max(0.0, self.pGeneral.fractionReproductiveAllocationAtMaturity_frn *
+            fractionRepro = max(0.0, self.pGeneral.fractionReproductiveAllocationAtMaturity_frn *
                                       umath.safedivExcept(
                                           self.age - self.ageAtWhichFloweringStarted,
                                           self.pGeneral.ageAtMaturity - self.ageAtWhichFloweringStarted, 0))
@@ -268,14 +268,6 @@ class PdPlant:
         return undistributed
 
     # ── helpers ──
-
-    def mainStemNodeCount(self):
-        count = 0
-        node = self.firstPhytomer
-        while node is not None:
-            count += 1
-            node = node.nextPlantPart if node.nextPlantPart is not None and node.nextPlantPart.isPhytomer() else None
-        return count
 
     def countMeristems(self):
         self._apicalMeristemCount = 0
