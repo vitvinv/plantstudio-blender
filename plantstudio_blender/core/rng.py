@@ -31,10 +31,14 @@ class PdRandom:
 
     def randomNormal(self, mean):
         """Normal random number based on mean (std dev = half mean)."""
+        return self.randomNormalWithStdDev(mean, mean / 2.0)
+
+    def randomNormalWithStdDev(self, mean, stdDev):
+        """12-draw approximation of a normal variate (urandom.pas.py:69)."""
         randomNumber = 0.0
         for _ in range(12):
             randomNumber = randomNumber + self.zeroToOne()
-        return (randomNumber - 6.0) * (mean / 2.0) + mean
+        return (randomNumber - 6.0) * stdDev + mean
 
     def randomNormalBoundedZeroToOne(self, mean):
         return max(0.0, min(1.0, self.randomNormal(mean)))

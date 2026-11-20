@@ -87,7 +87,7 @@ def rebuild_plant_at_day(obj):
     if not _is_plant(obj):
         return None
     from types import SimpleNamespace
-    from .operators import _get_species, get_library
+    from .operators import base_species_for_object, get_library
     from .core.factory import create_plant
     from .scene_bridge import rebuild_plant_mesh
     from .wizard import (load_knobs_from_params, load_knobs_from_obj,
@@ -95,9 +95,9 @@ def rebuild_plant_at_day(obj):
 
     try:
         lib, tdo_lib = get_library()
-        # ps_species may be a display name (saved presets, Create button) —
-        # anything that isn't a library species falls back to default params
-        base = _get_species(obj.get("ps_base_species") or obj["ps_species"])
+        # bred plants rebuild from their stored ps_custom_params; anything
+        # else falls back to the library species (or default params)
+        base = base_species_for_object(obj)
         seed = int(obj["ps_seed"])
         day = max(0, int(obj.get("ps_day", 0)))
         maturity = int(obj.get("ps_maturity", 0) or 0)

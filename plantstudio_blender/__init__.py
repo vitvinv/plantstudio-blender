@@ -61,7 +61,8 @@ def _cancel_loaded_timers():
 
 
 def _remove_scene_properties(bpy):
-    for name in ("ps_props", "ps_wizard_knobs", "ps_plant_list"):
+    for name in ("ps_props", "ps_wizard_knobs", "ps_plant_list",
+                 "ps_breeder"):
         try:
             delattr(bpy.types.Scene, name)
         except AttributeError:
@@ -91,18 +92,23 @@ def register():
     _clear_runtime_state(bpy)
     _purge_submodules()
 
-    from .ui_panel import (PSProperties, PS_PT_panel, PS_MT_presets,
+    from .ui_panel import (PSProperties, PSBreederProps, PS_PT_panel,
+                           PS_MT_presets, PS_MT_breeds,
                            register_category_menus, _depsgraph_load_active_knobs)
     from .operators import (PS_OT_add_plant, PS_OT_load_preset,
                             PS_OT_save_preset, PS_OT_regrow, PS_OT_step_day,
-                            PS_OT_export_plant_config)
+                            PS_OT_export_plant_config, PS_OT_breed,
+                            PS_OT_breed_strategy_save,
+                            PS_OT_breed_strategy_load)
     from .animator import (_frame_change_rebuild as _ps_frame_change_rebuild)
     from .wizard import PSWizardKnobs
 
     classes = [
         PSProperties,
+        PSBreederProps,
         PSWizardKnobs,
         PS_MT_presets,
+        PS_MT_breeds,
         PS_PT_panel,
         PS_OT_add_plant,
         PS_OT_load_preset,
@@ -110,12 +116,16 @@ def register():
         PS_OT_regrow,
         PS_OT_step_day,
         PS_OT_export_plant_config,
+        PS_OT_breed,
+        PS_OT_breed_strategy_save,
+        PS_OT_breed_strategy_load,
     ]  # PS_OT_random_seed removed: seed now auto-rolls per new plant
     for cls in classes:
         bpy.utils.register_class(cls)
     register_category_menus()
     bpy.types.Scene.ps_props = bpy.props.PointerProperty(type=PSProperties)
     bpy.types.Scene.ps_wizard_knobs = bpy.props.PointerProperty(type=PSWizardKnobs)
+    bpy.types.Scene.ps_breeder = bpy.props.PointerProperty(type=PSBreederProps)
     if _depsgraph_load_active_knobs not in bpy.app.handlers.depsgraph_update_post:
         bpy.app.handlers.depsgraph_update_post.append(_depsgraph_load_active_knobs)
     if _ps_frame_change_rebuild not in bpy.app.handlers.frame_change_post:

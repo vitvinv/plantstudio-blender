@@ -17,6 +17,7 @@ DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 # reinstalling the addon never wipes them (mirrors ~/.plantstudio/exports)
 USER_PRESETS_DIR = os.path.join(os.path.expanduser("~"), ".plantstudio",
                                 "presets")
+BREEDS_DIR = os.path.join(os.path.expanduser("~"), ".plantstudio", "breeds")
 
 # seed for the next Create / Load Preset: a rolling random, so every new
 # plant gets a fresh look with no seed slider in the panel (per-plant seed
@@ -193,6 +194,34 @@ def _get_species(name):
     return _default_species()
 
 
+def params_for_object(obj):
+    """A plant object's live params: bred custom params, else species+knobs.
+
+    Bred plants carry ps_custom_params ({access: value} JSON); wizard knobs
+    then apply over those params as the base (like species defaults)."""
+    raw = obj.get("ps_custom_params") if obj is not None else None
+    if raw:
+        from .core.breeding import params_from_dict
+        return params_from_dict(json.loads(raw))
+    base = _get_species(obj.get("ps_base_species") or obj["ps_species"])
+    from types import SimpleNamespace
+    from .wizard import (load_knobs_from_params, load_knobs_from_obj,
+                         apply_knobs_to_params)
+    knobs = SimpleNamespace()
+    load_knobs_from_params(base, knobs)
+    load_knobs_from_obj(obj, knobs)
+    return apply_knobs_to_params(base, knobs)
+
+
+def base_species_for_object(obj):
+    """Species-like wrapper for rebuilds: custom params or library species."""
+    if obj is not None and obj.get("ps_custom_params"):
+        params = params_for_object(obj)
+        return _named_params(params,
+                             str(obj.get("ps_custom_name") or obj.name))
+    return _get_species(obj.get("ps_base_species") or obj["ps_species"])
+
+
 def _species_items(self, context):
     from .core.tdo_parser import AssetError
     try:
@@ -231,15 +260,18 @@ class PS_OT_add_plant(Operator):
 class PS_OT_load_preset(Operator):
     bl_idname = "plantstudio.load_preset"
     bl_label = "Load Preset"
-    bl_description = "Create a new plant from a library species or a saved preset"
+    bl_description = "Create a new plant from a library species, a saved preset, or a bred plant"
     bl_options = {'REGISTER', 'UNDO'}
     species_name: EnumProperty(name="Species", items=_species_items)
     preset_name: StringProperty(name="Preset", default="")
     preset_category: StringProperty(name="Preset category", default="")
+    breed_name: StringProperty(name="Breed", default="")
 
     def execute(self, context):
         props = context.scene.ps_props
         import copy
+        if self.breed_name:
+            return self._load_breed(context)
         if self.species_name:
             # library species — non-empty species_name wins, so a stale
             # preset_name/preset_category from a previous call can never
@@ -278,6 +310,31 @@ class PS_OT_load_preset(Operator):
                               f"(age {day})")
         return {'FINISHED'}
 
+    def _load_breed(self, context):
+        from .core.breeding import params_from_dict
+        path = os.path.join(BREEDS_DIR, f"{_sanitize_name(self.breed_name)}.json")
+        if not os.path.exists(path):
+            self.report({'ERROR'}, f"Breed '{self.breed_name}' not found")
+            return {'CANCELLED'}
+        try:
+            with open(path, encoding="utf-8") as f:
+                data = json.load(f)
+            params = params_from_dict(data.get("params", {}))
+        except Exception as e:
+            self.report({'ERROR'}, f"Cannot load breed: {e}")
+            return {'CANCELLED'}
+        day = int(data.get("day") or context.scene.ps_props.day)
+        obj = _create_plant_object(params, "", _take_next_seed(context),
+                                   day, context, name=self.breed_name)
+        obj["ps_custom_params"] = json.dumps(data.get("params", {}))
+        obj["ps_custom_name"] = self.breed_name
+        if data.get("parents"):
+            obj["ps_parents"] = data["parents"]
+        if data.get("strategy"):
+            obj["ps_strategy"] = json.dumps(data["strategy"])
+        self.report({'INFO'}, f"Created plant from breed: {self.breed_name}")
+        return {'FINISHED'}
+
 
 class PS_OT_save_preset(Operator):
     bl_idname = "plantstudio.save_preset"
@@ -309,6 +366,9 @@ class PS_OT_save_preset(Operator):
             self.report({'ERROR'}, "Select a PlantStudio plant")
             return {'CANCELLED'}
         name = _sanitize_name(self.preset_name) or "preset"
+        custom = obj.get("ps_custom_params")
+        if custom:
+            return self._save_breed(obj, name)
         if self.category == "NEW":
             category = _sanitize_name(self.new_category) or "My Presets"
         else:
@@ -318,7 +378,7 @@ class PS_OT_save_preset(Operator):
         from types import SimpleNamespace
         from .wizard import (load_knobs_from_params, load_knobs_from_obj,
                              _knobs_to_dict)
-        base = _get_species(obj.get("ps_base_species") or obj["ps_species"])
+        base = base_species_for_object(obj)
         knobs = SimpleNamespace()
         load_knobs_from_params(base, knobs)
         load_knobs_from_obj(obj, knobs)
@@ -336,6 +396,23 @@ class PS_OT_save_preset(Operator):
         from .ui_panel import ensure_category_menu
         ensure_category_menu(category)
         self.report({'INFO'}, f"Saved preset '{name}' to category '{category}'")
+        return {'FINISHED'}
+
+    def _save_breed(self, obj, name):
+        """Bred plants save as breed files: full params, rebuildable."""
+        breed = {
+            "name": name,
+            "parents": list(obj.get("ps_parents", [])),
+            "strategy": json.loads(obj["ps_strategy"])
+            if obj.get("ps_strategy") else None,
+            "params": json.loads(obj["ps_custom_params"]),
+            "day": int(obj.get("ps_day", 60)),
+        }
+        os.makedirs(BREEDS_DIR, exist_ok=True)
+        path = os.path.join(BREEDS_DIR, f"{name}.json")
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(breed, f, indent=2)
+        self.report({'INFO'}, f"Saved breed '{name}' to {BREEDS_DIR}")
         return {'FINISHED'}
 
 
@@ -434,4 +511,127 @@ class PS_OT_export_plant_config(Operator):
             return {'CANCELLED'}
         self.report({'INFO'}, f"{len(exported)} config(s) written to "
                               f"{plants_dir}")
+        return {'FINISHED'}
+
+
+# ── plant breeder ──
+
+def get_breeder_strategy(props):
+    """PdBreedingStrategy from the scene's breeder props + mutation % scale."""
+    from .core.breeding import PdBreedingStrategy
+    data = json.loads(props.strategy_json) if props.strategy_json else {}
+    strategy = PdBreedingStrategy.from_dict(data)
+    scale = int(getattr(props, "mutation_scale", 100))
+    if scale != 100:
+        strategy.mutationStrengths = [
+            max(0, min(100, int(round(s * scale / 100.0))))
+            for s in strategy.mutationStrengths]
+    return strategy
+
+
+class PS_OT_breed(Operator):
+    bl_idname = "plantstudio.breed"
+    bl_label = "Breed"
+    bl_description = ("Breed offspring from the active plant (parent A) and "
+                      "one other selected plant (parent B; none = mutation "
+                      "only), using the breeding seed for determinism")
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context):
+        import re
+        from .core.breeding import PdRandom, breed, params_to_dict
+        active = context.view_layer.objects.active
+        selected = [o for o in context.selected_objects if _is_plant(o)]
+        parent_a = active if _is_plant(active) else \
+            (selected[0] if selected else None)
+        if parent_a is None:
+            self.report({'ERROR'}, "Select a PlantStudio plant to breed from")
+            return {'CANCELLED'}
+        parent_b = next((o for o in selected if o != parent_a), None)
+        props = context.scene.ps_breeder
+        strategy = get_breeder_strategy(props)
+        params_a = params_for_object(parent_a)
+        params_b = params_for_object(parent_b) if parent_b is not None else None
+        rng = PdRandom()
+        rng.setSeed(int(props.breeding_seed))
+        short = re.sub(r'[^A-Za-z0-9_]+', '_',
+                       str(parent_a.get("ps_base_species")
+                           or parent_a["ps_species"]))[:20].strip('_') or "plant"
+        day = context.scene.ps_props.day
+        created = 0
+        for i in range(int(props.offspring_count)):
+            child_params = breed(params_a, params_b, strategy, rng)
+            child_seed = 1 + int(rng.zeroToOne() * 9998)
+            name = f"{short}_breed_{i + 1}"
+            obj = _create_plant_object(child_params, "", child_seed, day,
+                                       context, name=name)
+            obj["ps_custom_params"] = json.dumps(params_to_dict(child_params))
+            obj["ps_custom_name"] = name
+            obj["ps_parents"] = [str(parent_a["ps_species"])] + (
+                [str(parent_b["ps_species"])] if parent_b is not None else [])
+            obj["ps_strategy"] = json.dumps(strategy.to_dict())
+            created += 1
+        cross = f" × {parent_b['ps_species']}" if parent_b is not None \
+            else " (mutation only)"
+        self.report({'INFO'}, f"Bred {created} offspring from "
+                              f"{parent_a['ps_species']}{cross}, "
+                              f"seed {int(props.breeding_seed)}")
+        return {'FINISHED'}
+
+
+class PS_OT_breed_strategy_save(Operator):
+    bl_idname = "plantstudio.breed_strategy_save"
+    bl_label = "Save Strategy"
+    bl_description = "Save the breeding strategy (per-section mutation/weights) to ~/.plantstudio/breeds"
+    bl_options = {'REGISTER', 'UNDO'}
+    strategy_name: StringProperty(name="Name", default="", maxlen=64)
+
+    def invoke(self, context, event):
+        return context.window_manager.invoke_props_dialog(self)
+
+    def draw(self, context):
+        self.layout.prop(self, "strategy_name")
+
+    def execute(self, context):
+        name = _sanitize_name(self.strategy_name) or "strategy"
+        props = context.scene.ps_breeder
+        data = {"breeding_strategy": get_breeder_strategy(props).to_dict()}
+        os.makedirs(BREEDS_DIR, exist_ok=True)
+        path = os.path.join(BREEDS_DIR, f"{name}.strategy.json")
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2)
+        self.report({'INFO'}, f"Saved breeding strategy '{name}'")
+        return {'FINISHED'}
+
+
+def _strategy_file_items(self, context):
+    items = []
+    if os.path.isdir(BREEDS_DIR):
+        for fn in sorted(os.listdir(BREEDS_DIR)):
+            if fn.endswith(".strategy.json"):
+                items.append((fn[:-len(".strategy.json")], fn[:-len(".strategy.json")], ""))
+    return items or [("NONE", "No saved strategies", "")]
+
+
+class PS_OT_breed_strategy_load(Operator):
+    bl_idname = "plantstudio.breed_strategy_load"
+    bl_label = "Load Strategy"
+    bl_description = "Load a saved breeding strategy"
+    bl_options = {'REGISTER', 'UNDO'}
+    strategy_name: EnumProperty(name="Strategy", items=_strategy_file_items)
+
+    def execute(self, context):
+        if self.strategy_name == "NONE":
+            self.report({'ERROR'}, "No saved strategies in ~/.plantstudio/breeds")
+            return {'CANCELLED'}
+        path = os.path.join(BREEDS_DIR, f"{self.strategy_name}.strategy.json")
+        try:
+            with open(path, encoding="utf-8") as f:
+                data = json.load(f)
+        except Exception as e:
+            self.report({'ERROR'}, f"Cannot load strategy: {e}")
+            return {'CANCELLED'}
+        context.scene.ps_breeder.strategy_json = json.dumps(
+            data.get("breeding_strategy", {}))
+        self.report({'INFO'}, f"Loaded breeding strategy '{self.strategy_name}'")
         return {'FINISHED'}

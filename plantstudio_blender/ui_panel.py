@@ -12,11 +12,14 @@ a depsgraph handler loads the active plant's knobs into the wizard.
 
 import os
 import re
+import json
 import bpy
 from bpy.types import Panel, PropertyGroup
-from bpy.props import StringProperty, IntProperty, PointerProperty
+from bpy.props import (StringProperty, IntProperty, PointerProperty,
+                       BoolProperty, EnumProperty)
 
-from .operators import get_library, USER_PRESETS_DIR
+from .operators import (get_library, USER_PRESETS_DIR, BREEDS_DIR,
+                        get_breeder_strategy)
 
 # last object name whose knobs were loaded into the wizard, so switching
 # selection reloads knobs exactly once per switch
@@ -109,9 +112,41 @@ class PS_MT_presets(bpy.types.Menu):
 
     def draw(self, context):
         layout = self.layout
+        breeds = _breed_files()
+        if breeds:
+            layout.menu("PS_MT_breeds", text="Breeds", icon='PARTICLE_DATA')
+            layout.separator()
         for cat in _all_categories():
             ensure_category_menu(cat)
             layout.menu(_menu_id(cat), text=cat, icon='FILE_FOLDER')
+
+
+def _breed_files():
+    """Saved breed files (name, path) from ~/.plantstudio/breeds."""
+    if not os.path.isdir(BREEDS_DIR):
+        return []
+    return [(fn[:-5], os.path.join(BREEDS_DIR, fn))
+            for fn in sorted(os.listdir(BREEDS_DIR))
+            if fn.endswith(".json") and not fn.endswith(".strategy.json")]
+
+
+class PS_MT_breeds(bpy.types.Menu):
+    """Saved bred plants (full params, rebuildable)."""
+    bl_idname = "PS_MT_breeds"
+    bl_label = "Breeds"
+
+    def draw(self, context):
+        layout = self.layout
+        breeds = _breed_files()
+        if not breeds:
+            layout.label(text="No saved breeds", icon='INFO')
+            return
+        for name, _path in breeds:
+            op = layout.operator("plantstudio.load_preset", text=name)
+            op.species_name = ""
+            op.preset_name = ""
+            op.preset_category = ""
+            op.breed_name = name
 
 
 def register_category_menus():
@@ -129,6 +164,65 @@ class PSProperties(bpy.types.PropertyGroup):
         description="Directory for exported plant configs (JSON). Leave empty to "
                     "use $PLANTSTUDIO_PLANTS_DIR or ~/.plantstudio/exports",
     )
+
+
+# ── breeder ──
+
+def _breeder_section_items(_self, _context):
+    from .core.breeding import load_sections
+    items = [(str(i), s["name"], "") for i, s in enumerate(load_sections())]
+    return items or [("0", "General parameters", "")]
+
+
+def _breeder_section_changed(self, context):
+    """Load the picked section's values into the two sliders."""
+    try:
+        strategy = get_breeder_strategy(self)
+        index = int(self.section)
+        self.section_mutation = int(strategy.mutationStrengths[index])
+        self.section_weight = int(strategy.firstPlantWeights[index])
+    except Exception:
+        pass
+
+
+def _breeder_value_changed(self, context):
+    """Write the slider values back into the stored strategy."""
+    try:
+        strategy = get_breeder_strategy(self)
+        index = int(self.section)
+        strategy.mutationStrengths[index] = int(self.section_mutation)
+        strategy.firstPlantWeights[index] = int(self.section_weight)
+        self.strategy_json = json.dumps(strategy.to_dict())
+    except Exception:
+        pass
+
+
+class PSBreederProps(bpy.types.PropertyGroup):
+    offspring_count: IntProperty(
+        name="Offspring", default=3, min=1, max=20,
+        description="How many offspring one Breed click creates")
+    breeding_seed: IntProperty(
+        name="Breeding seed", default=280, min=1,
+        description="Same parents + same seed + same count = identical offspring")
+    mutation_scale: IntProperty(
+        name="Mutation %", default=100, min=0, max=200,
+        description="Scales every section's mutation strength")
+    show_advanced: BoolProperty(name="Advanced", default=False)
+    section: EnumProperty(
+        name="Section", items=_breeder_section_items,
+        update=_breeder_section_changed,
+        description="Which breeding section the sliders edit")
+    section_mutation: IntProperty(
+        name="Mutation", default=60, min=0, max=100,
+        update=_breeder_value_changed,
+        description="Mutation strength for the picked section (0-100)")
+    section_weight: IntProperty(
+        name="Parent A weight", default=50, min=0, max=100,
+        update=_breeder_value_changed,
+        description="Blend weight of parent A for the picked section")
+    strategy_json: StringProperty(
+        name="Strategy", default="",
+        description="Stored breeding strategy (per-section mutation/weights)")
 
 
 @bpy.app.handlers.persistent
@@ -240,6 +334,30 @@ class PS_PT_panel(Panel):
                 else:
                     continue
                 col.prop(knobs, prop_name, text=label)
+
+        # ── Breeder ──
+        breeder = context.scene.ps_breeder
+        box = layout.box()
+        box.label(text="Breeder", icon='PARTICLE_DATA')
+        col = box.column(align=True)
+        col.label(text=f"Parent A: {obj.name}")
+        others = [o for o in context.selected_objects
+                  if o != obj and o.type == 'MESH' and "ps_species" in o]
+        col.label(text="Parent B: " + (others[0].name if others
+                                       else "none (mutation only)"))
+        col.prop(breeder, "offspring_count")
+        col.prop(breeder, "breeding_seed")
+        col.prop(breeder, "mutation_scale")
+        col.operator("plantstudio.breed", icon='PLUS')
+        box.prop(breeder, "show_advanced")
+        if breeder.show_advanced:
+            col = box.column(align=True)
+            col.prop(breeder, "section", text="Section")
+            col.prop(breeder, "section_mutation")
+            col.prop(breeder, "section_weight")
+            row = col.row(align=True)
+            row.operator("plantstudio.breed_strategy_save", text="Save")
+            row.operator("plantstudio.breed_strategy_load", text="Load")
 
         # ── Export ──
         _draw_export(layout, props)

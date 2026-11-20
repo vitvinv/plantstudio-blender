@@ -51,7 +51,7 @@ python -m pytest plantstudio_blender/tests/ -q
 ---
 ## Plans
 - [x] Make sure every plant matches the original library
-- [ ] Add a plant breeder
+- [x] Add a plant breeder
 - [x] Add some human touch to this page
 - [ ] Polish the UI
 - [ ] Optimize materials
@@ -84,6 +84,8 @@ plantstudio_blender/
 │   ├── math3d.py            # Vector/matrix/SCurve math
 │   ├── matrix3d.py          # KfMatrix / KfPoint3D (PlantStudio coords)
 │   ├── plant_library.py     # SpeciesLibrary — parsed .pla cache
+│   ├── breeding.py          # Plant breeder: inherit() + breeding strategy (port)
+│   ├── breeding_sections.json # Bundled breeding section/parameter layout
 │   └── defaults.py          # Hard-coded defaults when no .pla loads
 ├── ui_panel.py              # Blender N-panel (PlantStudio-Blender tab)
 ├── operators.py             # Blender operators (create, load, save, regrow, export…)
@@ -129,6 +131,7 @@ The parameter registry (1,000+ entries) maps **field IDs** (e.g., `kGeneralAgeAt
 | `.pla` | Plant species definition | Text, Latin-1 encoded. Sections: `[Species Name] start PlantStudio plant <v2.0>` + `Param Name [kFieldID] =value`. Embedded TDO blocks (`start 3D object` … `end 3D object`) for custom parts. |
 | `.tdo` | 3D object library | Text. `Name=…`, `Point=x y z`, `Triangle=i j k` (1-based). Also a compact inline form `N[name],P[x y z],T[i j k]…` used in parameters.tab. |
 | `.json` (user preset) | Saved wizard state | `{name, category, base_species, knobs: {knob_name: value}}`. Stored under `~/.plantstudio/presets/<category>/<name>.json` (outside the addon folder, so updates never wipe saved presets). |
+| `.json` (breed) | Saved bred plant | `{name, parents, strategy, params: {access: value}, day}` — the offspring's full parameter set; reloadable via **Load Preset → Breeds**. Stored under `~/.plantstudio/breeds/`. |
 | `.json` (export config) | Headless / CI regeneration | `{plant_id, species, seed, planted_date}` (ISO date). Written to the export dir (panel *Config export dir* or `$PLANTSTUDIO_PLANTS_DIR`). |
 
 ---
@@ -154,12 +157,34 @@ The parameter registry (1,000+ entries) maps **field IDs** (e.g., `kGeneralAgeAt
    - **Color picker** — unripe fruit color.
    - **Age (days) / Growth (%)** — the plant's own `ps_day` and `ps_pct` properties; dragging either rebuilds instantly (they stay in sync: % is measured against the species' full-growth day), and hovering one and pressing **I** keyframes it for animation.
    - **Save Preset** button → writes a `.json` preset (base species + knob deltas).
-5. **Live rebuild** — every knob change triggers a lightweight timer (`bpy.app.timers`) that re-simulates and re-draws the mesh in place.
-6. **Export Plant Config** — writes one JSON config per plant in the scene to the export dir (see *Config export dir* above the button).
-7. **Animate growth yourself** — the age is the plant's own `ps_day` property: hover the *Age (days)* slider and press **I** to keyframe it (or add a driver), then scrub/play the timeline; a frame-change handler rebuilds the mesh as animation plays. Per plant: keying one plant never moves another. To make several species grow simultaneously, drive one plant's *Growth (%)* slider (e.g. by keyframing it), then copy that driver to the other plants' `ps_pct` — % of full growth means different species finish together regardless of their maturity days.
-8. **Delete** — plants are ordinary Blender objects: select and press `X` / `Delete`.
+5. **Breeder** box — cross two plants into offspring, like the original Breeding Room:
+   - Select the parent A plant (active) and optionally one more plant (parent B). With no parent B the offspring are mutations of parent A only.
+   - Set **Offspring** count and the **Breeding seed** (same parents + same seed = identical offspring), then press **Breed** — offspring appear as `<parent>_breed_N` plants in the collection. Numeric parameters blend by section weight and mutate (original algorithm); booleans, enums, growth curves and 3D-object choices are copied from the section's winning parent; colors blend and mutate.
+   - **Mutation %** scales every section's mutation strength. **Advanced** exposes per-section mutation/parent-weight sliders (13 sections, matching the original's parameter sections) and strategy Save/Load (`~/.plantstudio/breeds/*.strategy.json`).
+   - Bred plants carry their full parameters (`ps_custom_params`), rebuild on age changes, survive `.blend` save/reopen, and can be edited with the wizard on top. **Save Preset** on a bred plant writes a breed file (`~/.plantstudio/breeds/<name>.json`), which appears under **Load Preset → Breeds**.
+6. **Live rebuild** — every knob change triggers a lightweight timer (`bpy.app.timers`) that re-simulates and re-draws the mesh in place.
+7. **Export Plant Config** — writes one JSON config per plant in the scene to the export dir (see *Config export dir* above the button).
+8. **Animate growth yourself** — the age is the plant's own `ps_day` property: hover the *Age (days)* slider and press **I** to keyframe it (or add a driver), then scrub/play the timeline; a frame-change handler rebuilds the mesh as animation plays. Per plant: keying one plant never moves another. To make several species grow simultaneously, drive one plant's *Growth (%)* slider (e.g. by keyframing it), then copy that driver to the other plants' `ps_pct` — % of full growth means different species finish together regardless of their maturity days.
+9. **Delete** — plants are ordinary Blender objects: select and press `X` / `Delete`.
 
 **Requirements:** Python 3.11+, Blender 4.2 LTS or 5.x LTS. No external Python packages (stdlib only).
+
+---
+
+## Gap Report vs the Original PlantStudio
+
+| Original feature | Status in this addon |
+|---|---|
+| Plant breeder (Breeding Room) | **Present** — N-panel Breeder box (cross/mutate, per-section strategy, breed presets) |
+| Wizard | Present (8 steps) |
+| Species libraries | Present (bundled `.pla` + `.tdo`) |
+| Time series / animation | Present (age keyframing + frame handler) |
+| External `.pla` import (Plant Exchange) | Missing — only bundled data loads; natural next step, unlocks ~100 free `.pla` files |
+| Multi-plant arrangement / posing | Mostly covered by Blender scene tools; branch-level posing optional later |
+| 3D object (TDO) editor | Missing — shape pickers only; Blender has native mesh editing but the TDO format differs |
+| Hints/help system | Missing — cheap win: Parameters.tab hint strings as tooltips |
+| Plant statistics | Missing (low priority) |
+| DXF/POV/BMP export, image hoses, clipboard | Superseded by GLB/JSON export + Blender |
 
 ---
 

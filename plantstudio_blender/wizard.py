@@ -307,6 +307,11 @@ def _set_param_by_path(params, path, value):
             return
         if len(rest) == 1:
             obj[rest[0]] = float(value)
+            # keep the lowercase alias the simulation reads in sync
+            # (normalize creates it; a stale one silently ignores the knob)
+            alias = rest[0][:1].lower() + rest[0][1:]
+            if alias != rest[0] and alias in obj:
+                obj[alias] = float(value)
         return
     # leafTdoParams.scaleAtFullSize style paths
     section = getattr(params, head, None)
