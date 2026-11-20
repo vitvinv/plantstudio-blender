@@ -122,6 +122,25 @@ def last_tag(version: str) -> str | None:
 # so each release gets plain-language highlights instead of raw commit titles.
 # Falls back to the commit log for versions without an entry here.
 FRIENDLY_CHANGES = {
+    "0.6.0": [
+        "New Plant Breeder: pick two plants as parents and cross them into "
+        "offspring. You choose how many offspring a Breed click creates, and "
+        "the same parents with the same seed always produce the same "
+        "offspring — so your experiments are repeatable.",
+        "Fine-tune the cross in the advanced breeder settings: per plant "
+        "section (trunk, leaves, flowers...), set how strongly it mutates "
+        "and how much it takes after each parent. Breeding setups can be "
+        "saved and loaded.",
+        "Bred plants carry their full recipe inside them, so they load and "
+        "rebuild on their own — no need to keep the parent species around.",
+        "Your favorite offspring can be saved and show up in a new Breeds "
+        "menu right next to Load Preset.",
+        "Saved presets and breeds now live in a folder in your home "
+        "directory (~/.plantstudio) instead of inside the addon, so "
+        "installing a new version no longer wipes them.",
+        "Fixes: the Save Preset button works again (it used to crash every "
+        "time) and now sits right on the New Plant row.",
+    ],
     "0.5.0": [
         "Plants can now grow with animation: keyframe a plant's age (or growth %), "
         "then scrub or play the timeline and watch it grow. Different species can "
