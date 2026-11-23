@@ -163,8 +163,8 @@ class PSProperties(bpy.types.PropertyGroup):
         name="Export Dir",
         subtype='DIR_PATH',
         default="",
-        description="Directory for exported plant configs (JSON). Leave empty to "
-                    "use $PLANTSTUDIO_PLANTS_DIR or ~/.plantstudio/exports",
+        description="Where exported configs go. Empty: $PLANTSTUDIO_PLANTS_DIR, "
+                    "else ~/.plantstudio/exports",
     )
 
 
@@ -205,23 +205,23 @@ class PSBreederProps(bpy.types.PropertyGroup):
         description="How many offspring one Breed click creates")
     breeding_seed: IntProperty(
         name="Breeding seed", default=280, min=1,
-        description="Same parents + same seed + same count = identical offspring")
+        description="Same parents, seed and count give identical offspring")
     mutation_scale: IntProperty(
         name="Mutation %", default=100, min=0, max=200,
-        description="Scales every section's mutation strength")
+        description="How much offspring differ from their parents (100 = normal)")
     show_advanced: BoolProperty(name="Advanced", default=False)
     section: EnumProperty(
         name="Section", items=_breeder_section_items,
         update=_breeder_section_changed,
-        description="Which breeding section the sliders edit")
+        description="Part of the plant the two sliders below apply to")
     section_mutation: IntProperty(
         name="Mutation", default=60, min=0, max=100,
         update=_breeder_value_changed,
-        description="Mutation strength for the picked section (0-100)")
+        description="How strongly this section mutates (0-100)")
     section_weight: IntProperty(
         name="Parent A weight", default=50, min=0, max=100,
         update=_breeder_value_changed,
-        description="Blend weight of parent A for the picked section")
+        description="How much this section takes after parent A (0-100); the rest comes from parent B")
     strategy_json: StringProperty(
         name="Strategy", default="",
         description="Stored breeding strategy (per-section mutation/weights)")
@@ -262,7 +262,7 @@ def _draw_export(layout, props):
     box = layout.box()
     box.prop(props, "export_dir", text="Config export dir")
     box.operator("plantstudio.export_plant_config",
-                 text="export with metadata", icon='EXPORT')
+                 text="Export Plant Config", icon='EXPORT')
 
 
 class PS_PT_panel(Panel):
@@ -302,8 +302,9 @@ class PS_PT_panel(Panel):
 
         if not is_plant:
             box = layout.box()
-            box.label(text="Select a plant", icon='INFO')
-            box.label(text="(or Create / Load Preset above)")
+            col = box.column(align=True)
+            col.label(text="No plant selected.", icon='INFO')
+            col.label(text="Select one, or press Create above.")
             _draw_export(layout, props)
             return
         box = layout.box()
@@ -321,9 +322,8 @@ class PS_PT_panel(Panel):
         if any(is_growth_animated(p) for p in plants()):
             note = box.box()
             text = note.column(align=True)  # aligned: no gaps between lines
-            text.label(text="Growth is animated.", icon='INFO')
-            text.label(text="Plain render (Ctrl+F12) won't grow")
-            text.label(text="the plants: use the button below.")
+            text.label(text="Growth is animated. Ctrl+F12 would", icon='INFO')
+            text.label(text="render frozen plants. Use this:")
             note.operator("plantstudio.render_growth", icon='RENDER_ANIMATION')
 
         # all wizard sections in one panel, in order
@@ -353,7 +353,7 @@ class PS_PT_panel(Panel):
         others = [o for o in context.selected_objects
                   if o != obj and o.type == 'MESH' and "ps_species" in o]
         col.label(text="Parent B: " + (others[0].name if others
-                                       else "none (mutation only)"))
+                                       else "none (select one to cross)"))
         col.prop(breeder, "offspring_count")
         col.prop(breeder, "breeding_seed")
         col.prop(breeder, "mutation_scale")

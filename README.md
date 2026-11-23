@@ -6,189 +6,163 @@
   <img src="assets/gifs/maiden_grass0000-0210_.gif" alt="Thin shrub growth animation" width="32%">
 </p>
 
-An extension that brings the functionality of [**PlantStudio Botanical Illustration Software**](https://www.kurtz-fernhout.com/summary_plantstudio.html) to Blender. Create, grow, and tweak herbaceous plants (wildflowers, grasses, vegetables, garden flowers, shrubs) with a real-time wizard, then export them for use in your projects.
+A Blender extension that brings [**PlantStudio Botanical Illustration Software**](https://www.kurtz-fernhout.com/summary_plantstudio.html) into Blender. Create, grow, and tweak herbaceous plants (wildflowers, grasses, vegetables, garden flowers, shrubs) with a real-time wizard, cross them in a breeder, and animate their growth.
 
-> try the [original](https://www.kurtz-fernhout.com/download_new.html) or a WIP [browser version](https://plantstudio.com/plantstudio-js-alpha1/tests-interactive/Application-test.html) by Paul Fernhout & Synthia Kurtz
+> Try the [original](https://www.kurtz-fernhout.com/download_new.html) or a WIP [browser version](https://plantstudio.com/plantstudio-js-alpha1/tests-interactive/Application-test.html) by Paul Fernhout & Synthia Kurtz.
 
-A fair warning: I’m not a programmer. I made this add-on with the help of a coding agent as a stylized plant-generation engine for my [Digital Garden](https://github.com/vitvinv/digital-garden) art project. Beyond this section, the Readme is mostly written by the agent as well. For now, my plan is simply to recreate PlantStudio as faithfully as possible in a modern environment, with a few quality-of-life improvements.
+A fair warning: I'm not a programmer. I made this add-on with the help of a coding agent as a stylized plant-generation engine for my [Gardenia Automata](https://github.com/vitvinv/digital-garden) art project, and the agent wrote most of this Readme too. For now, my plan is to recreate PlantStudio as faithfully as possible in a modern environment, with a few quality-of-life improvements.
 
 ---
 
-## How to use
-**Download:**
-[Click here](https://github.com/vitvinv/plantstudio-blender/releases/latest/download/plantstudio_blender.zip) or go to [Releases](https://github.com/vitvinv/plantstudio-blender/releases)
+## Install
 
-**Install in Blender:**
+1. Download [plantstudio_blender.zip](https://github.com/vitvinv/plantstudio-blender/releases/latest/download/plantstudio_blender.zip) from [Releases](https://github.com/vitvinv/plantstudio-blender/releases).
+2. Drag the zip into the Blender window and click **Install**. (Or: Edit → Preferences → Add-ons → Install from Disk.)
+3. Make sure "PlantStudio-Blender" is enabled, then press **N** in the 3D viewport and open the *PlantStudio-Blender* tab.
 
-Variant 1 — through Preferences:
-1. Edit → Preferences → Add-ons → Install from Disk → select plantstudio_blender.zip
-2. Enable "PlantStudio-Blender"
+Tested on Blender 4.2 LTS and 5.x. No external Python packages.
 
-Variant 2 — drag and drop:
-Drag the `plantstudio_blender.zip` file into the Blender window and click **Install** when prompted. Then make sure "PlantStudio-Blender" is enabled (Edit → Preferences → Add-ons).
+## Quick start
 
-Either way, you'll find the add-on in the sidebar (press **N**) under the PlantStudio-Blender tab.
+1. **Load Preset** → pick a species (or a saved preset or breed), then press **Create**.
+2. Select the plant in the viewport or Outliner. The panel now edits it.
+3. Drag **Age (days)** or **Growth (%)** to watch it grow. Change the seed for a different shape.
+4. Tweak the wizard sliders. The mesh rebuilds as you drag.
+5. **Save Preset** keeps your changes for next time.
 
-**Run without Blender:**
+## The panel
+
+| Box | What it does |
+|---|---|
+| **New Plant** | **Load Preset** (library species, your presets, saved breeds), **Save Preset**, **Create**. |
+| **Plant** | Age, Growth (% of full), Seed, then eight wizard sections: Meristems, Internodes, Leaves, Compound Leaves, Inflorescence Placement, Inflorescence Drawing, Flowers, Fruits. The last three appear only once the plant can flower. |
+| **Breeder** | Cross two plants into offspring (see below). |
+| **Export** | Writes one JSON config per plant (`plant_id`, `species`, `seed`, `planted_date`) to the *Config export dir*, for headless or CI regeneration. |
+
+Plants are ordinary Blender objects in the `PlantStudio Plants` collection. Delete them with **X**.
+
+### Breeder
+
+Like the original Breeding Room. The active plant is parent A. Select a second plant to make it parent B; with no parent B, offspring are mutations of A.
+
+Set **Offspring** and **Breeding seed**, then press **Breed**. Offspring appear as `<parent>_breed_N`. The same parents, seed, and count always give the same offspring. **Mutation %** scales how much they differ. **Advanced** sets mutation and parent weight per section, and saves or loads the strategy.
+
+Bred plants carry their full parameters, so they survive `.blend` save/reopen and can be edited in the wizard. **Save Preset** on a bred plant adds it to **Load Preset → Breeds**.
+
+### Animating growth
+
+Age is the plant's own property. Hover **Age (days)** or **Growth (%)** and press **I** to keyframe it, then scrub or play the timeline. Each plant animates on its own. To make different species finish growing together, key **Growth (%)** instead of days.
+
+**Rendering:** use **Render Growth Animation** (it appears once a plant is animated), not Ctrl+F12. Blender's render thread can't safely regrow meshes, so Ctrl+F12 leaves plants frozen.
+
+- Frames go to `<Output path><start>-<end>_PNG/`, then `ffmpeg` (must be on `PATH`) encodes `<Output path><start>-<end>.mp4`. Without ffmpeg you keep the PNGs.
+- **Esc** cancels and offers to delete the frames rendered so far.
+
+## Where your files go
+
+Presets and breeds live outside the add-on, so updating never wipes them.
+
+| What | Where |
+|---|---|
+| Presets | `~/.plantstudio/presets/<category>/<name>.json` |
+| Breeds and strategies | `~/.plantstudio/breeds/` |
+| Exported configs | *Config export dir* in the panel, else `$PLANTSTUDIO_PLANTS_DIR`, else `~/.plantstudio/exports` |
+
+---
+
+## For developers
+
+The simulation core (`plantstudio_blender/core/`) has no Blender dependency. It runs on Python 3.11+ for batch generation, tests, or server-side use. Run the tests with:
+
 ```bash
-cd /path/to/plantstudio-blender
 python -m pytest plantstudio_blender/tests/ -q
 ```
----
 
-## What It Is
-
-**PlantStudio-Blender** is a Python 3 port of **PlantStudio** (originally by Cynthia F. Kurtz & Paul Fernhout, Kurtz-Fernhout Software), wrapped as a Blender 4.2+ addon. The original PlantStudio was a Windows 95/98-era application for simulating herbaceous (non-woody) plant growth using a meristem/biomass model. This port:
-
-- **Preserves original behavior, but realtime** — deterministic growth, parameter registry, `.pla`/`.tdo` file formats.
-- **Runs headless** — the core (`plantstudio_blender/core/`) has zero Blender dependencies and can be imported in any Python 3.11+ environment for batch generation, testing, or server-side use.
-- **Runs in Blender** — N-panel with a **Wizard** exposes 70+ parameters across 8 steps (Meristems → Internodes → Leaves → Compound Leaves → Inflorescence Placement → Inflorescence Drawing → Flowers → Fruits), with mesh rebuild on every slider change.
-- **Bundles the original species library** — 9 `.pla` files (~1.4 MB) covering garden flowers, wildflowers, grasses, shrubs, vegetables, and "Strange Breeder" experimental plants, plus the original `3D object library.tdo` with 100+ hand-modeled plant parts (leaves, petals, buds, fruits).
-- **Exports with metadata** — one-click JSON config export (`plant_id`, `species`, `seed`, `planted_date`) for headless pipelines, CI, or server-side regeneration.
-
----
-## Plans
-- [x] Make sure every plant matches the original library
-- [x] Add a plant breeder
-- [x] Add some human touch to this page
-- [ ] Polish the UI
-- [ ] Optimize materials
-- [ ] Add the decimation algorithm for headless mode
-
----
-## Architecture Overview
 <details>
-<summary>Click to expand</summary>
+<summary>Project layout</summary>
 
 ```
 plantstudio_blender/
-├── core/                    # Headless simulation & drawing (NO bpy)
-│   ├── plant.py             # PdPlant — whole-plant growth, biomass allocation, traversal
-│   ├── meristem.py          # PdMeristem — branching, phytomer/inflorescence creation
-│   ├── internode.py         # PdInternode — stem segments
-│   ├── leaf.py              # PdLeaf — simple & compound leaves
-│   ├── inflorescence.py     # PdInflorescence — flower stalks, bracts, flowers
-│   ├── flower_fruit.py      # PdFlowerFruit — flower & fruit development
-│   ├── turtle.py            # MeshTurtle — 3D turtle graphics → MeshBuffer
-│   ├── mesh_buffer.py       # MeshBuffer — indexed vertex/face/color buffers
-│   ├── draw.py              # draw_plant() — high-level drawing dispatch
-│   ├── params.py            # Parameter containers (pGeneral, pMeristem, …)
-│   ├── pla_parser.py        # .pla file parser (parameter registry + embedded TDOs)
-│   ├── tdo_parser.py        # .tdo file parser (3D object library)
-│   ├── normalize.py         # Post-parse normalization (s-curves, refs, units)
-│   ├── factory.py           # create_plant() / grow_species() entry points
-│   ├── growth.py            # Growth-% mirror math (ps_pct <-> ps_day)
-│   ├── rng.py               # PdRandom — deterministic LFSR (matches original)
-│   ├── math3d.py            # Vector/matrix/SCurve math
-│   ├── matrix3d.py          # KfMatrix / KfPoint3D (PlantStudio coords)
-│   ├── plant_library.py     # SpeciesLibrary — parsed .pla cache
-│   ├── breeding.py          # Plant breeder: inherit() + breeding strategy (port)
-│   ├── breeding_sections.json # Bundled breeding section/parameter layout
-│   └── defaults.py          # Hard-coded defaults when no .pla loads
-├── ui_panel.py              # Blender N-panel (PlantStudio-Blender tab)
-├── operators.py             # Blender operators (create, load, save, regrow, export…)
-├── wizard.py                # Realtime wizard: knobs ↔ params, live rebuild timer
-├── scene_bridge.py          # Mesh build, material creation, collection management
-├── animator.py              # Age/growth-% sync + frame-change/refresh engine
-├── data/                    # Bundled .pla files + 3D object library.tdo
-└── tests/                   # Pytest suite (mesh output, LOD, parser round-trips)
-
-Outside the addon package (not shipped in the zip):
-```
-tools/                      # Validation / comparison scripts (repo root)
-scripts/                    # Maintainer verification scripts (headless Blender)
-```
+├── core/               # Headless simulation and drawing (no bpy)
+│   ├── plant.py        # whole-plant growth, biomass allocation
+│   ├── meristem.py     # branching, phytomer/inflorescence creation
+│   ├── internode.py, leaf.py, inflorescence.py
+│   ├── turtle.py       # 3D turtle graphics -> mesh buffer
+│   ├── draw.py         # high-level drawing dispatch
+│   ├── params.py, pla_parser.py, tdo_parser.py, normalize.py
+│   ├── factory.py      # create_plant() / grow_species()
+│   ├── breeding.py     # breeder: inherit() + strategy
+│   ├── rng.py          # deterministic LFSR matching the original
+│   └── ...             # math, growth %, species library, defaults
+├── ui_panel.py         # N-panel
+├── operators.py        # create, load, save, breed, render, export
+├── wizard.py           # sliders <-> parameters, live rebuild timer
+├── scene_bridge.py     # mesh build, materials, collections
+├── animator.py         # age/growth sync, frame-change handler
+├── data/               # bundled .pla species + 3D object library (.tdo)
+└── tests/
+tools/                  # validation and comparison scripts (not shipped)
+scripts/                # maintainer scripts (not shipped)
 ```
 
 </details>
 
-**Key design principle:** the `core/` package is pure Python — no `import bpy`. The Blender bridge lives entirely in the top-level modules (`ui_panel.py`, `operators.py`, `wizard.py`, `scene_bridge.py`, `animator.py`). This makes the simulation testable in CI and reusable outside Blender.
+<details>
+<summary>How plants grow</summary>
 
----
+PlantStudio uses a meristem-driven biomass model:
 
-## Simulation Model (How Plants Grow)
+1. Apical and axillary meristems accumulate biomass each day.
+2. When a meristem crosses a threshold, it creates a phytomer: an internode, a leaf, and axillary buds.
+3. Branching is probabilistic, controlled by `branchingIndex`, `branchingDistance`, `branchingAngle`, and the sympodial/monopodial setting.
+4. Biomass allocation follows an S-curve toward `ageAtMaturity`. After flowering starts, a fraction goes to reproductive structures.
+5. Inflorescences form on reproductive meristems. Flowers grow, open, and may set fruit.
+6. One seeded random generator drives every stochastic decision, so the same seed gives an identical plant.
 
-PlantStudio uses a **meristem-driven, biomass-allocation model**:
+The parameter registry maps field IDs (e.g. `kGeneralAgeAtMaturity`) to access strings (e.g. `pGeneral.ageAtMaturity`). `.pla` files reference parameters by field ID, so new parameters don't break old files.
 
-1. **Meristems** (apical & axillary) accumulate photosynthetic biomass each day.
-2. When a meristem's biomass crosses a threshold, it **creates a phytomer**: an internode + leaf (+ axillary buds).
-3. **Branching** is probabilistic: axillary buds activate based on `branchingIndex`, `branchingDistance`, `branchingAngle`, and sympodial/monopodial settings.
-4. **Biomass allocation** follows an S-curve (`growthSCurve.c1`, `c2`) toward `ageAtMaturity`. After flowering starts, a fraction (`fractionReproductiveAllocationAtMaturity_frn`) diverts to reproductive structures.
-5. **Inflorescences** form on active reproductive meristems (apical or axillary), each with stalk, bracts, and flowers.
-6. **Flowers** grow, open, and optionally set fruit based on biomass thresholds and day counts.
-7. **Determinism**: a single `PdRandom` (LFSR) seeded from `startingSeedForRandomNumberGenerator` drives every stochastic decision — same seed = identical plant.
+</details>
 
-The parameter registry (1,000+ entries) maps **field IDs** (e.g., `kGeneralAgeAtMaturity`) to **access strings** (e.g., `pGeneral.ageAtMaturity`). The parser loads this registry once; `.pla` files reference parameters by field ID, so new parameters can be added without breaking old files.
+<details>
+<summary>File formats</summary>
 
----
-
-## File Formats
-
-| Format | Purpose | Notes |
-|--------|---------|-------|
-| `.pla` | Plant species definition | Text, Latin-1 encoded. Sections: `[Species Name] start PlantStudio plant <v2.0>` + `Param Name [kFieldID] =value`. Embedded TDO blocks (`start 3D object` … `end 3D object`) for custom parts. |
-| `.tdo` | 3D object library | Text. `Name=…`, `Point=x y z`, `Triangle=i j k` (1-based). Also a compact inline form `N[name],P[x y z],T[i j k]…` used in parameters.tab. |
-| `.json` (user preset) | Saved wizard state | `{name, category, base_species, knobs: {knob_name: value}}`. Stored under `~/.plantstudio/presets/<category>/<name>.json` (outside the addon folder, so updates never wipe saved presets). |
-| `.json` (breed) | Saved bred plant | `{name, parents, strategy, params: {access: value}, day}` — the offspring's full parameter set; reloadable via **Load Preset → Breeds**. Stored under `~/.plantstudio/breeds/`. |
-| `.json` (export config) | Headless / CI regeneration | `{plant_id, species, seed, planted_date}` (ISO date). Written to the export dir (panel *Config export dir* or `$PLANTSTUDIO_PLANTS_DIR`). |
-
----
-
-## User Workflow (In Blender)
-
-1. **Open the N-panel** → *PlantStudio-Blender* tab.
-2. **New Plant** box:
-   - **Load Preset** menu → pick a library species (grouped by category) or a saved user preset.
-   - **Seed** spinner (default 280) — changes the stochastic shape.
-   - **Create** button → grows a new plant at the current *Age (days)*.
-3. **Pick a plant** — select it in the viewport or Outliner (plants live in the `PlantStudio Plants` collection). The wizard edits the active plant.
-4. **Wizard** (for the active plant) — 8 steps, each a collapsible box with labeled sliders/enum pickers/color pickers:
-   - **Meristems** — branching index/distance/angle, determinate probability, sympodial, secondary branching.
-   - **Internodes** — length, width, biomass, curving, days to create.
-   - **Leaves** — petiole length/width/angle, leaf biomass, leaf size (TDO scale), grow days.
-   - **Compound Leaves** — leaflets, pinnate/palmate, rachis:petiole ratio.
-   - **Inflorescence Placement** — flowering start age, apical/axillary inflorescence counts, reproductive allocation fraction.
-   - **Inflorescence Drawing** — stalk length, flowers on main branch / per branch / branches, days to all flowers.
-   - **Flowers** — petals per flower, petal size/angle, flower biomass.
-   - **Fruits** — fruit biomass threshold, days to fruit.
-   - **Shape pickers** (per step) — choose any TDO library object for bud, leaf, stipule, petal, fruit.
-   - **Color picker** — unripe fruit color.
-   - **Age (days) / Growth (%)** — the plant's own `ps_day` and `ps_pct` properties; dragging either rebuilds instantly (they stay in sync: % is measured against the species' full-growth day), and hovering one and pressing **I** keyframes it for animation.
-   - **Save Preset** button → writes a `.json` preset (base species + knob deltas).
-5. **Breeder** box — cross two plants into offspring, like the original Breeding Room:
-   - Select the parent A plant (active) and optionally one more plant (parent B). With no parent B the offspring are mutations of parent A only.
-   - Set **Offspring** count and the **Breeding seed** (same parents + same seed = identical offspring), then press **Breed** — offspring appear as `<parent>_breed_N` plants in the collection. Numeric parameters blend by section weight and mutate (original algorithm); booleans, enums, growth curves and 3D-object choices are copied from the section's winning parent; colors blend and mutate.
-   - **Mutation %** scales every section's mutation strength. **Advanced** exposes per-section mutation/parent-weight sliders (13 sections, matching the original's parameter sections) and strategy Save/Load (`~/.plantstudio/breeds/*.strategy.json`).
-   - Bred plants carry their full parameters (`ps_custom_params`), rebuild on age changes, survive `.blend` save/reopen, and can be edited with the wizard on top. **Save Preset** on a bred plant writes a breed file (`~/.plantstudio/breeds/<name>.json`), which appears under **Load Preset → Breeds**.
-6. **Live rebuild** — every knob change triggers a lightweight timer (`bpy.app.timers`) that re-simulates and re-draws the mesh in place.
-7. **Export Plant Config** — writes one JSON config per plant in the scene to the export dir (see *Config export dir* above the button).
-8. **Animate growth yourself** — the age is the plant's own `ps_day` property: hover the *Age (days)* slider and press **I** to keyframe it (or add a driver), then scrub/play the timeline; a frame-change handler rebuilds the mesh as animation plays. Per plant: keying one plant never moves another. To make several species grow simultaneously, drive one plant's *Growth (%)* slider (e.g. by keyframing it), then copy that driver to the other plants' `ps_pct` — % of full growth means different species finish together regardless of their maturity days.
-   - **Rendering growth:** use the panel's **Render Growth Animation** button, not plain *Render Animation* (Ctrl+F12) — Blender's render thread can't safely regrow meshes (it crashed Blender), so Ctrl+F12 leaves plants frozen. The button (and a reminder) appears once any plant's `ps_day`/`ps_pct`/`ps_seed` is keyed or driven.
-   - It renders PNG frames to `<Output path><start>-<end>_PNG/`, then encodes `<Output path><start>-<end>.mp4` with `ffmpeg` (must be on `PATH`; without it you keep the PNGs).
-   - The window updates between frames (progress in the status bar); **Esc** cancels and asks whether to delete the PNGs rendered so far.
-9. **Delete** — plants are ordinary Blender objects: select and press `X` / `Delete`.
-
-**Requirements:** Python 3.11+, Blender 4.2 LTS or 5.x LTS. No external Python packages (stdlib only).
-
----
-
-## Gap Report vs the Original PlantStudio
-
-| Original feature | Status in this addon |
+| Format | Purpose |
 |---|---|
-| Plant breeder (Breeding Room) | **Present** — N-panel Breeder box (cross/mutate, per-section strategy, breed presets) |
-| Wizard | Present (8 steps) |
-| Species libraries | Present (bundled `.pla` + `.tdo`) |
-| Time series / animation | Present (age keyframing + frame handler) |
-| External `.pla` import (Plant Exchange) | Missing — only bundled data loads; natural next step, unlocks ~100 free `.pla` files |
-| Multi-plant arrangement / posing | Mostly covered by Blender scene tools; branch-level posing optional later |
-| 3D object (TDO) editor | Missing — shape pickers only; Blender has native mesh editing but the TDO format differs |
-| Hints/help system | Missing — cheap win: Parameters.tab hint strings as tooltips |
-| Plant statistics | Missing (low priority) |
-| DXF/POV/BMP export, image hoses, clipboard | Superseded by GLB/JSON export + Blender |
+| `.pla` | Plant species definition. Latin-1 text: `[Species Name] start PlantStudio plant <v2.0>`, then `Param Name [kFieldID] =value`. Can embed custom 3D parts. |
+| `.tdo` | 3D object library. `Name=…`, `Point=x y z`, `Triangle=i j k` (1-based). |
+| preset `.json` | `{name, category, base_species, knobs}` |
+| breed `.json` | `{name, parents, strategy, params, day}`: the offspring's full parameter set. |
+| config `.json` | `{plant_id, species, seed, planted_date}` (ISO date). |
+
+</details>
 
 ---
+
+## Plans
+
+- [x] Make sure every plant matches the original library
+- [x] Add a plant breeder
+- [x] Add some human touch to this page
+- [ ] Polish the UI
+- [ ] Import external `.pla` files
+- [ ] Optimize materials
+- [ ] Add the decimation algorithm for headless mode
+
+## Compared with the original
+
+| Original feature | Status |
+|---|---|
+| Plant breeder (Breeding Room) | Present |
+| Wizard | Present (8 sections) |
+| Species libraries | Present (bundled `.pla` and `.tdo`) |
+| Time series / animation | Present (keyframe age or growth %) |
+| External `.pla` import | Missing. Natural next step; it would unlock ~100 free `.pla` files. |
+| 3D object (TDO) editor | Missing. Shape pickers only. |
+| Hints and help | Missing. The parameter hint strings could become tooltips. |
+| Plant statistics | Missing (low priority) |
+| Multi-plant arrangement | Mostly covered by Blender's own tools |
+| DXF/POV/BMP export, image hoses | Superseded by Blender |
 
 ## License
 
-GPL-3.0 — see `LICENSE`. The original PlantStudio source (Delphi) is © Kurtz-Fernhout Software, used with permission / under its original freeware terms. The Python port and Blender addon are derivative works.
+GPL-3.0, see `LICENSE`. The original PlantStudio source (Delphi) is © Kurtz-Fernhout Software, used with permission / under its original freeware terms. The Python port and Blender addon are derivative works.

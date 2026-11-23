@@ -243,7 +243,7 @@ def _species_items(self, context):
 class PS_OT_add_plant(Operator):
     bl_idname = "plantstudio.add_plant"
     bl_label = "Create"
-    bl_description = "Create a new plant with all original PlantStudio default settings"
+    bl_description = "Create a new plant with PlantStudio's default settings"
     # without a registered undo step, Ctrl+Z after creating plants can
     # crash Blender (operator created data the undo stack doesn't know)
     bl_options = {'REGISTER', 'UNDO'}
@@ -262,7 +262,7 @@ class PS_OT_add_plant(Operator):
 class PS_OT_load_preset(Operator):
     bl_idname = "plantstudio.load_preset"
     bl_label = "Load Preset"
-    bl_description = "Create a new plant from a library species, a saved preset, or a bred plant"
+    bl_description = "Create a plant from a species, a saved preset, or a saved breed"
     bl_options = {'REGISTER', 'UNDO'}
     species_name: EnumProperty(name="Species", items=_species_items)
     preset_name: StringProperty(name="Preset", default="")
@@ -341,7 +341,7 @@ class PS_OT_load_preset(Operator):
 class PS_OT_save_preset(Operator):
     bl_idname = "plantstudio.save_preset"
     bl_label = "Save Preset"
-    bl_description = "Save the selected plant's settings as a preset (name + category)"
+    bl_description = "Save the selected plant as a preset you can load later"
     preset_name: StringProperty(name="Name", default="", maxlen=64)
     category: EnumProperty(name="Category", items=_preset_category_items)
     new_category: StringProperty(name="New category", default="", maxlen=64)
@@ -455,10 +455,8 @@ class PS_OT_step_day(Operator):
 class PS_OT_render_growth(Operator):
     bl_idname = "plantstudio.render_growth"
     bl_label = "Render Growth Animation"
-    bl_description = ("Render the frame range to PNGs from the main thread "
-                      "(plants regrow safely between frames), then encode "
-                      "<Output path><start>-<end>.mp4 with ffmpeg. "
-                      "The UI refreshes between frames; Esc cancels")
+    bl_description = ("Render the frame range with growing plants: PNG frames, "
+                      "then an mp4 via ffmpeg (if installed). Esc cancels")
 
     # modal + timer: one blocking frame per tick, so the window redraws
     # (progress bar, status text) between frames. A real render job would
@@ -595,11 +593,9 @@ class PS_OT_export_plant_config(Operator):
     bl_options = {'REGISTER', 'UNDO'}
     bl_idname = "plantstudio.export_plant_config"
     bl_label = "Export Plant Config"
-    bl_description = ("Write one JSON config per plant in the scene "
-                      "(plant_id/species/seed/planted_date) for headless/CI "
-                      "pipelines; plant_id is derived from species+seed, dates "
-                      "are strict ISO; target directory = panel 'Config export "
-                      "dir' or $PLANTSTUDIO_PLANTS_DIR")
+    bl_description = ("Write one JSON config per plant (id, species, seed, date) "
+                      "to the config export dir, for regenerating plants "
+                      "outside Blender")
 
     def execute(self, context):
         from datetime import date, timedelta
@@ -673,9 +669,8 @@ def get_breeder_strategy(props):
 class PS_OT_breed(Operator):
     bl_idname = "plantstudio.breed"
     bl_label = "Breed"
-    bl_description = ("Breed offspring from the active plant (parent A) and "
-                      "one other selected plant (parent B; none = mutation "
-                      "only), using the breeding seed for determinism")
+    bl_description = ("Cross the active plant (parent A) with another selected "
+                      "plant (parent B). With no parent B, mutate parent A")
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
@@ -723,7 +718,7 @@ class PS_OT_breed(Operator):
 class PS_OT_breed_strategy_save(Operator):
     bl_idname = "plantstudio.breed_strategy_save"
     bl_label = "Save Strategy"
-    bl_description = "Save the breeding strategy (per-section mutation/weights) to ~/.plantstudio/breeds"
+    bl_description = "Save the per-section breeding settings for reuse"
     bl_options = {'REGISTER', 'UNDO'}
     strategy_name: StringProperty(name="Name", default="", maxlen=64)
 

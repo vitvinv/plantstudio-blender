@@ -122,6 +122,12 @@ def last_tag(version: str) -> str | None:
 # so each release gets plain-language highlights instead of raw commit titles.
 # Falls back to the commit log for versions without an entry here.
 FRIENDLY_CHANGES = {
+    "0.7.0": [
+        "Render Growth Animation: plants now grow properly in rendered "
+        "animations, and Blender no longer crashes while rendering them.",
+        "Shorter, clearer README and panel hints; tooltips now say what a "
+        "button does in a sentence.",
+    ],
     "0.6.0": [
         "New Plant Breeder: pick two plants as parents and cross them into "
         "offspring. You choose how many offspring a Breed click creates, and "
