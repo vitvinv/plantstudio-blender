@@ -595,6 +595,10 @@ def _timer_cb():
     global _rebuild_busy
     if _rebuild_busy:
         return 0.1
+    # rewriting a mesh under a running render job crashes Blender (the job's
+    # thread evaluates it); retry once the job is over
+    if getattr(bpy.app, "is_job_running", lambda _: False)("RENDER"):
+        return 1.0
     # undo/redo invalidates every bpy reference — re-fetch everything from
     # bpy.context here; never cache bpy data in this module
     if getattr(bpy.context.scene, "ps_wizard_knobs", None) is None:

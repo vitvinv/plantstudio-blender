@@ -97,6 +97,7 @@ def register():
                            register_category_menus, _depsgraph_load_active_knobs)
     from .operators import (PS_OT_add_plant, PS_OT_load_preset,
                             PS_OT_save_preset, PS_OT_regrow, PS_OT_step_day,
+                            PS_OT_render_growth, PS_OT_render_growth_cancelled,
                             PS_OT_export_plant_config, PS_OT_breed,
                             PS_OT_breed_strategy_save,
                             PS_OT_breed_strategy_load)
@@ -115,6 +116,8 @@ def register():
         PS_OT_save_preset,
         PS_OT_regrow,
         PS_OT_step_day,
+        PS_OT_render_growth,
+        PS_OT_render_growth_cancelled,
         PS_OT_export_plant_config,
         PS_OT_breed,
         PS_OT_breed_strategy_save,

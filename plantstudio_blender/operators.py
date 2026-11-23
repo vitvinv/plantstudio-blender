@@ -2,6 +2,8 @@
 
 import os
 import json
+import shutil
+import subprocess
 import bpy
 from bpy.types import Operator
 from bpy.props import IntProperty, StringProperty, BoolProperty, EnumProperty
@@ -447,6 +449,145 @@ class PS_OT_step_day(Operator):
         obj["ps_day"] = int(obj["ps_day"]) + 1
         from .animator import rebuild_plant_at_day
         rebuild_plant_at_day(obj)
+        return {'FINISHED'}
+
+
+class PS_OT_render_growth(Operator):
+    bl_idname = "plantstudio.render_growth"
+    bl_label = "Render Growth Animation"
+    bl_description = ("Render the frame range to PNGs from the main thread "
+                      "(plants regrow safely between frames), then encode "
+                      "<Output path><start>-<end>.mp4 with ffmpeg. "
+                      "The UI refreshes between frames; Esc cancels")
+
+    # modal + timer: one blocking frame per tick, so the window redraws
+    # (progress bar, status text) between frames. A real render job would
+    # keep it fully responsive but is the thread that crashes on regrowth.
+    def invoke(self, context, event):
+        scene = context.scene
+        fmt = scene.render.image_settings
+        # <name>0000-0210_PNG/<name>0000-0210_00001.png + <name>0000-0210.mp4
+        self._base = scene.render.filepath
+        self._abs_base = bpy.path.abspath(self._base)
+        self._span = f"{scene.frame_start:04d}-{scene.frame_end:04d}"
+        self._png_dir = f"{self._abs_base}{self._span}_PNG"
+        self._stem = os.path.basename(self._abs_base) + self._span
+        os.makedirs(self._png_dir, exist_ok=True)
+        self._frame0 = scene.frame_current
+        self._media = getattr(fmt, "media_type", None)
+        self._format = fmt.file_format
+        self._frames = list(range(scene.frame_start, scene.frame_end + 1,
+                                  scene.frame_step))
+        self._n = 0
+        if self._format == 'FFMPEG' or self._media == 'VIDEO':
+            # write_still can't write video: emit PNG frames instead
+            if self._media is not None:
+                fmt.media_type = 'IMAGE'
+            fmt.file_format = 'PNG'
+        wm = context.window_manager
+        self._timer = wm.event_timer_add(0.1, window=context.window)
+        wm.modal_handler_add(self)
+        return {'RUNNING_MODAL'}
+
+    def _restore(self, context):
+        scene = context.scene
+        fmt = scene.render.image_settings
+        wm = context.window_manager
+        wm.event_timer_remove(self._timer)
+        context.workspace.status_text_set(None)
+        scene.render.filepath = self._base
+        if self._media is not None:
+            fmt.media_type = self._media
+        fmt.file_format = self._format
+        scene.frame_set(self._frame0)
+
+    def modal(self, context, event):
+        if event.type == 'ESC':
+            self._restore(context)
+            bpy.ops.plantstudio.render_growth_cancelled(
+                'INVOKE_DEFAULT', png_dir=self._png_dir, stem=self._stem,
+                count=self._n)
+            return {'CANCELLED'}
+        if event.type != 'TIMER':
+            return {'PASS_THROUGH'}
+        if self._n < len(self._frames):
+            scene = context.scene
+            try:
+                scene.frame_set(self._frames[self._n])  # main thread: plants regrow
+                self._n += 1
+                scene.render.filepath = os.path.join(
+                    self._png_dir, f"{self._stem}_{self._n:05d}")
+                bpy.ops.render.render(write_still=True)  # blocking, no job
+            except Exception as e:
+                self._restore(context)
+                self.report({'ERROR'}, f"Render failed: {e}")
+                return {'CANCELLED'}
+            total = len(self._frames)
+            # status text instead of wm.progress_*: that widget shows a raw
+            # float ("74.41") that doesn't fit the status bar
+            context.workspace.status_text_set(
+                f"Growth render: frame {self._n}/{total} "
+                f"({100 * self._n // total}%) - Esc to cancel")
+            return {'RUNNING_MODAL'}
+        self._restore(context)
+        return self._encode(context.scene)
+
+    def _encode(self, scene):
+        ffmpeg = shutil.which("ffmpeg")
+        if not ffmpeg:
+            self.report({'WARNING'}, f"ffmpeg not on PATH; PNG frames are in {self._png_dir}")
+            return {'FINISHED'}
+        mp4 = f"{self._abs_base}{self._span}.mp4"
+        r = subprocess.run(
+            [ffmpeg, "-y", "-framerate", str(scene.render.fps / scene.render.fps_base),
+             "-i", os.path.join(self._png_dir, f"{self._stem}_%05d.png"),
+             # yuv420p needs even dimensions
+             "-vf", "scale=trunc(iw/2)*2:trunc(ih/2)*2",
+             "-c:v", "libx264", "-pix_fmt", "yuv420p", mp4],
+            capture_output=True, text=True)
+        if r.returncode:
+            self.report({'ERROR'}, f"ffmpeg failed: {r.stderr.strip()[-300:]}")
+            return {'CANCELLED'}
+        self.report({'INFO'}, f"Wrote {mp4}")
+        return {'FINISHED'}
+
+
+class PS_OT_render_growth_cancelled(Operator):
+    """Dialog after Esc: OK deletes the frames rendered so far, Cancel keeps them."""
+    bl_idname = "plantstudio.render_growth_cancelled"
+    bl_label = "Render cancelled"
+    bl_options = {'INTERNAL'}
+
+    png_dir: StringProperty(options={'HIDDEN'})
+    stem: StringProperty(options={'HIDDEN'})
+    count: IntProperty(options={'HIDDEN'})
+
+    def invoke(self, context, event):
+        if not self.count:  # nothing rendered: just drop the empty folder
+            self._delete_frames()
+            return {'CANCELLED'}
+        return context.window_manager.invoke_props_dialog(
+            self, title="Render cancelled", confirm_text="Delete PNGs")
+
+    def draw(self, context):
+        col = self.layout.column()
+        col.label(text=f"{self.count} frames were rendered to")
+        col.label(text=self.png_dir)
+        col.label(text="Delete them? (Cancel keeps them)")
+
+    def _delete_frames(self):
+        # only this run's files: the folder may hold older frames
+        for name in os.listdir(self.png_dir):
+            if name.startswith(self.stem + "_") and name.endswith(".png"):
+                os.remove(os.path.join(self.png_dir, name))
+        try:
+            os.rmdir(self.png_dir)  # only if now empty
+        except OSError:
+            pass
+
+    def execute(self, context):
+        self._delete_frames()
+        self.report({'INFO'}, "Deleted PNG frames")
         return {'FINISHED'}
 
 

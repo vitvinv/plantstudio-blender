@@ -163,6 +163,9 @@ The parameter registry (1,000+ entries) maps **field IDs** (e.g., `kGeneralAgeAt
 6. **Live rebuild** — every knob change triggers a lightweight timer (`bpy.app.timers`) that re-simulates and re-draws the mesh in place.
 7. **Export Plant Config** — writes one JSON config per plant in the scene to the export dir (see *Config export dir* above the button).
 8. **Animate growth yourself** — the age is the plant's own `ps_day` property: hover the *Age (days)* slider and press **I** to keyframe it (or add a driver), then scrub/play the timeline; a frame-change handler rebuilds the mesh as animation plays. Per plant: keying one plant never moves another. To make several species grow simultaneously, drive one plant's *Growth (%)* slider (e.g. by keyframing it), then copy that driver to the other plants' `ps_pct` — % of full growth means different species finish together regardless of their maturity days.
+   - **Rendering growth:** use the panel's **Render Growth Animation** button, not plain *Render Animation* (Ctrl+F12) — Blender's render thread can't safely regrow meshes (it crashed Blender), so Ctrl+F12 leaves plants frozen. The button (and a reminder) appears once any plant's `ps_day`/`ps_pct`/`ps_seed` is keyed or driven.
+   - It renders PNG frames to `<Output path><start>-<end>_PNG/`, then encodes `<Output path><start>-<end>.mp4` with `ffmpeg` (must be on `PATH`; without it you keep the PNGs).
+   - The window updates between frames (progress in the status bar); **Esc** cancels and asks whether to delete the PNGs rendered so far.
 9. **Delete** — plants are ordinary Blender objects: select and press `X` / `Delete`.
 
 **Requirements:** Python 3.11+, Blender 4.2 LTS or 5.x LTS. No external Python packages (stdlib only).

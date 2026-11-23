@@ -186,3 +186,20 @@ def test_reconcile_legacy_object_keeps_rebuilding(animator):
         assert animator.reconcile_growth(fresh) is None
     finally:
         animator.rebuild_plant_at_day = orig
+
+
+def test_is_growth_animated(animator):
+    """Drivers and keyframes on the age props count; other animation doesn't."""
+    ns = types.SimpleNamespace
+    drv = lambda path: ns(data_path=path)
+    assert not animator.is_growth_animated(ns(animation_data=None))
+    other = ns(animation_data=ns(drivers=[drv('location')], action=None))
+    assert not animator.is_growth_animated(other)
+    driven = ns(animation_data=ns(drivers=[drv('["ps_pct"]')], action=None))
+    assert animator.is_growth_animated(driven)
+    keyed = ns(animation_data=ns(
+        drivers=[], action=ns(fcurves=[drv('["ps_day"]')])))  # pre-4.4 action
+    assert animator.is_growth_animated(keyed)
+    keyed_other = ns(animation_data=ns(
+        drivers=[], action=ns(fcurves=[drv('location')])))
+    assert not animator.is_growth_animated(keyed_other)

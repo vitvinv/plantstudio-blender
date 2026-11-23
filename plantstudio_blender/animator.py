@@ -30,6 +30,33 @@ def _active_plant():
     return obj if _is_plant(obj) else None
 
 
+_GROWTH_PATHS = ('["ps_day"]', '["ps_pct"]', '["ps_seed"]')
+
+
+def is_growth_animated(obj):
+    """True when a keyframe or driver moves the plant's age (ps_day/ps_pct).
+
+    shortcut: NLA strips are not inspected, upgrade if growth is animated there.
+    """
+    ad = obj.animation_data
+    if ad is None:
+        return False
+    if any(d.data_path in _GROWTH_PATHS for d in ad.drivers):
+        return True
+    action = ad.action
+    if action is None:
+        return False
+    if hasattr(action, "layers"):  # Blender 4.4+ slotted actions: no action.fcurves
+        if ad.action_slot is None:
+            return False
+        from bpy_extras import anim_utils
+        channelbag = anim_utils.action_get_channelbag_for_slot(action, ad.action_slot)
+        fcurves = channelbag.fcurves if channelbag else ()
+    else:
+        fcurves = action.fcurves
+    return any(f.data_path in _GROWTH_PATHS for f in fcurves)
+
+
 def reconcile_growth(obj):
     """Sync the day/pct pair, then rebuild if either moved.
 
@@ -147,11 +174,17 @@ def _frame_change_rebuild(scene=None, depsgraph=None):
         rendering = bpy.app.is_job_running("RENDER")
     except AttributeError:  # older Blender / bpy-stubbed tests
         rendering = False
+    if rendering:
+        # A render job runs this handler on its own thread; rewriting a mesh
+        # there races the main thread's viewport depsgraph (access violation
+        # in a TBB worker, Blender 5.2/5.3). Grow from the main thread
+        # instead: plantstudio.render_growth.
+        print("PlantStudio: growth is not rebuilt during a render job; "
+              "use 'Render Growth Animation' in the PlantStudio panel")
+        return
     for obj in _plants():
         if obj.name in _poison:
             continue
-        if rendering and obj.hide_render:
-            continue  # invisible to the render: skip per-frame re-simulation
         try:
             reconcile_growth(obj)
         except Exception:

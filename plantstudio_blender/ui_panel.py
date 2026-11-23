@@ -15,6 +15,8 @@ import re
 import json
 import bpy
 from bpy.types import Panel, PropertyGroup
+from .animator import is_growth_animated
+from .scene_bridge import plants
 from bpy.props import (StringProperty, IntProperty, PointerProperty,
                        BoolProperty, EnumProperty)
 
@@ -316,6 +318,13 @@ class PS_PT_panel(Panel):
         col.prop(obj, '["ps_day"]', text="Age (days)")
         col.prop(obj, '["ps_pct"]', text="Growth (% of full)")
         col.prop(obj, '["ps_seed"]', text="Seed")
+        if any(is_growth_animated(p) for p in plants()):
+            note = box.box()
+            text = note.column(align=True)  # aligned: no gaps between lines
+            text.label(text="Growth is animated.", icon='INFO')
+            text.label(text="Plain render (Ctrl+F12) won't grow")
+            text.label(text="the plants: use the button below.")
+            note.operator("plantstudio.render_growth", icon='RENDER_ANIMATION')
 
         # all wizard sections in one panel, in order
         can_repro = placement_enabled(knobs)
