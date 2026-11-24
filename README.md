@@ -10,7 +10,7 @@ A Blender extension that brings [**PlantStudio Botanical Illustration Software**
 
 > Try the [original](https://www.kurtz-fernhout.com/download_new.html) or a WIP [browser version](https://plantstudio.com/plantstudio-js-alpha1/tests-interactive/Application-test.html) by Paul Fernhout & Synthia Kurtz.
 
-A fair warning: I'm not a programmer. I made this add-on with the help of a coding agent as a stylized plant-generation engine for my [Gardenia Automata](https://github.com/vitvinv/digital-garden) art project, and the agent wrote most of this Readme too. For now, my plan is to recreate PlantStudio as faithfully as possible in a modern environment, with a few quality-of-life improvements.
+A fair warning: I'm not a programmer. I made this add-on with the help of a coding agent as a stylized plant-generation engine for my art project, and the agent wrote most of this Readme too. For now, my plan is to recreate PlantStudio as faithfully as possible in a modern environment, with a few quality-of-life improvements.
 
 ---
 
